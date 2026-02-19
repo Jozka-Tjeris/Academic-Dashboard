@@ -6,7 +6,7 @@ datasource db {
   provider = "postgresql"
 }
 
-// ---------------- NextAuth and User Models  ----------------
+// ---------------- NextAuth and User Models ----------------
 
 model Account {
   id                       String  @id @default(cuid())
@@ -56,24 +56,35 @@ model VerificationToken {
 }
 
 // ---------------- Course and Assessment models ----------------
+
 model Course {
-  courseId    String @id @default(cuid())
+  courseId    String       @id @default(cuid())
   userId      String
+  name        String
+  description String?
   assessments Assessment[]
 
-  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@unique([userId, courseId])
 }
 
 model Assessment {
-  assessmentId  String @id @default(cuid())
+  assessmentId  String   @id @default(cuid())
   courseId      String
   userId        String
+  title         String
+  description   String?
+  dueDate       DateTime
+  status        String   // optional: can also be derived
+  score         Float?   // current score, nullable if not graded yet
+  targetScore   Float?   // optional: what-if input
+  weight        Float    // percentage of course grade, sum should not exceed 100
+  latePenalty   Float?   // optional: % to deduct if submitted late
 
-  course        Course @relation(fields: [courseId], references: [courseId], onDelete: Cascade)
-  user          User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course        Course   @relation(fields: [courseId], references: [courseId], onDelete: Cascade)
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, courseId])
   @@unique([userId, courseId, assessmentId])
