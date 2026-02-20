@@ -1,4 +1,4 @@
-import { applyLatePenalty } from "../../../../src/domain/grade/latePenalty";
+import { applyLatePenalty } from "@/domain/grade/latePenalty";
 
 describe("Late Penalty Tests", () => {
   describe("applyLatePenalty", () => {

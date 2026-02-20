@@ -1,8 +1,22 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true,
+    "isolatedModules": true,
+    "target": "ES2022",
+    "module": "NodeNext",          // Or "CommonJS" if you want to stay strictly CJS
+    "moduleResolution": "NodeNext", // Helps find types for ESM packages like uuid
+    "esModuleInterop": true,        // You have this - keep it!
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "types": ["node", "jest"]
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "rootDir": "..",
+    "types": ["node", "jest"],
+    "strict": true,                  // Highly recommended for Prisma/Zod workflows
+    "paths": {
+      "@shared/*": ["../shared/*"],
+      "@/*": ["src/*"],
+    },
   },
-  "include": ["src/**/*", "tests/**/*"]
+  "include": ["src/**/*", "tests/**/*", "prisma/**/*.ts"],
+  "exclude": ["node_modules"]
 }

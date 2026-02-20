@@ -1,5 +1,5 @@
-import { TWENTYFOUR_HOURS_IN_MS } from "../../../../shared/constants/constants";
-import { Assessment } from "../../../../shared/types/types";
+import { TWENTYFOUR_HOURS_IN_MS } from "@shared/constants/constants";
+import { Assessment } from "@shared/types/types";
 import { deriveStatusFromDate } from "./status";
 
 export function calculateUrgencyScore(
