@@ -7,7 +7,7 @@ export type Course = {
   updatedAt: Date,
 }
 
-export type AssessmentStatus = 'upcoming' | 'submitted' | 'due in 24 hours' | 'overdue';
+export type AssessmentStatus = 'upcoming' | 'submitted' | 'due in 24 hours' | 'overdue' | 'graded';
 
 export type Assessment = {
   assessmentId: string,
@@ -22,6 +22,7 @@ export type Assessment = {
   weight: number,
   latePenalty: number | null,
   isSimulated: boolean | null,
+  submitted: boolean,
   createdAt: Date,
   updatedAt: Date,
 }
