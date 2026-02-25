@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import authRoutes from "./modules/auth/auth.routes";
 import passport from './modules/auth/passport';
 import { env } from "./config/env";
+import coursesRoutes from "./modules/courses/course.routes";
 
 export const app = express();
 
@@ -30,5 +31,6 @@ app.use("/health", healthRouter);
 
 // Feature routes here
 app.use('/api/auth', authRoutes);
+app.use('/courses', coursesRoutes);
 
 app.use(errorMiddleware);
