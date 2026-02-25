@@ -23,7 +23,14 @@ passport.use(
           'Google authentication successful'
         );
 
-        return done(null, user);
+        const userWithSub = {
+          ...user,
+          sub: user.id,
+          name: user.name,
+          email: user.email ?? "",
+        };
+
+        return done(null, userWithSub);
       } catch (error) {
         logger.error({ error }, 'Google authentication failed');
         return done(error as Error, undefined);

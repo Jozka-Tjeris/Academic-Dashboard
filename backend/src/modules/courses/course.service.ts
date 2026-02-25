@@ -1,5 +1,8 @@
 import { Course, PrismaClient } from "@prisma/client";
 import { HttpError } from "@/utils/httpError";
+import { calculateCurrentGrade } from "../../domain/grade/gradeCalculator";
+import { Assessment, AssessmentStatus } from "@shared/types/types";
+import { AssessmentStatusTypes } from "@shared/constants/constants";
 
 interface CreateCourseInput {
   userId: string;
@@ -32,4 +35,39 @@ export function buildCourseService(prisma: PrismaClient) {
       });
     },
   };
+}
+
+export function getCourseService(prisma: PrismaClient) {
+  return {
+    async getCoursesForUser(userId: string) {
+      // Fetch courses including assessments
+      const courses = await prisma.course.findMany({
+        where: { userId },
+        include: {
+          assessments: true,
+        },
+        orderBy: { createdAt: "desc" },
+      });
+
+      // Compute grade summary for each course
+      const coursesWithSummary = courses.map((course) => {
+        const assessments: Assessment[] = course.assessments.map((v) => {
+          if(v.status in AssessmentStatusTypes !== true){
+            throw new HttpError(422, "Unprocessable Entity error");
+          }
+          return {
+            ...v,
+            status: v.status as AssessmentStatus
+          }
+        })
+        const gradeSummary = calculateCurrentGrade(assessments);
+        return {
+          ...course,
+          gradeSummary,
+        };
+      });
+
+      return coursesWithSummary;
+    }
+  }
 }

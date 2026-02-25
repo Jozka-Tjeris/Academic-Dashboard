@@ -1,4 +1,4 @@
-import { prismaMock } from "tests/mocks/mockPrismaSingleton";
+import { prismaMock } from "../mocks/mockPrismaSingleton";
 import { buildCourseService } from "@/modules/courses/course.service";
 
 describe("createCourse (unit)", () => {

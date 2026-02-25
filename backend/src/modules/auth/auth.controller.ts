@@ -5,10 +5,10 @@ import { TWENTYFOUR_HOURS_IN_MS } from '@shared/constants/constants';
 import { JwtPayload } from 'jsonwebtoken';
 
 export function googleCallback(req: Request, res: Response) {
-  const user = req.user as { id: string; email: string; name?: string };
+  const user = req.user as { sub: string; email: string; name?: string };
 
   const token = signToken({
-    sub: user.id,
+    sub: user.sub,
     email: user.email,
     name: user.name,
   });
