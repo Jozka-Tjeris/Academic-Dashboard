@@ -10,6 +10,8 @@ passport.use(
       clientID: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
       callbackURL: `${env.BACKEND_URL}/api/auth/google/callback`,
+      // Prevent CSRF attacks (Cross_Site_Request_Forgery)
+      state: true,
     },
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     async (_accessToken, _refreshToken, profile, done) => {

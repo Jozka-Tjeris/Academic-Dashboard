@@ -27,5 +27,26 @@ describe("auth user check test", () => {
 
     expect(res.status).toBe(200);
     expect(res.headers['set-cookie']).toBeDefined();
+    expect(res.headers['set-cookie'][0]).toContain('access_token=;');
+  });
+
+  it('returns 401 for invalid token', async () => {
+    const res = await request(app)
+      .get('/api/auth/me')
+      .set('Cookie', ['access_token=invalidtoken']);
+
+    expect(res.status).toBe(401);
+  });
+
+  it('returns 401 for tampered token', async () => {
+    const token = signToken({ sub: '123', email: 'a@a.com' });
+
+    const tampered = token.slice(0, -1) + 'x';
+
+    const res = await request(app)
+      .get('/api/auth/me')
+      .set('Cookie', [`access_token=${tampered}`]);
+
+    expect(res.status).toBe(401);
   });
 })

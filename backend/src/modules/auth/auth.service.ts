@@ -1,3 +1,4 @@
+import { HttpError } from '@/utils/httpError';
 import { prisma } from '../../lib/prisma';
 import { Profile } from 'passport-google-oauth20';
 
@@ -9,7 +10,7 @@ class AuthService {
     const image = profile.photos?.[0]?.value;
 
     if (!email) {
-      throw new Error('Google account does not provide email');
+      throw new HttpError(401, 'Google account does not provide email');
     }
 
     // Find user by google ID, if not found, create user

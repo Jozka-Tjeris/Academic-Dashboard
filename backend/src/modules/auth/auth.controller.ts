@@ -5,7 +5,7 @@ import { TWENTYFOUR_HOURS_IN_MS } from '@shared/constants/constants';
 import { JwtPayload } from 'jsonwebtoken';
 
 export function googleCallback(req: Request, res: Response) {
-  const user = req.user as JwtPayload;
+  const user = req.user as { id: string; email: string; name?: string };
 
   const token = signToken({
     sub: user.id,
@@ -15,8 +15,8 @@ export function googleCallback(req: Request, res: Response) {
 
   res.cookie('access_token', token, {
     httpOnly: true,
+    sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
     secure: env.NODE_ENV === 'production',
-    sameSite: 'none',
     maxAge: 7 * TWENTYFOUR_HOURS_IN_MS,
   });
 
@@ -25,9 +25,9 @@ export function googleCallback(req: Request, res: Response) {
 
 export function logout(_req: Request, res: Response) {
   res.clearCookie('access_token', {
-    httpOnly: true,
+    sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
     secure: env.NODE_ENV === 'production',
-    sameSite: 'none',
+    path: '/',
   });
 
   return res.status(200).json({ message: 'Logged out successfully' });

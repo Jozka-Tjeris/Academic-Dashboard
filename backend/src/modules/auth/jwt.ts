@@ -19,7 +19,9 @@ export function signToken(payload: Omit<JwtPayload, 'iat' | 'exp'>): string {
 
 export function verifyToken(token: string): JwtPayload {
   try {
-    return jwt.verify(token, JWT_SECRET) as JwtPayload;
+    return jwt.verify(token, JWT_SECRET, {
+      algorithms: ['HS256'],
+    }) as JwtPayload;
   } catch (error) {
     void error; //to prevent unused variable warning
     throw new HttpError(401, 'Invalid or expired token');
