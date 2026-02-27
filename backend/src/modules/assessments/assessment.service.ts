@@ -28,6 +28,19 @@ export function createAssessmentService(prisma: PrismaClient){
         throw new HttpError(400, "Course not found");
       }
 
+      const assessment = await prisma.assessment.findFirst({
+        where: {
+          userId, courseId, title
+        }
+      })
+
+      if(assessment){
+        throw new HttpError(
+          409,
+          "Conflict: Assessment with this name inside this Course already exists."
+        );
+      }
+
       const existingWeights = await prisma.assessment.aggregate({
         where: { courseId, userId },
         _sum: { weight: true },

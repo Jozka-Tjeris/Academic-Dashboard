@@ -10,9 +10,9 @@ interface CreateCourseInput {
   description?: string;
 }
 
-export function buildCourseService(prisma: PrismaClient) {
+export function buildCourseService(prisma: PrismaClient){
   return {
-    async createCourse(input: CreateCourseInput): Promise<Course> {
+    async createCourse(input: CreateCourseInput){
       const { userId, name, description } = input;
 
       const existing = await prisma.course.findFirst({
@@ -37,9 +37,9 @@ export function buildCourseService(prisma: PrismaClient) {
   };
 }
 
-export function getCourseService(prisma: PrismaClient) {
+export function getCourseService(prisma: PrismaClient){
   return {
-    async getCoursesForUser(userId: string) {
+    async getCoursesForUser(userId: string){
       // Fetch courses including assessments
       const courses = await prisma.course.findMany({
         where: { userId },
@@ -111,7 +111,7 @@ export function getCourseByIdService(prisma: PrismaClient){
 
 export function deleteCourseService(prisma: PrismaClient){
   return {
-    async deleteCourse(userId: string, courseId: string) {
+    async deleteCourse(userId: string, courseId: string){
       const course = await prisma.course.findFirst({
         where: { courseId, userId },
       });
