@@ -1,6 +1,6 @@
 import { HttpError } from "@/utils/httpError";
 import { Request, NextFunction, Response } from "express";
-import { createAssessmentService, deleteAssessmentService, updateAssessmentService } from "./assessment.service";
+import { getAssessmentServices } from "./assessment.service";
 import { prisma } from "@/lib/prisma";
 import { logger } from "@/lib/logger";
 
@@ -23,8 +23,8 @@ export async function createAssessmentHandler(req: Request, res: Response, next:
   }
 
   try {
-    const assessmentService = createAssessmentService(prisma);
-    const assessment = await assessmentService.createAssessmentToCourse({
+    const assessmentService = getAssessmentServices(prisma);
+    const assessment = await assessmentService.createAssessmentForCourse({
       userId, 
       courseId, 
       title, 
@@ -70,7 +70,7 @@ export async function updateAssessmentHandler(req: Request, res: Response, next:
   const { score, submitted, targetScore } = req.body;
 
   try {
-    const assessmentService = updateAssessmentService(prisma);
+    const assessmentService = getAssessmentServices(prisma);
     const updated = await assessmentService.updateAssessment({
       userId,
       assessmentId,
@@ -111,7 +111,7 @@ export async function deleteAssessmentHandler(req: Request, res: Response, next:
   }
 
   try {
-    const assessmentService = deleteAssessmentService(prisma);
+    const assessmentService = getAssessmentServices(prisma);
     const result = await assessmentService.deleteAssessment(userId, assessmentId);
 
     logger.info(

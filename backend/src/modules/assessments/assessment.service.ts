@@ -12,9 +12,17 @@ interface CreateAssessmentInput {
   latePenalty?: number;
 }
 
-export function createAssessmentService(prisma: PrismaClient){
+interface UpdateAssessmentInput {
+  userId: string;
+  assessmentId: string;
+  score?: number;
+  submitted?: boolean;
+  targetScore?: number;
+}
+
+export function getAssessmentServices(prisma: PrismaClient){
   return {
-    async createAssessmentToCourse(input: CreateAssessmentInput){
+    async createAssessmentForCourse(input: CreateAssessmentInput){
       const { userId, courseId, title, dueDate,
          weight, description, maxScore, latePenalty, } = input;
 
@@ -66,20 +74,7 @@ export function createAssessmentService(prisma: PrismaClient){
           status: "Pending",
         },
       });
-    }
-  }
-}
-
-interface UpdateAssessmentInput {
-  userId: string;
-  assessmentId: string;
-  score?: number;
-  submitted?: boolean;
-  targetScore?: number;
-}
-
-export function updateAssessmentService(prisma: PrismaClient){
-  return {
+    },
     async updateAssessment(input: UpdateAssessmentInput){
       const { userId, assessmentId, score, submitted, targetScore } = input;
 
@@ -113,12 +108,7 @@ export function updateAssessmentService(prisma: PrismaClient){
           ...(targetScore !== undefined && { targetScore }),
         },
       });
-    }
-  }
-}
-
-export function deleteAssessmentService(prisma: PrismaClient){
-  return {
+    },
     async deleteAssessment(userId: string, assessmentId: string){
       const assessment = await prisma.assessment.findFirst({
         where: { assessmentId, userId },
