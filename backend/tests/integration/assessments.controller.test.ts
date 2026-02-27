@@ -130,3 +130,44 @@ describe.skip("PUT /assessments/:id", () => {
     expect(res.status).toBe(404);
   });
 });
+
+describe.skip("DELETE /assessments/:id", () => {
+  let token: string;
+  let assessmentId: string;
+
+  beforeAll(async () => {
+    token = "test-jwt-token";
+
+    const course = await prisma.course.create({
+      data: {
+        userId: "test-user-id",
+        name: "TEST_DeleteAssessmentCourse",
+      },
+    });
+
+    const assessment = await prisma.assessment.create({
+      data: {
+        userId: "test-user-id",
+        courseId: course.courseId,
+        title: "Delete Quiz",
+        dueDate: new Date(),
+        weight: 10,
+        submitted: false,
+        status: "Pending",
+      },
+    });
+
+    assessmentId = assessment.assessmentId;
+  });
+
+  it("deletes an assessment", async () => {
+    const res = await request(app)
+      .delete(`/assessments/${assessmentId}`)
+      .set("Cookie", [`access_token=${token}`]);
+
+    expect(res.status).toBe(200);
+    expect(res.body.message).toBe(
+      "Assessment deleted successfully"
+    );
+  });
+});

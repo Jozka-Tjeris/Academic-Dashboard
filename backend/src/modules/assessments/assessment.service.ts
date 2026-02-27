@@ -103,3 +103,23 @@ export function updateAssessmentService(prisma: PrismaClient){
     }
   }
 }
+
+export function deleteAssessmentService(prisma: PrismaClient){
+  return {
+    async deleteAssessment(userId: string, assessmentId: string){
+      const assessment = await prisma.assessment.findFirst({
+        where: { assessmentId, userId },
+      });
+
+      if (!assessment) {
+        throw new HttpError(404, "Assessment not found");
+      }
+
+      await prisma.assessment.delete({
+        where: { assessmentId, userId },
+      });
+
+      return { message: "Assessment deleted successfully" };
+    }
+  }
+}

@@ -108,3 +108,23 @@ export function getCourseByIdService(prisma: PrismaClient){
     }
   };
 }
+
+export function deleteCourseService(prisma: PrismaClient){
+  return {
+    async deleteCourse(userId: string, courseId: string) {
+      const course = await prisma.course.findFirst({
+        where: { courseId, userId },
+      });
+
+      if (!course) {
+        throw new HttpError(404, "Course not found");
+      }
+
+      await prisma.course.delete({
+        where: { courseId, userId },
+      });
+
+      return { message: "Course deleted successfully" };
+    }
+  }
+}

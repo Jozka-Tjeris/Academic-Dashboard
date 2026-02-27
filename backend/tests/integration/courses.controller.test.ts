@@ -118,3 +118,38 @@ describe.skip("GET /courses/:id", () => {
     expect(res.status).toBe(404);
   });
 });
+
+describe.skip("DELETE /courses/:id", () => {
+  let token: string;
+  let courseId: string;
+
+  beforeAll(async () => {
+    token = "test-jwt-token";
+
+    const course = await prisma.course.create({
+      data: {
+        userId: "test-user-id",
+        name: "TEST_DeleteMe",
+      },
+    });
+
+    courseId = course.courseId;
+  });
+
+  it("deletes a course", async () => {
+    const res = await request(app)
+      .delete(`/courses/${courseId}`)
+      .set("Cookie", [`access_token=${token}`]);
+
+    expect(res.status).toBe(200);
+    expect(res.body.message).toBe("Course deleted successfully");
+  });
+
+  it("returns 404 for invalid id", async () => {
+    const res = await request(app)
+      .delete("/courses/nonexistent-id")
+      .set("Cookie", [`access_token=${token}`]);
+
+    expect(res.status).toBe(404);
+  });
+});

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { buildCourseService, getCourseByIdService, getCourseService } from "./course.service";
+import { buildCourseService, deleteCourseService, getCourseByIdService, getCourseService } from "./course.service";
 import { HttpError } from "../../utils/httpError";
 import { logger } from "../../lib/logger";
 import { prisma } from "@/lib/prisma";
@@ -75,6 +75,41 @@ export async function getCourseByIdHandler(req: Request, res: Response, next: Ne
     logger.error(
       { requestId: req.id, err: error },
       "Failed to fetch course"
+    );
+    return next(error);
+  }
+}
+
+export async function deleteCourseHandler(req: Request, res: Response, next: NextFunction){
+  const userId = req.user?.sub;
+  const courseId = req.params.id;
+
+  if (!userId) {
+    return next(new HttpError(401, "Authentication required"));
+  }
+
+  if (!courseId) {
+    return next(new HttpError(400, "Course ID is required"));
+  }
+
+  if(Array.isArray(courseId)){
+    return next(new HttpError(400, "Only one Course ID can be requested"))
+  }
+
+  try {
+    const courseService = deleteCourseService(prisma);
+    const result = await courseService.deleteCourse(userId, courseId);
+
+    logger.info(
+      { requestId: req.id, userId, courseId },
+      "Course deleted"
+    );
+
+    return res.status(200).json(result);
+  } catch (error) {
+    logger.error(
+      { requestId: req.id, err: error },
+      "Failed to delete course"
     );
     return next(error);
   }
