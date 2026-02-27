@@ -56,3 +56,50 @@ export function createAssessmentService(prisma: PrismaClient){
     }
   }
 }
+
+interface UpdateAssessmentInput {
+  userId: string;
+  assessmentId: string;
+  score?: number;
+  submitted?: boolean;
+  targetScore?: number;
+}
+
+export function updateAssessmentService(prisma: PrismaClient){
+  return {
+    async updateAssessment(input: UpdateAssessmentInput){
+      const { userId, assessmentId, score, submitted, targetScore } = input;
+
+      const assessment = await prisma.assessment.findFirst({
+        where: {
+          assessmentId, 
+          userId,
+        }
+      });
+
+      if(!assessment){
+        throw new HttpError(404, "Assessment not found");
+      }
+
+      if(score !== undefined){
+        if(typeof score !== "number" || score < 0){
+          throw new HttpError(400, "Score must be a positive number");
+        }
+        if(assessment.maxScore !== null && assessment.maxScore !== undefined && score > assessment.maxScore){
+          throw new HttpError(400, "Score cannot exceed maxScore");
+        }
+      }
+
+      return prisma.assessment.update({
+        where: {
+          assessmentId, userId,
+        },
+        data: {
+          ...(score !== undefined && { score }),
+          ...(submitted !== undefined && { submitted }),
+          ...(targetScore !== undefined && { targetScore }),
+        },
+      });
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import { HttpError } from "@/utils/httpError";
 import { Request, NextFunction, Response } from "express";
-import { createAssessmentService } from "./assessment.service";
+import { createAssessmentService, updateAssessmentService } from "./assessment.service";
 import { prisma } from "@/lib/prisma";
 import { logger } from "@/lib/logger";
 
@@ -46,6 +46,49 @@ export async function createAssessmentHandler(req: Request, res: Response, next:
     logger.error(
       { requestId: req.id, err: error },
       "Failed to create assessment"
+    );
+    return next(error);
+  }
+}
+
+export async function updateAssessmentHandler(req: Request, res: Response, next: NextFunction){
+  const userId = req.user?.sub;
+  const assessmentId = req.params.id;
+
+  if(!userId){
+    return next(new HttpError(401, "Authentication required"));
+  }
+
+  if(!assessmentId){
+    return next(new HttpError(400, "Assessment ID is required"));
+  }
+
+  if(Array.isArray(assessmentId)){
+    return next(new HttpError(400, "Only one Assessment ID can be requested"))
+  }
+
+  const { score, submitted, targetScore } = req.body;
+
+  try {
+    const assessmentService = updateAssessmentService(prisma);
+    const updated = await assessmentService.updateAssessment({
+      userId,
+      assessmentId,
+      score,
+      submitted,
+      targetScore,
+    });
+
+    logger.info(
+      { requestId: req.id, assessmentId },
+      "Assessment updated"
+    );
+
+    return res.status(200).json(updated);
+  } catch (error) {
+    logger.error(
+      { requestId: req.id, err: error },
+      "Failed to update assessment"
     );
     return next(error);
   }
