@@ -71,3 +71,40 @@ export function getCourseService(prisma: PrismaClient) {
     }
   }
 }
+
+export function getCourseByIdService(prisma: PrismaClient){
+  return {
+    async getCourseById(userId: string, courseId: string){
+      const course = await prisma.course.findFirst({
+        where: {
+          courseId,
+          userId
+        },
+        include: {
+          assessments: true,
+        },
+      })
+
+      if(!course){
+        throw new HttpError(404, "Course not found");
+      }
+
+      const assessments: Assessment[] = course.assessments.map((v) => {
+        if(v.status in AssessmentStatusTypes !== true){
+          throw new HttpError(422, "Unprocessable Entity error");
+        }
+        return {
+          ...v,
+          status: v.status as AssessmentStatus
+        }
+      })
+
+      const gradeSummary = calculateCurrentGrade(assessments);
+
+      return {
+        ...course,
+        gradeSummary,
+      };
+    }
+  };
+}

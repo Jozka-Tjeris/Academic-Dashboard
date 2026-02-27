@@ -75,3 +75,46 @@ describe.skip("GET /courses", () => {
     expect(res.status).toBe(401);
   });
 });
+
+describe.skip("GET /courses/:id", () => {
+  let token: string;
+  let courseId: string;
+
+  beforeAll(async () => {
+    token = "test-jwt-token"; // replace with real JWT generation
+
+    const course = await prisma.course.create({
+      data: {
+        userId: "test-user-id",
+        name: "TEST_Physics",
+      },
+    });
+
+    courseId = course.courseId;
+  });
+
+  afterAll(async () => {
+    await prisma.course.deleteMany({
+      where: { name: { startsWith: "TEST_" } },
+    });
+  });
+
+  it("returns course with assessments and grade summary", async () => {
+    const res = await request(app)
+      .get(`/courses/${courseId}`)
+      .set("Cookie", [`access_token=${token}`]);
+
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty("courseId", courseId);
+    expect(res.body).toHaveProperty("assessments");
+    expect(res.body).toHaveProperty("gradeSummary");
+  });
+
+  it("returns 404 for invalid id", async () => {
+    const res = await request(app)
+      .get("/courses/nonexistent-id")
+      .set("Cookie", [`access_token=${token}`]);
+
+    expect(res.status).toBe(404);
+  });
+});

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { buildCourseService, getCourseService } from "./course.service";
+import { buildCourseService, getCourseByIdService, getCourseService } from "./course.service";
 import { HttpError } from "../../utils/httpError";
 import { logger } from "../../lib/logger";
 import { prisma } from "@/lib/prisma";
@@ -42,5 +42,40 @@ export async function getCoursesHandler(req: Request, res: Response, next: NextF
   } catch (error: unknown) {
     logger.error({ requestId: req.id, err: error }, "Failed to fetch courses");
     return next(new HttpError(500, "Failed to fetch courses"));
+  }
+}
+
+export async function getCourseByIdHandler(req: Request, res: Response, next: NextFunction) {
+  const userId = req.user?.sub;
+  const courseId = req.params.id;
+
+  if (!userId) {
+    return next(new HttpError(401, "Authentication required"));
+  }
+
+  if (!courseId) {
+    return next(new HttpError(400, "Course ID is required"));
+  }
+
+  if(Array.isArray(courseId)){
+    return next(new HttpError(400, "Only one Course ID can be requested"))
+  }
+
+  try {
+    const courseService = getCourseByIdService(prisma);
+    const course = await courseService.getCourseById(userId, courseId);
+
+    logger.info(
+      { requestId: req.id, userId, courseId },
+      "Fetched course by id"
+    );
+
+    return res.status(200).json(course);
+  } catch (error) {
+    logger.error(
+      { requestId: req.id, err: error },
+      "Failed to fetch course"
+    );
+    return next(error);
   }
 }
