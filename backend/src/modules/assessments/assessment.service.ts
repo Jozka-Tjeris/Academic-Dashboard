@@ -33,7 +33,7 @@ export function getAssessmentServices(prisma: PrismaClient){
       })
 
       if(!course){
-        throw new HttpError(400, "Course not found");
+        throw new HttpError(404, "Course not found");
       }
 
       const assessment = await prisma.assessment.findFirst({
