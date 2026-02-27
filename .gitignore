@@ -47,3 +47,5 @@ backend/build/
 **/notes.txt
 .vscode/
 .idea/
+
+architecture.md

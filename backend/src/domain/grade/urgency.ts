@@ -6,9 +6,9 @@ export function calculateUrgencyScore(
   assessment: Assessment,
   now: Date = new Date()
 ): number {
-  const status = deriveStatusFromDate(assessment.dueDate, assessment.score, now);
+  const status = deriveStatusFromDate(assessment.dueDate, assessment.score, assessment.submitted, now);
 
-  if(status === "submitted"){
+  if(status === "submitted" || status === "graded"){
     return 0;
   }
 

@@ -4,10 +4,16 @@ import { AssessmentStatus } from "@shared/types/types";
 export function deriveStatusFromDate(
   dueDate: Date,
   score: number | null,
+  hasSubmitted: boolean,
   now: Date = new Date()
 ): AssessmentStatus {
-  if(score !== null){
-    return "submitted";
+  if(hasSubmitted){
+    if(score !== null){
+      return "graded";
+    }
+    else{
+      return "submitted";
+    }
   }
 
   if(dueDate.getTime() < now.getTime()){

@@ -8,13 +8,13 @@ describe("Grade Simulation Functions", () => {
       assessmentId: "a1",    courseId: "c1",        title: "Quiz",  description: null,
       dueDate: new Date(),   status: "upcoming",    score: 80,      targetScore: null,
       weight: 0.4,           latePenalty: null,     maxScore: null, isSimulated: null,
-      createdAt: new Date(), updatedAt: new Date(),
+      submitted: true,       createdAt: new Date(), updatedAt: new Date(),
     },
     {
       assessmentId: "a2",    courseId: "c1",        title: "Exam",  description: null,
       dueDate: new Date(),   status: "upcoming",    score: null,    targetScore: null,
       weight: 0.6,           latePenalty: null,     maxScore: null, isSimulated: null,
-      createdAt: new Date(), updatedAt: new Date(),
+      submitted: true,       createdAt: new Date(), updatedAt: new Date(),
     }
   ];
 
@@ -48,12 +48,12 @@ describe("Grade Simulation - Edge Cases", () => {
         { assessmentId: "a1",    courseId: "c1",        title: "Test1", description: null, 
           dueDate: new Date(),   status: "upcoming",    score: 50,    targetScore: null, 
           weight: 0.5,           latePenalty: null,     maxScore: null, isSimulated: null,
-          createdAt: new Date(), updatedAt: new Date(),
+          submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         },
         { assessmentId: "a2",    courseId: "c1",        title: "Test2", description: null, 
           dueDate: new Date(),   status: "upcoming",    score: null,    targetScore: null, 
           weight: 0.5,           latePenalty: null,     maxScore: null, isSimulated: null,
-          createdAt: new Date(), updatedAt: new Date(),
+          submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         }
       ];
       const simulated = [
@@ -70,12 +70,12 @@ describe("Grade Simulation - Edge Cases", () => {
         { assessmentId: "a1",    courseId: "c1",        title: "Test1", description: null, 
           dueDate: new Date(),   status: "upcoming",    score: null,    targetScore: null, 
           weight: 0.5,           latePenalty: null,     maxScore: null, isSimulated: null,
-          createdAt: new Date(), updatedAt: new Date(),
+          submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         },
         { assessmentId: "a2",    courseId: "c1",        title: "Test2", description: null, 
           dueDate: new Date(),   status: "upcoming",    score: null,    targetScore: null, 
           weight: 0.5,           latePenalty: null,     maxScore: null, isSimulated: null,
-          createdAt: new Date(), updatedAt: new Date(),
+          submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         }
       ];
       const simulated = [
