@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { buildCourseService, deleteCourseService, getCourseByIdService, getCourseService } from "./course.service";
+import { getCourseServices } from "./course.service";
 import { HttpError } from "../../utils/httpError";
 import { logger } from "../../lib/logger";
 import { prisma } from "@/lib/prisma";
@@ -17,7 +17,7 @@ export async function createCourseHandler(req: Request, res: Response, next: Nex
   }
 
   try {
-    const courseService = buildCourseService(prisma);
+    const courseService = getCourseServices(prisma);
     const course = await courseService.createCourse({ userId, name, description });
     logger.info({ requestId: req.id, courseId: course.courseId }, "Course created");
     return res.status(201).json(course);
@@ -35,7 +35,7 @@ export async function getCoursesHandler(req: Request, res: Response, next: NextF
   }
 
   try {
-    const courseService = getCourseService(prisma);
+    const courseService = getCourseServices(prisma);
     const courses = await courseService.getCoursesForUser(userId);
     logger.info({ requestId: req.id, userId }, "Fetched courses for user");
     return res.status(200).json(courses);
@@ -62,7 +62,7 @@ export async function getCourseByIdHandler(req: Request, res: Response, next: Ne
   }
 
   try {
-    const courseService = getCourseByIdService(prisma);
+    const courseService = getCourseServices(prisma);
     const course = await courseService.getCourseById(userId, courseId);
 
     logger.info(
@@ -97,7 +97,7 @@ export async function deleteCourseHandler(req: Request, res: Response, next: Nex
   }
 
   try {
-    const courseService = deleteCourseService(prisma);
+    const courseService = getCourseServices(prisma);
     const result = await courseService.deleteCourse(userId, courseId);
 
     logger.info(

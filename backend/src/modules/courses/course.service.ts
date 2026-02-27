@@ -1,4 +1,4 @@
-import { Course, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { HttpError } from "@/utils/httpError";
 import { calculateCurrentGrade } from "../../domain/grade/gradeCalculator";
 import { Assessment, AssessmentStatus } from "@shared/types/types";
@@ -10,7 +10,7 @@ interface CreateCourseInput {
   description?: string;
 }
 
-export function buildCourseService(prisma: PrismaClient){
+export function getCourseServices(prisma: PrismaClient){
   return {
     async createCourse(input: CreateCourseInput){
       const { userId, name, description } = input;
@@ -34,11 +34,6 @@ export function buildCourseService(prisma: PrismaClient){
         },
       });
     },
-  };
-}
-
-export function getCourseService(prisma: PrismaClient){
-  return {
     async getCoursesForUser(userId: string){
       // Fetch courses including assessments
       const courses = await prisma.course.findMany({
@@ -68,12 +63,7 @@ export function getCourseService(prisma: PrismaClient){
       });
 
       return coursesWithSummary;
-    }
-  }
-}
-
-export function getCourseByIdService(prisma: PrismaClient){
-  return {
+    },
     async getCourseById(userId: string, courseId: string){
       const course = await prisma.course.findFirst({
         where: {
@@ -105,12 +95,7 @@ export function getCourseByIdService(prisma: PrismaClient){
         ...course,
         gradeSummary,
       };
-    }
-  };
-}
-
-export function deleteCourseService(prisma: PrismaClient){
-  return {
+    },
     async deleteCourse(userId: string, courseId: string){
       const course = await prisma.course.findFirst({
         where: { courseId, userId },
@@ -125,6 +110,6 @@ export function deleteCourseService(prisma: PrismaClient){
       });
 
       return { message: "Course deleted successfully" };
-    }
+    },
   }
 }
