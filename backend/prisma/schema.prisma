@@ -39,6 +39,14 @@ model Course {
   @@unique([userId, courseId])
 }
 
+enum AssessmentStatus {
+  UPCOMING           @map("upcoming")
+  SUBMITTED          @map("submitted")
+  DUE_IN_24_HOURS    @map("due in 24 hours")
+  OVERDUE            @map("overdue")
+  GRADED             @map("graded")
+}
+
 model Assessment {
   assessmentId  String   @id @default(cuid())
   courseId      String
@@ -46,12 +54,12 @@ model Assessment {
   title         String   @db.VarChar(40)
   description   String?  @db.VarChar(250)
   dueDate       DateTime
-  status        String   // restricted to a set of values
-  score         Float?   // current score, nullable if not graded yet
-  targetScore   Float?   // optional: what-if input
-  weight        Float    // percentage of course grade, sum should not exceed 100
-  latePenalty   Float?   // optional: % to deduct if submitted late
-  maxScore      Float    @default(100)
+  status        AssessmentStatus // enum field
+  score         Decimal? @db.Decimal(5, 2) // nullable if not graded
+  targetScore   Decimal? @db.Decimal(5, 2) // optional what-if
+  weight        Decimal  @db.Decimal(5, 2) // % of course grade
+  latePenalty   Decimal? @db.Decimal(5, 2) // optional % deduction
+  maxScore      Decimal  @db.Decimal(5, 2) @default(100)
   isSimulated   Boolean?
   submitted     Boolean
   createdAt     DateTime @default(now())

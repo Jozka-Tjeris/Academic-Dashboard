@@ -18,11 +18,11 @@ CHECK (score IS NULL OR (score >= 0 AND score <= "maxScore"));
 
 ALTER TABLE "Assessment"
 ADD CONSTRAINT targetScore_range_check
-CHECK (targetScore IS NULL OR (targetScore >= 0 AND targetScore <= "maxScore"));
+CHECK ("targetScore" IS NULL OR ("targetScore" >= 0 AND "targetScore" <= "maxScore"));
 
 ALTER TABLE "Assessment"
 ADD CONSTRAINT maxScore_range_check
-CHECK (maxScore >= 0 AND maxScore <= 100);
+CHECK ("maxScore" >= 0 AND "maxScore" <= 100);
 
 ALTER TABLE "Assessment"
 ADD CONSTRAINT weight_range_check
@@ -30,4 +30,4 @@ CHECK (weight >= 0 AND weight <= 100);
 
 ALTER TABLE "Assessment"
 ADD CONSTRAINT latePenalty_range_check
-CHECK (latePenalty IS NULL OR (latePenalty >= 0 AND latePenalty <= 100));
+CHECK ("latePenalty" IS NULL OR ("latePenalty" >= 0 AND "latePenalty" <= 100));
