@@ -52,6 +52,11 @@ export function getCourseServices(prisma: PrismaClient){
           }
           return {
             ...v,
+            score: v.score?.toNumber() ?? null,
+            targetScore: v.targetScore?.toNumber() ?? null,
+            weight: v.weight.toNumber(),
+            latePenalty: v.latePenalty?.toNumber() ?? null,
+            maxScore: v.maxScore.toNumber(),
             status: v.status as AssessmentStatus
           }
         })
@@ -85,6 +90,11 @@ export function getCourseServices(prisma: PrismaClient){
         }
         return {
           ...v,
+          score: v.score?.toNumber() ?? null,
+          targetScore: v.targetScore?.toNumber() ?? null,
+          weight: v.weight.toNumber(),
+          latePenalty: v.latePenalty?.toNumber() ?? null,
+          maxScore: v.maxScore.toNumber(),
           status: v.status as AssessmentStatus
         }
       })

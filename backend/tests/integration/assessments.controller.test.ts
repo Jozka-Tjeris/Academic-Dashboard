@@ -1,6 +1,7 @@
 import request from "supertest";
 import { app } from "../../src/app";
 import { prisma } from "../../src/lib/prisma";
+import { AssessmentStatus } from "@prisma/client";
 
 describe.skip("POST /courses/:id/assessments", () => {
   let token: string;
@@ -49,7 +50,7 @@ describe.skip("POST /courses/:id/assessments", () => {
         dueDate: new Date(),
         weight: 80,
         submitted: false,
-        status: "Pending",
+        status: AssessmentStatus.UPCOMING,
       },
     });
 
@@ -88,7 +89,7 @@ describe.skip("PUT /assessments/:id", () => {
         dueDate: new Date(),
         weight: 20,
         submitted: false,
-        status: "Pending",
+        status: AssessmentStatus.UPCOMING,
         maxScore: 100,
       },
     });
@@ -153,7 +154,7 @@ describe.skip("DELETE /assessments/:id", () => {
         dueDate: new Date(),
         weight: 10,
         submitted: false,
-        status: "Pending",
+        status: AssessmentStatus.UPCOMING,
       },
     });
 

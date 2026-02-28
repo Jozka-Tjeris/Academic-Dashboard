@@ -1,3 +1,4 @@
+import { AssessmentStatus, Prisma } from "@prisma/client";
 import { prismaMock } from "../mocks/mockPrismaSingleton";
 import { getAssessmentServices } from "@/modules/assessments/assessment.service";
 
@@ -20,7 +21,7 @@ describe("Assessment Service", () => {
       });
 
       prismaMock.assessment.aggregate.mockResolvedValue({
-        _sum: { weight: 20 },
+        _sum: { weight: new Prisma.Decimal(20) },
         _count: undefined,
         _avg: undefined,
         _min: undefined,
@@ -29,7 +30,7 @@ describe("Assessment Service", () => {
 
       prismaMock.assessment.create.mockResolvedValue({
         assessmentId: "assess1",
-        weight: 30,
+        weight: new Prisma.Decimal(30),
         courseId: "",
         userId: "",
         description: null,
@@ -37,11 +38,11 @@ describe("Assessment Service", () => {
         updatedAt: new Date(),
         title: "",
         dueDate: new Date(),
-        status: "",
+        status: AssessmentStatus.UPCOMING,
         score: null,
         targetScore: null,
         latePenalty: null,
-        maxScore: 100,
+        maxScore: new Prisma.Decimal(100),
         isSimulated: null,
         submitted: false
       });
@@ -68,7 +69,7 @@ describe("Assessment Service", () => {
       });
 
       prismaMock.assessment.aggregate.mockResolvedValue({
-        _sum: { weight: 90 },
+        _sum: { weight: new Prisma.Decimal(90) },
         _count: undefined,
         _avg: undefined,
         _min: undefined,
@@ -98,7 +99,7 @@ describe("Assessment Service", () => {
 
       prismaMock.assessment.findFirst.mockResolvedValue({
         assessmentId: "assess1",
-        weight: 30,
+        weight: new Prisma.Decimal(30),
         courseId: "course-1",
         userId: "user-1",
         description: null,
@@ -106,11 +107,11 @@ describe("Assessment Service", () => {
         updatedAt: new Date(),
         title: "",
         dueDate: new Date(),
-        status: "",
+        status: AssessmentStatus.UPCOMING,
         score: null,
         targetScore: null,
         latePenalty: null,
-        maxScore: 100,
+        maxScore: new Prisma.Decimal(100),
         isSimulated: null,
         submitted: false
       });
@@ -149,17 +150,17 @@ describe("Assessment Service", () => {
       prismaMock.assessment.findFirst.mockResolvedValue({
         assessmentId: "a1",
         userId: "user1",
-        maxScore: 100,
+        maxScore: new Prisma.Decimal(100),
         courseId: "course1",
         description: null,
         createdAt: new Date(),
         updatedAt: new Date(),
         title: "",
         dueDate: new Date(),
-        status: "",
+        status: AssessmentStatus.UPCOMING,
         score: null,
         targetScore: null,
-        weight: 0,
+        weight: new Prisma.Decimal(0),
         latePenalty: null,
         isSimulated: null,
         submitted: false
@@ -167,15 +168,15 @@ describe("Assessment Service", () => {
 
       prismaMock.assessment.update.mockResolvedValue({
         assessmentId: "a1",
-        score: 80,
+        score: new Prisma.Decimal(80),
         description: null,
-        weight: 0,
+        weight: new Prisma.Decimal(0),
         targetScore: null,
         latePenalty: null,
-        maxScore: 100,
+        maxScore: new Prisma.Decimal(100),
         title: "",
         dueDate: new Date(),
-        status: "",
+        status: AssessmentStatus.UPCOMING,
         isSimulated: null,
         submitted: false,
         createdAt: new Date(),
@@ -190,22 +191,22 @@ describe("Assessment Service", () => {
         score: 80,
       });
 
-      expect(result.score).toBe(80);
+      expect(result.score?.toNumber()).toBe(80);
     });
 
     it("throws if score exceeds maxScore", async () => {
       prismaMock.assessment.findFirst.mockResolvedValue({
         assessmentId: "a1",
         userId: "user1",
-        maxScore: 50,
+        maxScore: new Prisma.Decimal(50),
         courseId: "",
         title: "",
         description: null,
         dueDate: new Date(),
-        status: "",
+        status: AssessmentStatus.UPCOMING,
         score: null,
         targetScore: null,
-        weight: 0,
+        weight: new Prisma.Decimal(0),
         latePenalty: null,
         isSimulated: null,
         submitted: false,
@@ -226,15 +227,15 @@ describe("Assessment Service", () => {
       prismaMock.assessment.findFirst.mockResolvedValue({
         assessmentId: "a1",
         userId: "user1",
-        maxScore: 50,
+        maxScore: new Prisma.Decimal(50),
         courseId: "",
         title: "",
         description: null,
         dueDate: new Date(),
-        status: "",
+        status: AssessmentStatus.UPCOMING,
         score: null,
         targetScore: null,
-        weight: 0,
+        weight: new Prisma.Decimal(0),
         latePenalty: null,
         isSimulated: null,
         submitted: false,
@@ -273,12 +274,12 @@ describe("Assessment Service", () => {
         title: "",
         description: null,
         dueDate: new Date(),
-        status: "",
+        status: AssessmentStatus.UPCOMING,
         score: null,
         targetScore: null,
-        weight: 0,
+        weight: new Prisma.Decimal(0),
         latePenalty: null,
-        maxScore: 100,
+        maxScore: new Prisma.Decimal(100),
         isSimulated: null,
         submitted: false,
         createdAt: new Date(),

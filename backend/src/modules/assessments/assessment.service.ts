@@ -1,5 +1,5 @@
 import { HttpError } from "@/utils/httpError";
-import { PrismaClient } from "@prisma/client";
+import { AssessmentStatus, PrismaClient } from "@prisma/client";
 
 interface CreateAssessmentInput {
   userId: string;
@@ -54,7 +54,7 @@ export function getAssessmentServices(prisma: PrismaClient){
         _sum: { weight: true },
       });
 
-      const currentTotalWeight = existingWeights._sum.weight ?? 0;
+      const currentTotalWeight = existingWeights._sum.weight?.toNumber() ?? 0;
 
       if(currentTotalWeight + weight > 100){
         throw new HttpError(400, "Total assessment weight cannot exceed 100%");
@@ -71,7 +71,7 @@ export function getAssessmentServices(prisma: PrismaClient){
           maxScore, 
           latePenalty,
           submitted: false,
-          status: "Pending",
+          status: AssessmentStatus.UPCOMING,
         },
       });
     },
@@ -93,7 +93,7 @@ export function getAssessmentServices(prisma: PrismaClient){
         if(typeof score !== "number" || score < 0){
           throw new HttpError(400, "Score must be a positive number");
         }
-        if(assessment.maxScore !== null && assessment.maxScore !== undefined && score > assessment.maxScore){
+        if(assessment.maxScore !== null && assessment.maxScore !== undefined && score > assessment.maxScore.toNumber()){
           throw new HttpError(400, "Score cannot exceed maxScore");
         }
       }
