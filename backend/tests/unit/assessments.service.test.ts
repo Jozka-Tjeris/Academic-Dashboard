@@ -41,7 +41,7 @@ describe("Assessment Service", () => {
         score: null,
         targetScore: null,
         latePenalty: null,
-        maxScore: null,
+        maxScore: 100,
         isSimulated: null,
         submitted: false
       });
@@ -110,7 +110,7 @@ describe("Assessment Service", () => {
         score: null,
         targetScore: null,
         latePenalty: null,
-        maxScore: null,
+        maxScore: 100,
         isSimulated: null,
         submitted: false
       });
@@ -172,7 +172,7 @@ describe("Assessment Service", () => {
         weight: 0,
         targetScore: null,
         latePenalty: null,
-        maxScore: null,
+        maxScore: 100,
         title: "",
         dueDate: new Date(),
         status: "",
@@ -278,7 +278,7 @@ describe("Assessment Service", () => {
         targetScore: null,
         weight: 0,
         latePenalty: null,
-        maxScore: null,
+        maxScore: 100,
         isSimulated: null,
         submitted: false,
         createdAt: new Date(),

@@ -112,7 +112,7 @@ describe("Course Services", () => {
             targetScore: null,
             weight: 0,
             latePenalty: null,
-            maxScore: null,
+            maxScore: 100,
             isSimulated: null,
             submitted: false
           }
@@ -179,7 +179,7 @@ describe("Course Services", () => {
             targetScore: null,
             weight: 0,
             latePenalty: null,
-            maxScore: null,
+            maxScore: 100,
             isSimulated: null,
             submitted: false
           }
