@@ -1,4 +1,4 @@
-import { calculateCurrentGrade, calculateMaxPossibleGrade } from "@/domain/grade/gradeCalculator";
+import { calculateCurrentGrade, calculateMaxPossibleGrade } from "../../../../src/domain/grade/gradeCalculator";
 import { Assessment } from "@shared/types/types";
 import { INVALID_GRADE } from "@shared/constants/constants";
 

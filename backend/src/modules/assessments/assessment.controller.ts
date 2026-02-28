@@ -1,9 +1,9 @@
-import { HttpError } from "@/utils/httpError";
+import { HttpError } from "../../utils/httpError";
 import { NextFunction, Response } from "express";
 import { getAssessmentServices } from "./assessment.service";
-import { prisma } from "@/lib/prisma";
-import { logger } from "@/lib/logger";
-import { AuthenticatedRequest } from "@/types/express";
+import { prisma } from "../../lib/prisma";
+import { logger } from "../../lib/logger";
+import { AuthenticatedRequest } from "../../types/express";
 
 export async function createAssessmentHandler(req: AuthenticatedRequest, res: Response, next: NextFunction){
   const userId = req.jwt?.sub;

@@ -1,4 +1,4 @@
-import { deriveStatusFromDate } from "@/domain/grade/status";
+import { deriveStatusFromDate } from "../../../../src/domain/grade/status";
 
 describe("Status", () => {
   describe("deriveStatusFromDate", () => {

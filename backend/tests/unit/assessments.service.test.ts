@@ -1,6 +1,6 @@
 import { AssessmentStatus, Prisma } from "@prisma/client";
 import { prismaMock } from "../mocks/mockPrismaSingleton";
-import { getAssessmentServices } from "@/modules/assessments/assessment.service";
+import { getAssessmentServices } from "../../src/modules/assessments/assessment.service";
 
 describe("Assessment Service", () => {
   let service: ReturnType<typeof getAssessmentServices>;

@@ -1,5 +1,5 @@
 import { Assessment } from "@shared/types/types";
-import { simulateFinalGrade } from "@/domain/grade/simulation";
+import { simulateFinalGrade } from "../../../../src/domain/grade/simulation";
 import { INVALID_GRADE } from "@shared/constants/constants";
 
 describe("Grade Simulation Functions", () => {

@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { signToken } from './jwt';
 import { env } from '../../config/env';
 import { TWENTYFOUR_HOURS_IN_MS } from '@shared/constants/constants';
-import { AuthenticatedRequest } from '@/types/express';
+import { AuthenticatedRequest } from '../../types/express';
 
 export function googleCallback(req: AuthenticatedRequest, res: Response) {
   const user = req.jwt as { sub: string; email: string; name?: string };

@@ -1,5 +1,5 @@
 import { prismaMock } from "../mocks/mockPrismaSingleton";
-import { getCourseServices } from "@/modules/courses/course.service";
+import { getCourseServices } from "../../src/modules/courses/course.service";
 import { Prisma } from "@prisma/client";
 
 describe("Course Services", () => {

@@ -1,4 +1,4 @@
-import { HttpError } from "@/utils/httpError";
+import { HttpError } from "../../utils/httpError";
 import { AssessmentStatus, PrismaClient } from "@prisma/client";
 
 interface CreateAssessmentInput {

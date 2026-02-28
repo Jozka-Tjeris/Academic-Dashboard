@@ -2,7 +2,7 @@ import { Response, NextFunction } from 'express';
 import { verifyToken } from './jwt';
 import { HttpError } from '../../utils/httpError';
 import { logger } from '../../lib/logger';
-import { AuthenticatedRequest } from '@/types/express';
+import { AuthenticatedRequest } from '../../types/express';
 
 export function requireAuth(
   req: AuthenticatedRequest,

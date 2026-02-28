@@ -2,8 +2,8 @@ import { Response, NextFunction } from "express";
 import { getCourseServices } from "./course.service";
 import { HttpError } from "../../utils/httpError";
 import { logger } from "../../lib/logger";
-import { prisma } from "@/lib/prisma";
-import { AuthenticatedRequest } from "@/types/express";
+import { prisma } from "../../lib/prisma";
+import { AuthenticatedRequest } from "../../types/express";
 
 export async function createCourseHandler(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const { name, description } = req.body;

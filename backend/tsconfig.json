@@ -14,7 +14,6 @@
     "strict": true,                  // Highly recommended for Prisma/Zod workflows
     "paths": {
       "@shared/*": ["../shared/*"],
-      "@/*": ["src/*"],
     },
   },
   "include": ["src/**/*", "tests/**/*", "prisma/**/*.ts"],

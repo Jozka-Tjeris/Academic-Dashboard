@@ -5,7 +5,7 @@ import { requireAuth } from './auth.middleware';
 import { getCurrentUser } from './auth.controller';
 import { logout } from './auth.controller';
 import { authRateLimiter } from './rateLimit';
-import { env } from '@/config/env';
+import { env } from '../../config/env';
 
 const router = Router();
 

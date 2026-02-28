@@ -1,4 +1,4 @@
-import { signToken, verifyToken } from "@/modules/auth/jwt";
+import { signToken, verifyToken } from "../../../src/modules/auth/jwt";
 
 describe('jwt utils', () => {
   it('should sign and verify token', () => {

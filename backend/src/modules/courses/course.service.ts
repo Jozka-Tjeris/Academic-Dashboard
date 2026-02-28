@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { HttpError } from "@/utils/httpError";
+import { HttpError } from "../../utils/httpError";
 import { calculateCurrentGrade } from "../../domain/grade/gradeCalculator";
 import { Assessment, AssessmentStatus } from "@shared/types/types";
 import { AssessmentStatusTypes } from "@shared/constants/constants";

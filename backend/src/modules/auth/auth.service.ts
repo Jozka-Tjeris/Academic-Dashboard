@@ -1,4 +1,4 @@
-import { HttpError } from '@/utils/httpError';
+import { HttpError } from '../../utils/httpError';
 import { prisma } from '../../lib/prisma';
 import { Profile } from 'passport-google-oauth20';
 
