@@ -1,10 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { verifyToken } from './jwt';
 import { HttpError } from '../../utils/httpError';
 import { logger } from '../../lib/logger';
+import { AuthenticatedRequest } from '@/types/express';
 
 export function requireAuth(
-  req: Request,
+  req: AuthenticatedRequest,
   _res: Response,
   next: NextFunction
 ) {
@@ -24,7 +25,7 @@ export function requireAuth(
     // Verify token and attach to user
     const decoded = verifyToken(token);
 
-    req.user = decoded;
+    req.jwt = decoded;
 
     return next();
   } catch (error) {
