@@ -10,7 +10,8 @@
     "dev": "nodemon --exec ts-node -r tsconfig-paths/register ./src/server.ts",
     "lint": "eslint",
     "test": "jest --forceExit --detectOpenHandles",
-    "test:ci": "npx prisma generate && npx prisma db push --accept-data-loss && jest --runInBand --forceExit --detectOpenHandles"
+    "test:ci": "npx prisma generate && npx prisma db push --accept-data-loss && jest --runInBand --forceExit --detectOpenHandles",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
