@@ -1,5 +1,5 @@
-import { DEFAULT_MAX_SCORE, EPSILON, INVALID_GRADE, MAX_GRADE } from "../../../../shared/constants/constants";
-import { Assessment } from "../../../../shared/types/types";
+import { DEFAULT_MAX_SCORE, EPSILON, INVALID_GRADE, MAX_GRADE } from "@internal_package/shared";
+import { Assessment } from "@internal_package/shared";
 
 /**
  * Calculates the final grade for a course using a list of assessments.

@@ -12,9 +12,6 @@
     "rootDir": "..",
     "types": ["node", "jest"],
     "strict": true,                  // Highly recommended for Prisma/Zod workflows
-    "paths": {
-      "@shared/*": ["../shared/*"],
-    },
   },
   "include": ["src/**/*", "tests/**/*", "prisma/**/*.ts"],
   "exclude": ["node_modules"],

@@ -5,8 +5,6 @@ module.exports = {
   // Tell Jest to use the CommonJS version of uuid specifically
   moduleNameMapper: {
     '^uuid$': require.resolve('uuid'),
-    // Map the @shared alias to the folder outside backend
-    '^@shared/(.*)$': '<rootDir>/../shared/$1'
   },
   transform: {
     // Ensure both TS and JS (from node_modules) get processed

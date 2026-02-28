@@ -1,4 +1,4 @@
-import { DEFAULT_MAX_SCORE } from "@shared/constants/constants";
+import { DEFAULT_MAX_SCORE } from "@internal_package/shared";
 
 export function applyLatePenalty(score: number, maxScore: number, latePenalty: number | null){
   if(score < 0 || maxScore < 0 || (latePenalty && latePenalty < 0)){

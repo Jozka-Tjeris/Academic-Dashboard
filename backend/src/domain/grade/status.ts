@@ -1,5 +1,5 @@
-import { TWENTYFOUR_HOURS_IN_MS } from "@shared/constants/constants";
-import { AssessmentStatus } from "@shared/types/types";
+import { TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
+import { AssessmentStatus } from "@internal_package/shared";
 
 export function deriveStatusFromDate(
   dueDate: Date,

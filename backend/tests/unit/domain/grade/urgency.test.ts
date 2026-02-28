@@ -1,5 +1,5 @@
 import { calculateUrgencyScore } from "../../../../src/domain/grade/urgency";
-import { Assessment } from "@shared/types/types";
+import { Assessment } from "@internal_package/shared";
 
 describe("Urgency", () => {
   const baseAssessment: Assessment = {

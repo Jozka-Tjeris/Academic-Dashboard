@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { signToken } from './jwt';
 import { env } from '../../config/env';
-import { TWENTYFOUR_HOURS_IN_MS } from '@shared/constants/constants';
+import { TWENTYFOUR_HOURS_IN_MS } from '@internal_package/shared';
 import { AuthenticatedRequest } from '../../types/express';
 
 export function googleCallback(req: AuthenticatedRequest, res: Response) {
