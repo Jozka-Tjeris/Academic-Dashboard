@@ -1,6 +1,6 @@
 import request from "supertest";
-import { app } from "@/app";
-import { signToken } from "@/modules/auth/jwt";
+import { app } from "../../src/app";
+import { signToken } from "../../src/modules/auth/jwt";
 
 describe("auth user check test", () => {
   it('returns 401 if not authenticated', async () => {

@@ -1,12 +1,13 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { getCourseServices } from "./course.service";
 import { HttpError } from "../../utils/httpError";
 import { logger } from "../../lib/logger";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "../../lib/prisma";
+import { AuthenticatedRequest } from "../../types/express";
 
-export async function createCourseHandler(req: Request, res: Response, next: NextFunction) {
+export async function createCourseHandler(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const { name, description } = req.body;
-  const userId = req.user?.sub;
+  const userId = req.jwt?.sub;
 
   if (!userId) {
     return next(new HttpError(401, "Authentication required"));
@@ -27,8 +28,8 @@ export async function createCourseHandler(req: Request, res: Response, next: Nex
   }
 }
 
-export async function getCoursesHandler(req: Request, res: Response, next: NextFunction) {
-  const userId = req.user?.sub;
+export async function getCoursesHandler(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  const userId = req.jwt?.sub;
 
   if (!userId) {
     return next(new HttpError(401, "Authentication required"));
@@ -45,8 +46,8 @@ export async function getCoursesHandler(req: Request, res: Response, next: NextF
   }
 }
 
-export async function getCourseByIdHandler(req: Request, res: Response, next: NextFunction) {
-  const userId = req.user?.sub;
+export async function getCourseByIdHandler(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  const userId = req.jwt?.sub;
   const courseId = req.params.id;
 
   if (!userId) {
@@ -80,8 +81,8 @@ export async function getCourseByIdHandler(req: Request, res: Response, next: Ne
   }
 }
 
-export async function deleteCourseHandler(req: Request, res: Response, next: NextFunction){
-  const userId = req.user?.sub;
+export async function deleteCourseHandler(req: AuthenticatedRequest, res: Response, next: NextFunction){
+  const userId = req.jwt?.sub;
   const courseId = req.params.id;
 
   if (!userId) {

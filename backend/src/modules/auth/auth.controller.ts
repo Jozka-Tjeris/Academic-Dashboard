@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { signToken } from './jwt';
 import { env } from '../../config/env';
-import { TWENTYFOUR_HOURS_IN_MS } from '@shared/constants/constants';
-import { JwtPayload } from 'jsonwebtoken';
+import { TWENTYFOUR_HOURS_IN_MS } from '@internal_package/shared';
+import { AuthenticatedRequest } from '../../types/express';
 
-export function googleCallback(req: Request, res: Response) {
-  const user = req.user as { sub: string; email: string; name?: string };
+export function googleCallback(req: AuthenticatedRequest, res: Response) {
+  const user = req.jwt as { sub: string; email: string; name?: string };
 
   const token = signToken({
     sub: user.sub,
@@ -23,7 +23,7 @@ export function googleCallback(req: Request, res: Response) {
   return res.redirect(env.FRONTEND_URL);
 }
 
-export function logout(_req: Request, res: Response) {
+export function logout(_req: AuthenticatedRequest, res: Response) {
   res.clearCookie('access_token', {
     sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
     secure: env.NODE_ENV === 'production',
@@ -33,8 +33,8 @@ export function logout(_req: Request, res: Response) {
   return res.status(200).json({ message: 'Logged out successfully' });
 }
 
-export function getCurrentUser(req: Request, res: Response) {
-  const user = req.user as JwtPayload;
+export function getCurrentUser(req: AuthenticatedRequest, res: Response) {
+  const user = req.jwt;
 
   return res.status(200).json({
     id: user.sub,

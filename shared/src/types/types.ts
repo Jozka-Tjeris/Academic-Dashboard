@@ -1,4 +1,4 @@
-import { AssessmentStatusTypes } from "@shared/constants/constants";
+import { AssessmentStatusTypes } from "../";
 
 export type Course = {
   courseId: string,

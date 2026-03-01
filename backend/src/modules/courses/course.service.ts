@@ -1,8 +1,8 @@
 import { PrismaClient } from "@prisma/client";
-import { HttpError } from "@/utils/httpError";
+import { HttpError } from "../../utils/httpError";
 import { calculateCurrentGrade } from "../../domain/grade/gradeCalculator";
-import { Assessment, AssessmentStatus } from "@shared/types/types";
-import { AssessmentStatusTypes } from "@shared/constants/constants";
+import { Assessment, AssessmentStatus } from "@internal_package/shared";
+import { AssessmentStatusTypes } from "@internal_package/shared";
 
 interface CreateCourseInput {
   userId: string;
@@ -52,6 +52,11 @@ export function getCourseServices(prisma: PrismaClient){
           }
           return {
             ...v,
+            score: v.score?.toNumber() ?? null,
+            targetScore: v.targetScore?.toNumber() ?? null,
+            weight: v.weight.toNumber(),
+            latePenalty: v.latePenalty?.toNumber() ?? null,
+            maxScore: v.maxScore.toNumber(),
             status: v.status as AssessmentStatus
           }
         })
@@ -85,6 +90,11 @@ export function getCourseServices(prisma: PrismaClient){
         }
         return {
           ...v,
+          score: v.score?.toNumber() ?? null,
+          targetScore: v.targetScore?.toNumber() ?? null,
+          weight: v.weight.toNumber(),
+          latePenalty: v.latePenalty?.toNumber() ?? null,
+          maxScore: v.maxScore.toNumber(),
           status: v.status as AssessmentStatus
         }
       })

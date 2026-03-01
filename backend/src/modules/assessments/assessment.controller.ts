@@ -1,11 +1,12 @@
-import { HttpError } from "@/utils/httpError";
-import { Request, NextFunction, Response } from "express";
+import { HttpError } from "../../utils/httpError";
+import { NextFunction, Response } from "express";
 import { getAssessmentServices } from "./assessment.service";
-import { prisma } from "@/lib/prisma";
-import { logger } from "@/lib/logger";
+import { prisma } from "../../lib/prisma";
+import { logger } from "../../lib/logger";
+import { AuthenticatedRequest } from "../../types/express";
 
-export async function createAssessmentHandler(req: Request, res: Response, next: NextFunction){
-  const userId = req.user?.sub;
+export async function createAssessmentHandler(req: AuthenticatedRequest, res: Response, next: NextFunction){
+  const userId = req.jwt?.sub;
   const courseId = req.params.id;
 
   if(!userId){
@@ -51,8 +52,8 @@ export async function createAssessmentHandler(req: Request, res: Response, next:
   }
 }
 
-export async function updateAssessmentHandler(req: Request, res: Response, next: NextFunction){
-  const userId = req.user?.sub;
+export async function updateAssessmentHandler(req: AuthenticatedRequest, res: Response, next: NextFunction){
+  const userId = req.jwt?.sub;
   const assessmentId = req.params.id;
 
   if(!userId){
@@ -94,8 +95,8 @@ export async function updateAssessmentHandler(req: Request, res: Response, next:
   }
 }
 
-export async function deleteAssessmentHandler(req: Request, res: Response, next: NextFunction){
-  const userId = req.user?.sub;
+export async function deleteAssessmentHandler(req: AuthenticatedRequest, res: Response, next: NextFunction){
+  const userId = req.jwt?.sub;
   const assessmentId = req.params.id;
 
   if (!userId) {

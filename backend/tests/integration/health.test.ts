@@ -1,6 +1,6 @@
 import request from "supertest";
-import { app } from "@/app";
-import { server } from "@/server";
+import { app } from "../../src/app";
+import { server } from "../../src/server";
 
 describe("Health routes", () => {
   it("should return liveness", async () => {

@@ -1,5 +1,5 @@
 import { prismaMock } from "../mocks/mockPrismaSingleton";
-import { getCourseServices } from "@/modules/courses/course.service";
+import { getCourseServices } from "../../src/modules/courses/course.service";
 import { Prisma } from "@prisma/client";
 
 describe("Course Services", () => {
@@ -107,12 +107,12 @@ describe("Course Services", () => {
             assessmentId: "a1",
             title: "asdf",
             dueDate: new Date(),
-            status: "invalid-type-here",
+            status: "invalid-type-here" as any,
             score: null,
             targetScore: null,
-            weight: 0,
+            weight: new Prisma.Decimal(0),
             latePenalty: null,
-            maxScore: null,
+            maxScore: new Prisma.Decimal(100),
             isSimulated: null,
             submitted: false
           }
@@ -174,12 +174,12 @@ describe("Course Services", () => {
             assessmentId: "a1",
             title: "asdf",
             dueDate: new Date(),
-            status: "invalid-type-here",
+            status: "invalid-type-here" as any,
             score: null,
             targetScore: null,
-            weight: 0,
+            weight: new Prisma.Decimal(0),
             latePenalty: null,
-            maxScore: null,
+            maxScore: new Prisma.Decimal(100),
             isSimulated: null,
             submitted: false
           }

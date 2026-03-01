@@ -1,6 +1,6 @@
-import { Assessment } from "@shared/types/types";
-import { simulateFinalGrade } from "@/domain/grade/simulation";
-import { INVALID_GRADE } from "@shared/constants/constants";
+import { Assessment } from "@internal_package/shared";
+import { simulateFinalGrade } from "../../../../src/domain/grade/simulation";
+import { INVALID_GRADE } from "@internal_package/shared";
 
 describe("Grade Simulation Functions", () => {
   const assessments: Assessment[] = [

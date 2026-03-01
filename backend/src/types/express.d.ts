@@ -1,8 +1,6 @@
-import { JwtPayload } from '../modules/auth/auth.types';
+import { Request } from 'express';
+import { JwtPayload } from './auth.types';
 
-declare global {
-  namespace Express {
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    interface User extends JwtPayload {}
-  }
+export interface AuthenticatedRequest extends Request {
+  jwt?: JwtPayload;
 }

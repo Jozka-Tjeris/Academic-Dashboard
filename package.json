@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend",
+    "shared"
+  ],
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "build:shared": "npm run build -w @internal_package/shared",
+    "build:backend": "npm run build -w backend",
+    "build:frontend": "npm run build -w frontend",
+    "build:all": "npm run build:shared && npm run build:backend && npm run build:frontend"
+  }
+}

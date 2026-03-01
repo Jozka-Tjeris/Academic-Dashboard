@@ -10,6 +10,7 @@ import passport from './modules/auth/passport';
 import { env } from "./config/env";
 import coursesRoutes from "./modules/courses/course.routes";
 import assessmentRoutes from "./modules/assessments/assessment.routes";
+import { signToken } from "./modules/auth/jwt";
 
 export const app = express();
 
@@ -34,5 +35,21 @@ app.use("/health", healthRouter);
 app.use('/api/auth', authRoutes);
 app.use('/courses', coursesRoutes);
 app.use("/", assessmentRoutes);
+
+// only enabled in development
+if (env.NODE_ENV === 'development') {
+  app.post('/dev/login', (req, res) => {
+    const token = signToken({
+      sub: 'dev-user-id',
+      email: 'dev@example.com',
+    });
+
+    res.cookie('access_token', token, {
+      httpOnly: true,
+    });
+
+    res.json({ message: 'Dev login successful' });
+  });
+}
 
 app.use(errorMiddleware);
