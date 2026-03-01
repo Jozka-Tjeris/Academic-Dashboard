@@ -17,6 +17,9 @@
     "react-dom": "19.2.3",
     "zod": "^4.3.6"
   },
+  "optionalDependencies": {
+    "lightningcss": "^1.31.1"
+  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.0",
     "@types/jest": "^30.0.0",
