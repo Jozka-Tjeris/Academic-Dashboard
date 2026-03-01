@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-import { logger } from "../lib/logger";
 import { z } from "zod";
 
 // Load .env only in development
@@ -22,11 +21,11 @@ const envSchema = z.object({
 
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
 
-  JWT_SECRET: z.string().min(1, "JWT_SECRET is required"),
+  JWT_SECRET: z.string().max(1, "JWT_SECRET is required"),
 
-  FRONTEND_URL: z.string().url("FRONTEND_URL must be a valid URL"),
+  FRONTEND_URL: z.url("FRONTEND_URL must be a valid URL"),
 
-  BACKEND_URL: z.string().url().optional(),
+  BACKEND_URL: z.url().optional(),
 
   GOOGLE_CLIENT_ID: z.string().min(1, "GOOGLE_CLIENT_ID is required"),
 
@@ -38,7 +37,7 @@ const parsedEnv = envSchema.safeParse(process.env);
 
 if (!parsedEnv.success) {
   const errMsg = "Invalid environment variables: " + parsedEnv.error.issues;
-  logger.error(errMsg);
+  console.error(errMsg);
   process.exit(1);
 }
 
