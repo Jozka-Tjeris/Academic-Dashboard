@@ -16,5 +16,5 @@ module.exports = {
   transformIgnorePatterns: [
     "node_modules/(?!(uuid)/)"
   ],
-  setupFilesAfterEnv: ["./tests/teardown.ts", './tests/mocks/mockPrismaSingleton.ts'],
+  setupFilesAfterEnv: ["./tests/teardown.ts", './tests/mocks/mockPrismaSingleton.ts', "./tests/check_db.ts"],
 };
