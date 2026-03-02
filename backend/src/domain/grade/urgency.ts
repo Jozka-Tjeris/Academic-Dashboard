@@ -1,7 +1,7 @@
 import { TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
 import { Assessment } from "@internal_package/shared";
 import { deriveStatusFromDate } from "./status";
-import { Prisma } from "@prisma/client";
+import { AssessmentStatus, Prisma } from "@prisma/client";
 
 export function calculateUrgencyScore(
   assessment: Assessment,
@@ -11,12 +11,12 @@ export function calculateUrgencyScore(
 
   const weight = assessment.weight;
 
-  if (status === "submitted" || status === "graded") return new Prisma.Decimal(0);
+  if (status === AssessmentStatus.SUBMITTED || status === AssessmentStatus.GRADED) return new Prisma.Decimal(0);
 
   const diffMs = assessment.dueDate.getTime() - now.getTime();
   const daysUntilDue = diffMs / TWENTYFOUR_HOURS_IN_MS;
 
-  if (status === "overdue") {
+  if (status === AssessmentStatus.OVERDUE) {
     const daysOverdue = Math.abs(daysUntilDue);
     return weight.mul(1 + daysOverdue);
   }

@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { AssessmentStatus, Prisma } from "@prisma/client";
 import { deriveStatusFromDate } from "../../../../src/domain/grade/status";
 
 describe("Status", () => {
@@ -10,7 +10,7 @@ describe("Status", () => {
         true,
         new Date("2026-01-01")
       );
-      expect(status).toBe("graded");
+      expect(status).toBe(AssessmentStatus.GRADED);
     });
 
     test("returns submitted if submitted is true but no grade", () => {
@@ -20,7 +20,7 @@ describe("Status", () => {
         true,
         new Date("2026-01-01")
       );
-      expect(status).toBe("submitted");
+      expect(status).toBe(AssessmentStatus.SUBMITTED);
     });
 
     test("returns overdue if past due and no score and not submitted", () => {
@@ -30,7 +30,7 @@ describe("Status", () => {
         false,
         new Date("2026-01-05")
       );
-      expect(status).toBe("overdue");
+      expect(status).toBe(AssessmentStatus.OVERDUE);
     });
 
     test("returns due in 24 hours if dates are same and no score and not submitted", () => {
@@ -40,7 +40,7 @@ describe("Status", () => {
         false,
         new Date("2026-01-01")
       );
-      expect(status).toBe("due in 24 hours");
+      expect(status).toBe(AssessmentStatus.DUE_IN_24_HOURS);
     });
 
     test("returns upcoming if due in future and no score and not submitted", () => {
@@ -50,7 +50,7 @@ describe("Status", () => {
         false,
         new Date("2026-01-01")
       );
-      expect(status).toBe("upcoming");
+      expect(status).toBe(AssessmentStatus.UPCOMING);
     });
   });
 });
@@ -63,7 +63,7 @@ describe("Status - Hours, Minutes and Seconds", () => {
       false,
       new Date("2026-01-01T12:00:00")
     );
-    expect(statusHour).toBe("overdue");
+    expect(statusHour).toBe(AssessmentStatus.OVERDUE);
 
     const statusMin = deriveStatusFromDate(
       new Date("2026-01-01T11:00:00"),
@@ -71,7 +71,7 @@ describe("Status - Hours, Minutes and Seconds", () => {
       false,
       new Date("2026-01-01T11:01:00")
     );
-    expect(statusMin).toBe("overdue");
+    expect(statusMin).toBe(AssessmentStatus.OVERDUE);
 
     const statusSec = deriveStatusFromDate(
       new Date("2026-01-01T11:00:00"),
@@ -79,7 +79,7 @@ describe("Status - Hours, Minutes and Seconds", () => {
       false,
       new Date("2026-01-01T11:00:01")
     );
-    expect(statusSec).toBe("overdue");
+    expect(statusSec).toBe(AssessmentStatus.OVERDUE);
   });
 
   test("returns due in 24 hours if time period is within 24 hours and no score and not submitted", () => {
@@ -89,7 +89,7 @@ describe("Status - Hours, Minutes and Seconds", () => {
       false,
       new Date("2026-01-01T21:00:00")
     );
-    expect(status).toBe("due in 24 hours");
+    expect(status).toBe(AssessmentStatus.DUE_IN_24_HOURS);
   });
 });
 
@@ -101,7 +101,7 @@ describe("Status - Edge cases (grade exists, not submitted); ignore the score an
       false,
       new Date("2026-01-01")
     );
-    expect(status).toBe("upcoming");
+    expect(status).toBe(AssessmentStatus.UPCOMING);
   });
 
   test("dates are close, should return due in 24 hours", () => {
@@ -111,7 +111,7 @@ describe("Status - Edge cases (grade exists, not submitted); ignore the score an
       false,
       new Date("2026-01-01")
     );
-    expect(status).toBe("due in 24 hours");
+    expect(status).toBe(AssessmentStatus.DUE_IN_24_HOURS);
   });
 
   test("due date passed, should return overdue", () => {
@@ -121,6 +121,6 @@ describe("Status - Edge cases (grade exists, not submitted); ignore the score an
       false,
       new Date("2026-01-02")
     );
-    expect(status).toBe("overdue");
+    expect(status).toBe(AssessmentStatus.OVERDUE);
   });
 })
