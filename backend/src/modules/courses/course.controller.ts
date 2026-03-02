@@ -4,6 +4,7 @@ import { HttpError } from "../../utils/httpError";
 import { logger } from "../../lib/logger";
 import { prisma } from "../../lib/prisma";
 import { AuthenticatedRequest } from "../../types/express";
+import { serializeAssessments } from "../assessments/assessmentSerializer";
 
 export async function createCourseHandler(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const { name, description } = req.body;
@@ -38,8 +39,16 @@ export async function getCoursesHandler(req: AuthenticatedRequest, res: Response
   try {
     const courseService = getCourseServices(prisma);
     const courses = await courseService.getCoursesForUser(userId);
+    
+    const shapedCourses = courses.map(course => {
+      return {
+        ...course,
+        assessments: serializeAssessments(course.assessments)
+      };
+    })
+
     logger.info({ requestId: req.id, userId }, "Fetched courses for user");
-    return res.status(200).json(courses);
+    return res.status(200).json(shapedCourses);
   } catch (error: unknown) {
     logger.error({ requestId: req.id, err: error }, "Failed to fetch courses");
     return next(new HttpError(500, "Failed to fetch courses"));
@@ -66,12 +75,17 @@ export async function getCourseByIdHandler(req: AuthenticatedRequest, res: Respo
     const courseService = getCourseServices(prisma);
     const course = await courseService.getCourseById(userId, courseId);
 
+    const shapedCourse = {
+      ...course,
+      assessments: serializeAssessments(course.assessments)
+    }
+
     logger.info(
       { requestId: req.id, userId, courseId },
       "Fetched course by id"
     );
 
-    return res.status(200).json(course);
+    return res.status(200).json(shapedCourse);
   } catch (error) {
     logger.error(
       { requestId: req.id, err: error },

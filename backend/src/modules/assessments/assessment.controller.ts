@@ -4,6 +4,7 @@ import { getAssessmentServices } from "./assessment.service";
 import { prisma } from "../../lib/prisma";
 import { logger } from "../../lib/logger";
 import { AuthenticatedRequest } from "../../types/express";
+import { serializeAssessment } from "./assessmentSerializer";
 
 export async function createAssessmentHandler(req: AuthenticatedRequest, res: Response, next: NextFunction){
   const userId = req.jwt?.sub;
@@ -41,7 +42,7 @@ export async function createAssessmentHandler(req: AuthenticatedRequest, res: Re
       "Assessment created"
     );
 
-    return res.status(201).json(assessment);
+    return res.status(201).json(serializeAssessment(assessment));
   }
   catch(error){
     logger.error(
@@ -85,7 +86,7 @@ export async function updateAssessmentHandler(req: AuthenticatedRequest, res: Re
       "Assessment updated"
     );
 
-    return res.status(200).json(updated);
+    return res.status(200).json(serializeAssessment(updated));
   } catch (error) {
     logger.error(
       { requestId: req.id, err: error },
