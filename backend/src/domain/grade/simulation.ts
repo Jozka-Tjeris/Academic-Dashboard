@@ -12,9 +12,9 @@ import { Prisma } from "@prisma/client";
 export function simulateFinalGrade(
   assessments: Assessment[],
   simulationInputs: { assessmentId: string; simulatedScore: Prisma.Decimal }[]
-): Prisma.Decimal | typeof INVALID_GRADE {
+): Prisma.Decimal {
   const totalWeight = assessments.reduce((acc, v) => acc.plus(v.weight), new Prisma.Decimal(0));
-  if (!totalWeight.minus(1).abs().lte(EPSILON)) return INVALID_GRADE;
+  if (!totalWeight.minus(1).abs().lte(EPSILON)) return new Prisma.Decimal(INVALID_GRADE);
 
   const simMap: Record<string, Prisma.Decimal> = {};
   simulationInputs.forEach((sim) => { 

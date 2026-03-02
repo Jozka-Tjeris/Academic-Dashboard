@@ -8,9 +8,9 @@ import { Prisma } from "@prisma/client";
  * @param assessments - the list of actual assessments
  * @returns final grade (0–MAX_GRADE), or INVALID_GRADE if weights invalid
  */
-export function calculateCurrentGrade(assessments: Assessment[]): Prisma.Decimal | typeof INVALID_GRADE {
+export function calculateCurrentGrade(assessments: Assessment[]): Prisma.Decimal {
   const totalWeight = assessments.reduce((acc, v) => acc.plus(v.weight), new Prisma.Decimal(0));
-  if (!totalWeight.minus(1).abs().lte(EPSILON)) return INVALID_GRADE;
+  if (!totalWeight.minus(1).abs().lte(EPSILON)) return new Prisma.Decimal(INVALID_GRADE);
 
   let finalGrade = new Prisma.Decimal(0);
 
@@ -33,9 +33,9 @@ export function calculateCurrentGrade(assessments: Assessment[]): Prisma.Decimal
  * @param assessments - the list of actual assessments
  * @returns final maximum possible grade (0–MAX_GRADE), or INVALID_GRADE if weights invalid
  */
-export function calculateMaxPossibleGrade(assessments: Assessment[]): Prisma.Decimal | typeof INVALID_GRADE {
+export function calculateMaxPossibleGrade(assessments: Assessment[]): Prisma.Decimal {
   const totalWeight = assessments.reduce((acc, v) => acc.plus(v.weight), new Prisma.Decimal(0));
-  if (!totalWeight.minus(1).abs().lte(EPSILON)) return INVALID_GRADE;
+  if (!totalWeight.minus(1).abs().lte(EPSILON)) return new Prisma.Decimal(INVALID_GRADE);
 
   let finalGrade = new Prisma.Decimal(0);
 
