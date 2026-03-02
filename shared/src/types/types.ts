@@ -1,4 +1,4 @@
-import { AssessmentStatusTypes } from "../";
+import { AssessmentStatus, Prisma } from "@prisma/client";
 
 export type Course = {
   courseId: string,
@@ -8,9 +8,6 @@ export type Course = {
   updatedAt: Date,
 }
 
-type AssessmentStatusTuple = typeof AssessmentStatusTypes;
-export type AssessmentStatus = AssessmentStatusTuple[number];
-
 export type Assessment = {
   assessmentId: string,
   courseId: string,
@@ -18,11 +15,11 @@ export type Assessment = {
   description: string | null,
   dueDate: Date,
   status: AssessmentStatus,
-  score: number | null,
-  targetScore: number | null,
-  maxScore: number | null,
-  weight: number,
-  latePenalty: number | null,
+  score: Prisma.Decimal | null,
+  targetScore: Prisma.Decimal | null,
+  maxScore: Prisma.Decimal | null,
+  weight: Prisma.Decimal,
+  latePenalty: Prisma.Decimal | null,
   isSimulated: boolean | null,
   submitted: boolean,
   createdAt: Date,
