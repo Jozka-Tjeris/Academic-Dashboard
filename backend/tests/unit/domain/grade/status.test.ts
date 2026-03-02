@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { deriveStatusFromDate } from "../../../../src/domain/grade/status";
 
 describe("Status", () => {
@@ -5,7 +6,7 @@ describe("Status", () => {
     test("returns graded if score exists and submitted is true", () => {
       const status = deriveStatusFromDate(
         new Date("2026-01-10"),
-        80,
+        new Prisma.Decimal(80),
         true,
         new Date("2026-01-01")
       );
@@ -96,7 +97,7 @@ describe("Status - Edge cases (grade exists, not submitted); ignore the score an
   test("due date is not reached yet, so it should return upcoming", () => {
     const status = deriveStatusFromDate(
       new Date("2026-01-10"),
-      80,
+      new Prisma.Decimal(80),
       false,
       new Date("2026-01-01")
     );
@@ -106,7 +107,7 @@ describe("Status - Edge cases (grade exists, not submitted); ignore the score an
   test("dates are close, should return due in 24 hours", () => {
     const status = deriveStatusFromDate(
       new Date("2026-01-01"),
-      80,
+      new Prisma.Decimal(80),
       false,
       new Date("2026-01-01")
     );
@@ -116,7 +117,7 @@ describe("Status - Edge cases (grade exists, not submitted); ignore the score an
   test("due date passed, should return overdue", () => {
     const status = deriveStatusFromDate(
       new Date("2026-01-01"),
-      80,
+      new Prisma.Decimal(80),
       false,
       new Date("2026-01-02")
     );

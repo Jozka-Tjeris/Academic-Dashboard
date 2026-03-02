@@ -1,26 +1,27 @@
 import { Assessment } from "@internal_package/shared";
 import { simulateFinalGrade } from "../../../../src/domain/grade/simulation";
 import { INVALID_GRADE } from "@internal_package/shared";
+import { Prisma } from "@prisma/client";
 
 describe("Grade Simulation Functions", () => {
   const assessments: Assessment[] = [
     {
       assessmentId: "a1",    courseId: "c1",        title: "Quiz",  description: null,
-      dueDate: new Date(),   status: "upcoming",    score: 80,      targetScore: null,
-      weight: 0.4,           latePenalty: null,     maxScore: null, isSimulated: null,
+      dueDate: new Date(),   status: "upcoming",    score: new Prisma.Decimal(80),      targetScore: null,
+      weight: new Prisma.Decimal(0.4),           latePenalty: null,     maxScore: null, isSimulated: null,
       submitted: true,       createdAt: new Date(), updatedAt: new Date(),
     },
     {
       assessmentId: "a2",    courseId: "c1",        title: "Exam",  description: null,
       dueDate: new Date(),   status: "upcoming",    score: null,    targetScore: null,
-      weight: 0.6,           latePenalty: null,     maxScore: null, isSimulated: null,
+      weight: new Prisma.Decimal(0.6),           latePenalty: null,     maxScore: null, isSimulated: null,
       submitted: true,       createdAt: new Date(), updatedAt: new Date(),
     }
   ];
 
   describe("simulateFinalGrade", () => {
     test("applies simulated scores correctly", () => {
-      const simulated = [{ assessmentId: "a2", simulatedScore: 90 }];
+      const simulated = [{ assessmentId: "a2", simulatedScore: new Prisma.Decimal(90) }];
       const grade = simulateFinalGrade(assessments, simulated);
       // a1: 80/100*0.4=0.32, a2: 90/100*0.6=0.54 => total 0.86
       expect(grade).toBeCloseTo(0.86);
@@ -33,7 +34,7 @@ describe("Grade Simulation Functions", () => {
     });
 
     test("returns INVALID_GRADE if weights invalid", () => {
-      const invalidAssessments = assessments.map(a => ({ ...a, weight: 0.2 }));
+      const invalidAssessments = assessments.map(a => ({ ...a, weight: new Prisma.Decimal(0.2) }));
       const grade = simulateFinalGrade(invalidAssessments, []);
       expect(grade).toBe(INVALID_GRADE);
     });
@@ -46,19 +47,19 @@ describe("Grade Simulation - Edge Cases", () => {
     test("simulate all assessments with custom scores", () => {
       const assessments: Assessment[] = [
         { assessmentId: "a1",    courseId: "c1",        title: "Test1", description: null, 
-          dueDate: new Date(),   status: "upcoming",    score: 50,    targetScore: null, 
-          weight: 0.5,           latePenalty: null,     maxScore: null, isSimulated: null,
+          dueDate: new Date(),   status: "upcoming",    score: new Prisma.Decimal(50),    targetScore: null, 
+          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, isSimulated: null,
           submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         },
         { assessmentId: "a2",    courseId: "c1",        title: "Test2", description: null, 
           dueDate: new Date(),   status: "upcoming",    score: null,    targetScore: null, 
-          weight: 0.5,           latePenalty: null,     maxScore: null, isSimulated: null,
+          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, isSimulated: null,
           submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         }
       ];
       const simulated = [
-        { assessmentId: "a1", simulatedScore: 80 },
-        { assessmentId: "a2", simulatedScore: 90 }
+        { assessmentId: "a1", simulatedScore: new Prisma.Decimal(80) },
+        { assessmentId: "a2", simulatedScore: new Prisma.Decimal(90) }
       ];
       const grade = simulateFinalGrade(assessments, simulated);
       // 0.5*0.8 + 0.5*0.9 = 0.85
@@ -69,17 +70,17 @@ describe("Grade Simulation - Edge Cases", () => {
       const assessments: Assessment[] = [
         { assessmentId: "a1",    courseId: "c1",        title: "Test1", description: null, 
           dueDate: new Date(),   status: "upcoming",    score: null,    targetScore: null, 
-          weight: 0.5,           latePenalty: null,     maxScore: null, isSimulated: null,
+          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, isSimulated: null,
           submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         },
         { assessmentId: "a2",    courseId: "c1",        title: "Test2", description: null, 
           dueDate: new Date(),   status: "upcoming",    score: null,    targetScore: null, 
-          weight: 0.5,           latePenalty: null,     maxScore: null, isSimulated: null,
+          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, isSimulated: null,
           submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         }
       ];
       const simulated = [
-        { assessmentId: "a2", simulatedScore: 70 }
+        { assessmentId: "a2", simulatedScore: new Prisma.Decimal(70) }
       ];
       const grade = simulateFinalGrade(assessments, simulated);
       // a1 null => 100, a2 simulated 70 => 1*0.5 + 0.7*0.5 = 0.85
