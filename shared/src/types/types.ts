@@ -6,6 +6,7 @@ export type Course = {
   description: string | null,
   createdAt: Date,
   updatedAt: Date,
+  assessments?: Assessment[];
 }
 
 export type Assessment = {
