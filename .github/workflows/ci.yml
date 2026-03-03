@@ -1,5 +1,9 @@
 name: Backend CI
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches: [ main, dev ]
@@ -32,21 +36,38 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL_TEST }}
+
+      - name: Build Shared Package
+        run: npm run build -w @internal_package/shared
+        working-directory: .
+
       - name: Run Lint
         run: npm run lint
 
       - name: Sync Database (Neon)
-        run: npx prisma db push
+        run: |
+          if [[ "${{ secrets.DATABASE_URL_TEST }}" != *"ep-curly-rice"* ]]; then
+            echo "ERROR: DATABASE_URL_TEST does not look like a test database! Safety abort."
+            exit 1
+          fi
+          
+          echo "Safe to proceed. Resetting test database..."
+          npx prisma db push --force-reset
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL_TEST }}
 
       - name: Run Tests
         run: npm run test:ci
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL_TEST }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET_TEST }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
           BACKEND_URL: ${{ secrets.BACKEND_URL }}
+          TEST_DATABASE: ${{ secrets.TEST_DATABASE }}
           # Add other secrets here (e.g., JWT_SECRET)

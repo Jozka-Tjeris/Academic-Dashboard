@@ -107,6 +107,7 @@ describe("Course Services", () => {
             assessmentId: "a1",
             title: "asdf",
             dueDate: new Date(),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             status: "invalid-type-here" as any,
             score: null,
             targetScore: null,
@@ -174,6 +175,7 @@ describe("Course Services", () => {
             assessmentId: "a1",
             title: "asdf",
             dueDate: new Date(),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             status: "invalid-type-here" as any,
             score: null,
             targetScore: null,

@@ -1,5 +1,6 @@
 import { DEFAULT_MAX_SCORE, EPSILON, INVALID_GRADE, MAX_GRADE } from "@internal_package/shared";
 import { Assessment } from "@internal_package/shared";
+import { Prisma } from "@prisma/client";
 
 /**
  * Calculates the final grade for a course using a list of assessments.
@@ -7,17 +8,23 @@ import { Assessment } from "@internal_package/shared";
  * @param assessments - the list of actual assessments
  * @returns final grade (0–MAX_GRADE), or INVALID_GRADE if weights invalid
  */
-export function calculateCurrentGrade(assessments: Assessment[]){
-  const totalWeight = assessments.reduce((acc, v) => acc + v.weight, 0);
-  if(Math.abs(totalWeight - 1) > EPSILON) return INVALID_GRADE;
+export function calculateCurrentGrade(assessments: Assessment[]): Prisma.Decimal {
+  const totalWeight = assessments.reduce((acc, v) => acc.plus(v.weight), new Prisma.Decimal(0));
+  if (!totalWeight.minus(1).abs().lte(EPSILON)) return new Prisma.Decimal(INVALID_GRADE);
 
-  const finalGrade = assessments.reduce((sum, assessment) => {
-    const achieved = assessment.score ?? 0;
-    const maxScore = assessment.maxScore ?? DEFAULT_MAX_SCORE;
-    return sum + achieved / maxScore * assessment.weight;
-  }, 0);
+  let finalGrade = new Prisma.Decimal(0);
 
-  return Math.min(Math.max(finalGrade, 0), MAX_GRADE);
+  for (const assessment of assessments) {
+    const achieved = assessment.score ?? new Prisma.Decimal(0);
+    const maxScore = assessment.maxScore ?? new Prisma.Decimal(DEFAULT_MAX_SCORE);
+
+    finalGrade = finalGrade.plus(
+      achieved.div(maxScore).mul(assessment.weight)
+    );
+  }
+
+  // Clamp final grade between 0 and MAX_GRADE
+  return Prisma.Decimal.min(Prisma.Decimal.max(finalGrade, 0), MAX_GRADE);
 }
 
 /**
@@ -26,15 +33,21 @@ export function calculateCurrentGrade(assessments: Assessment[]){
  * @param assessments - the list of actual assessments
  * @returns final maximum possible grade (0–MAX_GRADE), or INVALID_GRADE if weights invalid
  */
-export function calculateMaxPossibleGrade(assessments: Assessment[]){
-  const totalWeight = assessments.reduce((acc, v) => acc + v.weight, 0);
-  if(Math.abs(totalWeight - 1) > EPSILON) return INVALID_GRADE;
+export function calculateMaxPossibleGrade(assessments: Assessment[]): Prisma.Decimal {
+  const totalWeight = assessments.reduce((acc, v) => acc.plus(v.weight), new Prisma.Decimal(0));
+  if (!totalWeight.minus(1).abs().lte(EPSILON)) return new Prisma.Decimal(INVALID_GRADE);
 
-  const finalGrade = assessments.reduce((sum, assessment) => {
-    const achieved = assessment.score ?? assessment.score ?? (assessment.maxScore ?? DEFAULT_MAX_SCORE);
-    const maxScore = assessment.maxScore ?? DEFAULT_MAX_SCORE;
-    return sum + achieved / maxScore * assessment.weight;
-  }, 0);
+  let finalGrade = new Prisma.Decimal(0);
 
-  return Math.min(Math.max(finalGrade, 0), MAX_GRADE);
+  for (const assessment of assessments) {
+    const achieved = assessment.score ?? assessment.maxScore ?? new Prisma.Decimal(DEFAULT_MAX_SCORE);
+    const maxScore = assessment.maxScore ?? new Prisma.Decimal(DEFAULT_MAX_SCORE);
+
+    finalGrade = finalGrade.plus(
+      achieved.div(maxScore).mul(assessment.weight)
+    );
+  }
+
+  // Clamp final grade between 0 and MAX_GRADE
+  return Prisma.Decimal.min(Prisma.Decimal.max(finalGrade, 0), MAX_GRADE);
 }

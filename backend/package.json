@@ -9,8 +9,8 @@
   "scripts": {
     "dev": "nodemon ./src/server.ts",
     "lint": "eslint",
-    "test": "jest --forceExit --detectOpenHandles",
-    "test:ci": "npx prisma generate && npx prisma db push --accept-data-loss && jest --runInBand --forceExit --detectOpenHandles",
+    "test": "dotenv -e .env.test -- jest --forceExit --detectOpenHandles",
+    "test:ci": "jest --runInBand --forceExit --detectOpenHandles",
     "build": "npm run build -w @internal_package/shared && tsc",
     "start": "node dist/backend/src/server.js",
     "seed:test": "dotenv -e .env.test -- ts-node prisma/seed.ts"

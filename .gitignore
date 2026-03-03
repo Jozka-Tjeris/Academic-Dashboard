@@ -52,3 +52,5 @@ architecture.md
 
 **/test-prisma-run.ts
 **/cookies.txt
+
+**/dist

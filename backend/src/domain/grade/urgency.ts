@@ -1,27 +1,27 @@
 import { TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
 import { Assessment } from "@internal_package/shared";
 import { deriveStatusFromDate } from "./status";
+import { AssessmentStatus, Prisma } from "@prisma/client";
 
 export function calculateUrgencyScore(
   assessment: Assessment,
   now: Date = new Date()
-): number {
+): Prisma.Decimal {
   const status = deriveStatusFromDate(assessment.dueDate, assessment.score, assessment.submitted, now);
 
-  if(status === "submitted" || status === "graded"){
-    return 0;
-  }
+  const weight = assessment.weight;
+
+  if (status === AssessmentStatus.SUBMITTED || status === AssessmentStatus.GRADED) return new Prisma.Decimal(0);
 
   const diffMs = assessment.dueDate.getTime() - now.getTime();
   const daysUntilDue = diffMs / TWENTYFOUR_HOURS_IN_MS;
 
-  if(status === "overdue"){
-    // Increase urgency as it becomes more overdue
+  if (status === AssessmentStatus.OVERDUE) {
     const daysOverdue = Math.abs(daysUntilDue);
-    return assessment.weight * (1 + daysOverdue);
+    return weight.mul(1 + daysOverdue);
   }
 
-  // Upcoming, decrease factor if further away from due date
+  // Upcoming, scale urgency
   const timeFactor = 1 / (daysUntilDue + 1);
-  return assessment.weight * timeFactor;
+  return weight.mul(timeFactor);
 }
