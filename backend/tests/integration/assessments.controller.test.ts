@@ -3,8 +3,9 @@ import { app } from "../../src/app";
 import { prisma } from "../../src/lib/prisma";
 import { AssessmentStatus, Prisma } from "@prisma/client";
 import jwt from "jsonwebtoken";
+import { v4 as uuidv4 } from 'uuid';
 
-const testId = Math.random().toString(36).substring(7);
+const testId = uuidv4().split('-')[0];
 const COURSE_NAME = `GET_Test_Course_${testId}`;
 const COURSE_FOR_OVERFLOW = `OVERFLOW_Test_Course_${testId}`;
 const COURSE_FOR_PUT = `PUT_Test_Course_${testId}`;
