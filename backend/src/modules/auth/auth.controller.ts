@@ -34,13 +34,18 @@ export function googleCallback(req: Request, res: Response) {
 }
 
 export function logout(_req: Request, res: Response) {
-  res.clearCookie('access_token', {
-    sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
-    secure: env.NODE_ENV === 'production',
-    path: '/',
+  res.clearCookie("access_token", {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
   });
 
-  return res.status(200).json({ message: 'Logged out successfully' });
+  res.clearCookie("csrf_token", {
+    sameSite: "none",
+    secure: true,
+  });
+
+  return res.redirect(env.FRONTEND_URL + "/login");
 }
 
 export function getCurrentUser(req: AuthenticatedRequest, res: Response) {
