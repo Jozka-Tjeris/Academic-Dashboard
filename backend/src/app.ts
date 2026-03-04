@@ -51,6 +51,10 @@ if (env.NODE_ENV === 'development') {
       httpOnly: true,
     });
 
+    res.cookie('csrf_token', token, {
+      httpOnly: false,
+    });
+
     res.json({ message: 'Dev login successful' });
   });
 }

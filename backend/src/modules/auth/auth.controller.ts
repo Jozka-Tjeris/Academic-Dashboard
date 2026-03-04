@@ -3,9 +3,10 @@ import { signToken } from './jwt';
 import { env } from '../../config/env';
 import { TWENTYFOUR_HOURS_IN_MS } from '@internal_package/shared';
 import { AuthenticatedRequest } from '../../types/express';
+import crypto from "crypto";
 
 export function googleCallback(req: AuthenticatedRequest, res: Response) {
-  const user = req.jwt as { sub: string; email: string; name?: string };
+  const user = req.jwt;
 
   const token = signToken({
     sub: user.sub,
@@ -13,11 +14,20 @@ export function googleCallback(req: AuthenticatedRequest, res: Response) {
     name: user.name,
   });
 
-  res.cookie('access_token', token, {
+  const csrfToken = crypto.randomBytes(32).toString("hex");
+
+  res.cookie("access_token", token, {
     httpOnly: true,
-    sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
-    secure: env.NODE_ENV === 'production',
+    sameSite: "none",
+    secure: true,
     maxAge: 7 * TWENTYFOUR_HOURS_IN_MS,
+  });
+
+  // NOT httpOnly (frontend must read it)
+  res.cookie("csrf_token", csrfToken, {
+    httpOnly: false,
+    sameSite: "none",
+    secure: true,
   });
 
   return res.redirect(env.FRONTEND_URL);
