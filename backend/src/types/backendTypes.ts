@@ -3,7 +3,6 @@ import { AssessmentStatus, Prisma } from "@prisma/client";
 export interface GradeSummary {
   currentGrade: Prisma.Decimal;
   maxPossibleGrade: Prisma.Decimal;
-  weightedScore: Prisma.Decimal;
 }
 
 export type Course = {
