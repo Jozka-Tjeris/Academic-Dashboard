@@ -1,7 +1,7 @@
 import { AssessmentStatus, PrismaClient } from "@prisma/client";
 import { HttpError } from "../../utils/httpError";
-import { calculateCurrentGrade } from "../../domain/grade/gradeCalculator";
-import { Assessment } from "../../types/backendTypes";
+import { calculateCurrentGrade, calculateMaxPossibleGrade } from "../../domain/grade/gradeCalculator";
+import { Assessment, GradeSummary } from "../../types/backendTypes";
 
 interface CreateCourseInput {
   userId: string;
@@ -54,7 +54,11 @@ export function getCourseServices(prisma: PrismaClient){
             status: v.status as AssessmentStatus
           }
         })
-        const gradeSummary = calculateCurrentGrade(assessments);
+        const currGrade = calculateCurrentGrade(assessments);
+        const gradeSummary: GradeSummary = {
+          currentGrade: currGrade,
+          maxPossibleGrade: calculateMaxPossibleGrade(assessments),
+        }
         return {
           ...course,
           gradeSummary,
@@ -88,8 +92,11 @@ export function getCourseServices(prisma: PrismaClient){
         }
       })
 
-      const gradeSummary = calculateCurrentGrade(assessments);
-
+      const currGrade = calculateCurrentGrade(assessments);
+      const gradeSummary: GradeSummary = {
+        currentGrade: currGrade,
+        maxPossibleGrade: calculateMaxPossibleGrade(assessments),
+      }
       return {
         ...course,
         gradeSummary,

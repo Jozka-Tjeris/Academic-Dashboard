@@ -1,7 +1,6 @@
 export interface GradeSummary {
   currentGrade: number;
   maxPossibleGrade: number;
-  weightedScore: number;
 }
 
 export type Course = {
