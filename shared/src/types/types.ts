@@ -1,11 +1,19 @@
 import { AssessmentStatus, Prisma } from "@prisma/client";
 
+export interface GradeSummary {
+  currentGrade: Prisma.Decimal;
+  maxPossibleGrade: Prisma.Decimal;
+  weightedScore: Prisma.Decimal;
+}
+
 export type Course = {
   courseId: string,
   name: string,
   description: string | null,
   createdAt: Date,
   updatedAt: Date,
+  assessments?: Assessment[];
+  gradeSummary: GradeSummary;
 }
 
 export type Assessment = {
