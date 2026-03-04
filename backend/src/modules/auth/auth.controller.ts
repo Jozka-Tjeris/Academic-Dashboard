@@ -30,7 +30,7 @@ export function googleCallback(req: Request, res: Response) {
     secure: true,
   });
 
-  return res.redirect(env.FRONTEND_URL);
+  return res.redirect(env.FRONTEND_URL + "/dashboard");
 }
 
 export function logout(_req: Request, res: Response) {
