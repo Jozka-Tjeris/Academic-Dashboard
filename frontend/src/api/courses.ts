@@ -1,11 +1,5 @@
 import { Course } from "@internal_package/shared";
 
-export interface GradeSummary {
-  currentGrade: number;
-  maxPossibleGrade: number;
-  weightedScore: number;
-}
-
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 async function fetcher<T>(url: string, options?: RequestInit): Promise<T> {
