@@ -11,8 +11,11 @@ const COURSE_FOR_DELETE = `DELETE_Test_Course_${testId}`;
 describe("Courses controller test", () => {
   let token: string;
   let userId: string;
+  let csrfToken: string;
 
   beforeAll(async () => {
+    csrfToken = "test-csrf_token";
+
     await prisma.course.deleteMany({
       where: { name: { contains: testId } }
     });
@@ -60,7 +63,8 @@ describe("Courses controller test", () => {
     it("creates a new course", async () => {
       const res = await request(app)
         .post("/courses")
-        .set("Cookie", [`access_token=${token}`])
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken)
         .send({ name: "Calculus 101", description: "Intro course" });
 
       expect(res.status).toBe(201);
@@ -71,7 +75,8 @@ describe("Courses controller test", () => {
     it("fails if name is missing", async () => {
       const res = await request(app)
         .post("/courses")
-        .set("Cookie", [`access_token=${token}`])
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken)
         .send({});
 
       expect(res.status).toBe(400);
@@ -143,7 +148,8 @@ describe("Courses controller test", () => {
 
       const res = await request(app)
         .delete(`/courses/${course?.courseId}`)
-        .set("Cookie", [`access_token=${token}`]);
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken);
 
       expect(res.status).toBe(200);
       expect(res.body.message).toBe("Course deleted successfully");
@@ -152,7 +158,8 @@ describe("Courses controller test", () => {
     it("returns 404 for invalid id", async () => {
       const res = await request(app)
         .delete("/courses/nonexistent-id")
-        .set("Cookie", [`access_token=${token}`]);
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken);
 
       expect(res.status).toBe(404);
     });

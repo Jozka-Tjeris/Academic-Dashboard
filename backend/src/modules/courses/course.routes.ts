@@ -3,11 +3,12 @@ import { createCourseHandler, deleteCourseHandler } from "./course.controller";
 import { requireAuth } from "../auth/auth.middleware";
 import { getCoursesHandler } from "./course.controller";
 import { getCourseByIdHandler } from "./course.controller";
+import { csrfProtection } from "../auth/csrfProtection";
 
 const router = Router();
 
 // POST /courses
-router.post("/", requireAuth, createCourseHandler);
+router.post("/", requireAuth, csrfProtection, createCourseHandler);
 
 // GET /courses
 router.get("/", requireAuth, getCoursesHandler);
@@ -16,6 +17,6 @@ router.get("/", requireAuth, getCoursesHandler);
 router.get("/:id", requireAuth, getCourseByIdHandler);
 
 // DELETE /courses/:id
-router.delete("/:id", requireAuth, deleteCourseHandler);
+router.delete("/:id", requireAuth, csrfProtection, deleteCourseHandler);
 
 export default router;

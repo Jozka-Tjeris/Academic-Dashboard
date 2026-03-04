@@ -3,6 +3,8 @@ import { app } from "../../src/app";
 import { signToken } from "../../src/modules/auth/jwt";
 
 describe("auth user check test", () => {
+  const csrfToken = "csrf_token-123";
+
   it('returns 401 if not authenticated', async () => {
     const res = await request(app).get('/api/auth/me');
     expect(res.status).toBe(401);
@@ -16,7 +18,8 @@ describe("auth user check test", () => {
 
     const res = await request(app)
       .get('/api/auth/me')
-      .set('Cookie', [`access_token=${token}`]);
+      .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+      .set("X-CSRF-Token", csrfToken);
 
     expect(res.status).toBe(200);
     expect(res.body.email).toBe('test@test.com');

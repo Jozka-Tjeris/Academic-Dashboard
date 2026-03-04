@@ -39,6 +39,20 @@ app.use('/api/auth', authRoutes);
 app.use('/courses', coursesRoutes);
 app.use("/", assessmentRoutes);
 
+app.use((req, res, next) => {
+  const allowedOrigin = [
+      "https://academic-dashboard-frontend.vercel.app",
+      "http://localhost:3000"
+  ];
+  const origin = req.headers.origin;
+
+  if (req.method !== "GET" && allowedOrigin.includes(origin ?? "")) {
+    return res.status(403).json({ message: "Invalid origin" });
+  }
+
+  next();
+});
+
 // only enabled in development
 if (env.NODE_ENV === 'development') {
   app.post('/dev/login', (req, res) => {

@@ -17,8 +17,11 @@ describe("Assessments controller", () => {
   let userId: string;
   let courseId: string;
   let courseId_overflow: string;
+  let csrfToken: string;
 
   beforeAll(async () => {
+    csrfToken = "test-csrf_token";
+
     await prisma.assessment.deleteMany({
       where: { title: { contains: testId } }
     });
@@ -84,7 +87,8 @@ describe("Assessments controller", () => {
     it("creates an assessment", async () => {
       const res = await request(app)
         .post(`/courses/${courseId}/assessments`)
-        .set("Cookie", [`access_token=${token}`])
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken)
         .send({
           title: "Midterm",
           dueDate: new Date().toISOString(),
@@ -99,7 +103,8 @@ describe("Assessments controller", () => {
     it("rejects if total weight exceeds 100", async () => {
       const res = await request(app)
         .post(`/courses/${courseId}/assessments`)
-        .set("Cookie", [`access_token=${token}`])
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken)
         .send({
           title: "Another",
           dueDate: new Date().toISOString(),
@@ -145,7 +150,8 @@ describe("Assessments controller", () => {
     it("updates score successfully", async () => {
       const res = await request(app)
         .put(`/assessments/${assessId_for_put}`)
-        .set("Cookie", [`access_token=${token}`])
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken)
         .send({ score: 85 });
 
       expect(res.status).toBe(200);
@@ -155,7 +161,8 @@ describe("Assessments controller", () => {
     it("rejects score above maxScore", async () => {
       const res = await request(app)
         .put(`/assessments/${assessId_for_put}`)
-        .set("Cookie", [`access_token=${token}`])
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken)
         .send({ score: 150 });
 
       expect(res.status).toBe(400);
@@ -164,7 +171,8 @@ describe("Assessments controller", () => {
     it("returns 404 for invalid id", async () => {
       const res = await request(app)
         .put("/assessments/nonexistent-id")
-        .set("Cookie", [`access_token=${token}`])
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken)
         .send({ score: 50 });
 
       expect(res.status).toBe(404);
@@ -178,7 +186,8 @@ describe("Assessments controller", () => {
 
       const res = await request(app)
         .delete(`/assessments/${assessment?.assessmentId}`)
-        .set("Cookie", [`access_token=${token}`]);
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken);
 
       expect(res.status).toBe(200);
       expect(res.body.message).toBe("Assessment deleted successfully");
@@ -187,7 +196,8 @@ describe("Assessments controller", () => {
     it("returns 404 for invalid id", async () => {
       const res = await request(app)
         .delete("/assessments/nonexistent-id")
-        .set("Cookie", [`access_token=${token}`]);
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken);
 
       expect(res.status).toBe(404);
     });
