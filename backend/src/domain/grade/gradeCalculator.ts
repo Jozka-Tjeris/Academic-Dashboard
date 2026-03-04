@@ -1,5 +1,5 @@
 import { DEFAULT_MAX_SCORE, EPSILON, INVALID_GRADE, MAX_GRADE } from "@internal_package/shared";
-import { Assessment } from "@internal_package/shared";
+import { Assessment } from "../../types/backendTypes";
 import { Prisma } from "@prisma/client";
 
 /**

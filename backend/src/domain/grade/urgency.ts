@@ -1,5 +1,5 @@
 import { TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
-import { Assessment } from "@internal_package/shared";
+import { Assessment } from "../../types/backendTypes";
 import { deriveStatusFromDate } from "./status";
 import { AssessmentStatus, Prisma } from "@prisma/client";
 

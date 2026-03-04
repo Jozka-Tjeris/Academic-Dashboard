@@ -1,4 +1,5 @@
-import { Assessment, DEFAULT_MAX_SCORE } from "@internal_package/shared";
+import { DEFAULT_MAX_SCORE } from "@internal_package/shared";
+import { Assessment } from "src/types/backendTypes";
 
 export function serializeAssessment(assessment: Assessment) {
   return {

@@ -1,7 +1,7 @@
 import { AssessmentStatus, PrismaClient } from "@prisma/client";
 import { HttpError } from "../../utils/httpError";
 import { calculateCurrentGrade } from "../../domain/grade/gradeCalculator";
-import { Assessment } from "@internal_package/shared";
+import { Assessment } from "../../types/backendTypes";
 
 interface CreateCourseInput {
   userId: string;

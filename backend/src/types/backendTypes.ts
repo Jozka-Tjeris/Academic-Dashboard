@@ -1,7 +1,9 @@
+import { AssessmentStatus, Prisma } from "@prisma/client";
+
 export interface GradeSummary {
-  currentGrade: number;
-  maxPossibleGrade: number;
-  weightedScore: number;
+  currentGrade: Prisma.Decimal;
+  maxPossibleGrade: Prisma.Decimal;
+  weightedScore: Prisma.Decimal;
 }
 
 export type Course = {
@@ -20,12 +22,12 @@ export type Assessment = {
   title: string,
   description: string | null,
   dueDate: Date,
-  status: "UPCOMING" | "SUBMITTED" | "DUE_IN_24_HOURS" | "OVERDUE" | "GRADED",
-  score: number | null,
-  targetScore: number | null,
-  maxScore: number | null,
-  weight: number,
-  latePenalty: number | null,
+  status: AssessmentStatus,
+  score: Prisma.Decimal | null,
+  targetScore: Prisma.Decimal | null,
+  maxScore: Prisma.Decimal | null,
+  weight: Prisma.Decimal,
+  latePenalty: Prisma.Decimal | null,
   isSimulated: boolean | null,
   submitted: boolean,
   createdAt: Date,
