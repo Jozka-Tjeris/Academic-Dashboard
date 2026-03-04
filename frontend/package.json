@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run build -w @internal_package/shared && next build",
     "start": "next start",
     "lint": "eslint",
     "test": "jest"
   },
   "dependencies": {
+    "shared": "file:../shared",
     "@internal_package/shared": "1.0.0",
     "@tanstack/react-query": "^5.90.21",
     "clsx": "^2.1.1",
