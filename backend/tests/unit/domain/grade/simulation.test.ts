@@ -1,4 +1,4 @@
-import { Assessment } from "@internal_package/shared";
+import { Assessment } from "../../../../src/types/backendTypes";
 import { simulateFinalGrade } from "../../../../src/domain/grade/simulation";
 import { INVALID_GRADE } from "@internal_package/shared";
 import { AssessmentStatus, Prisma } from "@prisma/client";

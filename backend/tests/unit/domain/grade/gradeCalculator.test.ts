@@ -1,5 +1,5 @@
 import { calculateCurrentGrade, calculateMaxPossibleGrade } from "../../../../src/domain/grade/gradeCalculator";
-import { Assessment } from "@internal_package/shared";
+import { Assessment } from "../../../../src/types/backendTypes";
 import { INVALID_GRADE } from "@internal_package/shared";
 import { AssessmentStatus, Prisma } from "@prisma/client";
 

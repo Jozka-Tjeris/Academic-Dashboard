@@ -1,6 +1,6 @@
 import { AssessmentStatus, Prisma } from "@prisma/client";
 import { calculateUrgencyScore } from "../../../../src/domain/grade/urgency";
-import { Assessment } from "@internal_package/shared";
+import { Assessment } from "../../../../src/types/backendTypes";
 
 describe("Urgency", () => {
   const baseAssessment: Assessment = {
