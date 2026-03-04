@@ -6,6 +6,7 @@ import { getCurrentUser } from './auth.controller';
 import { logout } from './auth.controller';
 import { authRateLimiter } from './rateLimit';
 import { env } from '../../config/env';
+import { csrfProtection } from './csrfProtection';
 
 const router = Router();
 
@@ -30,6 +31,6 @@ router.get(
 
 router.post('/logout', logout);
 
-router.get('/me', requireAuth, getCurrentUser);
+router.get('/me', requireAuth, csrfProtection, getCurrentUser);
 
 export default router;
