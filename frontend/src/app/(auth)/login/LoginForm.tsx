@@ -9,7 +9,7 @@ function WebsiteIcon({ height }: { height: number }){
 
 export default function LoginForm() {
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:4000/auth/google";
+    window.location.href = process.env.NEXT_PUBLIC_API_URL + "/api/auth/google";
   };
 
   return (
