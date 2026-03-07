@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { useCourse } from "@/hooks/useCourses";
 import GradeProgress from "@/components/grade/GradeProgress";
+import AddAssessmentForm from "@/components/assessment/AddAssessmentForm";
 
 export default function CoursePage() {
   const params = useParams();
@@ -30,6 +31,8 @@ export default function CoursePage() {
         <p className="mb-2 font-medium">{gradeText}</p>
         <GradeProgress value={currentGrade} max={maxPossibleGrade} />
       </div>
+
+      <AddAssessmentForm courseId={id} />
 
       {/* Assessment table will go here next */}
     </DashboardLayout>
