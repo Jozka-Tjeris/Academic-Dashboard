@@ -21,9 +21,15 @@ export default function CoursePage() {
       <p className="text-gray-600 mb-4">{data.description}</p>
 
       <div className="mb-6">
-        <p className="mb-2 font-medium">
-          {currentGrade.toFixed(1)} / {maxPossibleGrade.toFixed(1)}
-        </p>
+        {currentGrade && maxPossibleGrade ? (
+          <p className="mb-2 font-medium">
+            {currentGrade.toFixed(1)} / {maxPossibleGrade.toFixed(1)}
+          </p>
+        ) : (
+          <p className="mb-2 font-medium">
+            N/A
+          </p>
+        )}
         <GradeProgress value={currentGrade} max={maxPossibleGrade} />
       </div>
 

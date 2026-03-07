@@ -13,7 +13,7 @@ export async function apiFetch(
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      ...(csrfToken && { "X-CSRF-Token": csrfToken }),
+      ...(csrfToken ? { "X-CSRF-Token": csrfToken } : {}),
       ...options.headers,
     },
   }).then(res => {

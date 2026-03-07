@@ -12,9 +12,15 @@ export default function CourseCard({ course }: { course: Course }) {
     >
       <h3 className="text-lg font-semibold mb-2">{course.name}</h3>
 
-      <p className="text-sm text-gray-600 mb-3">
-        {currentGrade.toFixed(2)} / {maxPossibleGrade.toFixed(2)}
-      </p>
+      {currentGrade && maxPossibleGrade ? (
+        <p className="text-sm text-gray-600 mb-3">
+          {currentGrade.toFixed(2)} / {maxPossibleGrade.toFixed(2)}
+        </p>
+      ) : (
+        <p className="text-sm text-gray-600 mb-3">
+          N/A
+        </p>
+      )}
 
       <GradeProgress value={currentGrade} max={maxPossibleGrade} />
     </Link>

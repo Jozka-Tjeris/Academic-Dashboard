@@ -1,6 +1,6 @@
 export interface GradeSummary {
-  currentGrade: number;
-  maxPossibleGrade: number;
+  currentGrade: number | null;
+  maxPossibleGrade: number | null;
 }
 
 export type Course = {
