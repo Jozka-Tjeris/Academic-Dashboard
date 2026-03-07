@@ -3,7 +3,13 @@ import GradeProgress from "../grade/GradeProgress";
 import Link from "next/link";
 
 export default function CourseCard({ course }: { course: Course }) {
-  const { currentGrade, maxPossibleGrade } = course.gradeSummary;
+  const { currentGrade, maxPossibleGrade, gradeMessage } = course.gradeSummary;
+
+  // Determine the display text for the grade
+  const gradeText =
+    currentGrade !== null && maxPossibleGrade !== null
+      ? `${currentGrade.toFixed(2)} / ${maxPossibleGrade.toFixed(2)}`
+      : gradeMessage || "N/A"; // fallback if no message
 
   return (
     <Link
@@ -12,15 +18,7 @@ export default function CourseCard({ course }: { course: Course }) {
     >
       <h3 className="text-lg font-semibold mb-2">{course.name}</h3>
 
-      {currentGrade && maxPossibleGrade ? (
-        <p className="text-sm text-gray-600 mb-3">
-          {currentGrade.toFixed(2)} / {maxPossibleGrade.toFixed(2)}
-        </p>
-      ) : (
-        <p className="text-sm text-gray-600 mb-3">
-          N/A
-        </p>
-      )}
+      <p className="text-sm text-gray-600 mb-3">{gradeText}</p>
 
       <GradeProgress value={currentGrade} max={maxPossibleGrade} />
     </Link>
