@@ -54,9 +54,8 @@ export function getCourseServices(prisma: PrismaClient){
             status: v.status as AssessmentStatus
           }
         })
-        const currGrade = calculateCurrentGrade(assessments);
         const gradeSummary: GradeSummary = {
-          currentGrade: currGrade,
+          currentGrade: calculateCurrentGrade(assessments),
           maxPossibleGrade: calculateMaxPossibleGrade(assessments),
         }
         return {
@@ -92,9 +91,8 @@ export function getCourseServices(prisma: PrismaClient){
         }
       })
 
-      const currGrade = calculateCurrentGrade(assessments);
       const gradeSummary: GradeSummary = {
-        currentGrade: currGrade,
+        currentGrade: calculateCurrentGrade(assessments),
         maxPossibleGrade: calculateMaxPossibleGrade(assessments),
       }
       return {
