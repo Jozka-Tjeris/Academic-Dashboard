@@ -5,6 +5,7 @@ import DashboardLayout from "@/components/layout/DashboardLayout";
 import { useCourse } from "@/hooks/useCourses";
 import GradeProgress from "@/components/grade/GradeProgress";
 import AddAssessmentForm from "@/components/assessment/AddAssessmentForm";
+import AssessmentTable from "@/components/assessment/AssessmentTable";
 
 export default function CoursePage() {
   const params = useParams();
@@ -34,7 +35,10 @@ export default function CoursePage() {
 
       <AddAssessmentForm courseId={id} />
 
-      {/* Assessment table will go here next */}
+      <AssessmentTable
+        courseId={id}
+        assessments={data.assessments ?? []}
+      />
     </DashboardLayout>
   );
 }
