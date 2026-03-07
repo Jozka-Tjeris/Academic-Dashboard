@@ -1,19 +1,49 @@
 import { Course } from "src/types/backendTypes";
 import { Course as SharedCourse } from "@internal_package/shared";
 import { serializeAssessments } from "../assessments/assessmentSerializer";
+import { Prisma } from "@prisma/client";
 
+/**
+ * Safely converts Prisma.Decimal to number | null.
+ * Returns null if the value is NaN, Infinity, or undefined.
+ */
+function decimalToNumberOrNull(d?: Prisma.Decimal | null): number | null {
+  if (!d) return null;
 
+  const n = d.toNumber();
+  return Number.isFinite(n) ? n : null;
+}
+
+/**
+ * Serializes a single course, normalizes grade values,
+ * and adds optional messages depending on the grade state.
+ */
 export function serializeCourse(course: Course): SharedCourse {
+  const currentGrade = decimalToNumberOrNull(course.gradeSummary.currentGrade);
+  const maxPossibleGrade = decimalToNumberOrNull(course.gradeSummary.maxPossibleGrade);
+
+  // Optional message depending on grade calculation validity
+  let gradeMessage: string | null = null;
+  if (currentGrade === null) {
+    gradeMessage = "Grade calculation invalid or not available";
+  } else if (maxPossibleGrade !== null && maxPossibleGrade === 0) {
+    gradeMessage = "Max possible grade is zero, check grading setup";
+  }
+
   return {
     ...course,
     assessments: serializeAssessments(course.assessments ?? []),
     gradeSummary: {
-      currentGrade: course.gradeSummary.currentGrade.toNumber() ?? null,
-      maxPossibleGrade: course.gradeSummary.maxPossibleGrade.toNumber() ?? null,
+      currentGrade,
+      maxPossibleGrade,
+      gradeMessage,
     }
   };
 }
 
+/**
+ * Serializes multiple courses
+ */
 export function serializeCourses(courses: Course[]): SharedCourse[] {
   return courses.map(serializeCourse);
 }

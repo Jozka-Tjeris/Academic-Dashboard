@@ -1,6 +1,7 @@
 export interface GradeSummary {
   currentGrade: number | null;
   maxPossibleGrade: number | null;
+  gradeMessage: string | null;
 }
 
 export type Course = {

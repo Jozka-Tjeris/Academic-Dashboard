@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { signToken } from './jwt';
-import { env } from '../../config/env';
+import { env, isProd } from '../../config/env';
 import { TWENTYFOUR_HOURS_IN_MS } from '@internal_package/shared';
 import { AuthenticatedRequest } from '../../types/express';
 import crypto from "crypto";
@@ -18,16 +18,16 @@ export function googleCallback(req: Request, res: Response) {
 
   res.cookie("access_token", token, {
     httpOnly: true,
-    sameSite: "none",
-    secure: true,
+    sameSite: isProd ? "none" : "lax",
+    secure: isProd,
     maxAge: 7 * TWENTYFOUR_HOURS_IN_MS,
   });
 
   // NOT httpOnly (frontend must read it)
   res.cookie("csrf_token", csrfToken, {
     httpOnly: false,
-    sameSite: "none",
-    secure: true,
+    sameSite: isProd ? "none" : "lax",
+    secure: isProd,
   });
 
   return res.redirect(env.FRONTEND_URL + "/dashboard");
