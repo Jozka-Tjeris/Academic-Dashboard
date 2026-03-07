@@ -30,6 +30,10 @@ export function serializeCourse(course: Course): SharedCourse {
     gradeMessage = "Max possible grade is zero, check grading setup";
   }
 
+  if (!course.assessments || course.assessments.length <= 0) {
+    gradeMessage = "No assessments yet";
+  }
+
   return {
     ...course,
     assessments: serializeAssessments(course.assessments ?? []),
