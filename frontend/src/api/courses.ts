@@ -1,18 +1,8 @@
 import { Course } from "@internal_package/shared";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+import { apiFetch } from "../lib/queryClient";
 
 async function fetcher<T>(url: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_URL}${url}`, {
-    credentials: "include",
-    ...options,
-  });
-
-  if (!res.ok) {
-    throw new Error("Something went wrong");
-  }
-
-  return res.json();
+  return apiFetch(url, options);
 }
 
 export const getCourses = () => fetcher<Course[]>("/courses");
@@ -26,7 +16,6 @@ export const createCourse = (data: {
 }) =>
   fetcher<Course>("/courses", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
 

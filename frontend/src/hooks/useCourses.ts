@@ -5,7 +5,6 @@ import {
   createCourse,
   deleteCourse,
 } from "@/api/courses";
-import { Course } from "@internal_package/shared";
 
 export const useCourses = () =>
   useQuery({
