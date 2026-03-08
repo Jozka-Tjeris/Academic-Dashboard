@@ -1,5 +1,7 @@
+import { deriveStatusFromDate } from "src/domain/assessments/deriveStatusFromDate";
 import { HttpError } from "../../utils/httpError";
 import { AssessmentStatus, PrismaClient } from "@prisma/client";
+import { calculateUrgencyScore } from "src/domain/assessments/calculateUrgencyScore";
 
 interface CreateAssessmentInput {
   userId: string;
@@ -22,6 +24,42 @@ interface UpdateAssessmentInput {
 
 export function getAssessmentServices(prisma: PrismaClient){
   return {
+    async getAssessmentById(assessmentId: string){
+      const assessment = await prisma.assessment.findUniqueOrThrow({
+        where: {
+          assessmentId,
+        },
+        include: {
+          course: true,
+        },
+      });
+  
+      const derivedStatus = deriveStatusFromDate(
+        assessment.dueDate,
+        assessment.score,
+        assessment.submitted,
+        new Date(),
+      );
+      const urgencyScore = calculateUrgencyScore(assessment);
+
+      const { course, ...assessmentWithoutCourse } = assessment;
+  
+      const response = {
+        assessment: {
+          ...assessmentWithoutCourse,
+        },
+        course: {
+          courseId: assessment.course.courseId,
+          name: assessment.course.name,
+        },
+        derived: {
+          status: derivedStatus,
+          urgencyScore,
+        },
+      };
+
+      return response;
+    },
     async createAssessmentForCourse(input: CreateAssessmentInput){
       const { userId, courseId, title, dueDate,
          weight, description, maxScore, latePenalty, } = input;

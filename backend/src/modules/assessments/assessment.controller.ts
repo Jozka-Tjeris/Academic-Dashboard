@@ -6,6 +6,47 @@ import { logger } from "../../lib/logger";
 import { AuthenticatedRequest } from "../../types/express";
 import { serializeAssessment } from "./assessmentSerializer";
 
+export async function getAssessmentByIdHandler(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) {
+  const userId = req.jwt?.sub;
+  const assessmentId = req.params.id;
+
+  if (!userId) {
+    return next(new HttpError(401, "Authentication required"));
+  }
+
+  if (Array.isArray(assessmentId)) {
+    return next(new HttpError(400, "Only one assessment ID can be requested"));
+  }
+
+  try {
+    const assessmentService = getAssessmentServices(prisma);
+    const response = await assessmentService.getAssessmentById(assessmentId);
+
+    const serializedResponse = {
+      ...response,
+      assessment: serializeAssessment(response.assessment)
+    }
+    logger.info(
+      { requestId: req.id, assessmentId },
+      "Assessment fetched"
+    );
+    return res.json(serializedResponse);
+  } catch (error) {
+    logger.error(
+      { requestId: req.id, assessmentId, err: error },
+      "Failed to get assessment"
+    );
+    if (error instanceof Error && "code" in error && error.code === "P2025") {
+      return next(new HttpError(404, "Assessment not found"));
+    }
+    return next(error);
+  }
+}
+
 export async function createAssessmentHandler(req: AuthenticatedRequest, res: Response, next: NextFunction){
   const userId = req.jwt?.sub;
   const courseId = req.params.id;
