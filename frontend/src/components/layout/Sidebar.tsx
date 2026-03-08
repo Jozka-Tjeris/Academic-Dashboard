@@ -7,7 +7,7 @@ import clsx from "clsx";
 const navItems = [
   { name: "Dashboard", href: "/dashboard" },
   { name: "Courses", href: "/courses" },
-  { name: "Simulator", href: "/grade-simulator" },
+  { name: "Assessments", href: "/assessments" },
 ];
 
 export default function Sidebar() {
@@ -31,7 +31,6 @@ export default function Sidebar() {
                   ? "bg-blue-100 text-blue-600"
                   : "text-gray-600 hover:bg-gray-100"
               )}
-              onClick={(e) => e.preventDefault()}
             >
               {item.name}
             </Link>
