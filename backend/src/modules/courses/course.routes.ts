@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createCourseHandler, deleteCourseHandler } from "./course.controller";
+import { createCourseHandler, deleteCourseHandler, simulateCourseHandler } from "./course.controller";
 import { requireAuth } from "../auth/auth.middleware";
 import { getCoursesHandler } from "./course.controller";
 import { getCourseByIdHandler } from "./course.controller";
@@ -18,5 +18,12 @@ router.get("/:id", requireAuth, getCourseByIdHandler);
 
 // DELETE /courses/:id
 router.delete("/:id", requireAuth, csrfProtection, deleteCourseHandler);
+
+router.post(
+  "/:id/simulate",
+  requireAuth,
+  csrfProtection,
+  simulateCourseHandler
+);
 
 export default router;

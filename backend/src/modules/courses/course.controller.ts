@@ -5,6 +5,8 @@ import { logger } from "../../lib/logger";
 import { prisma } from "../../lib/prisma";
 import { AuthenticatedRequest } from "../../types/express";
 import { serializeCourse, serializeCourses } from "./courseSerializer";
+import { simulateFinalGrade } from "../../domain/grade/simulation";
+import { calculateCurrentGrade, calculateMaxPossibleGrade } from "../../domain/grade/gradeCalculator";
 
 export async function createCourseHandler(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const { name, description } = req.body;
@@ -113,6 +115,51 @@ export async function deleteCourseHandler(req: AuthenticatedRequest, res: Respon
     logger.error(
       { requestId: req.id, err: error },
       "Failed to delete course"
+    );
+    return next(error);
+  }
+}
+
+export async function simulateCourseHandler(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) {
+  const userId = req.jwt?.sub;
+  const courseId = req.params.id;
+
+  if (!userId) {
+    return next(new HttpError(401, "Authentication required"));
+  }
+
+  if (Array.isArray(courseId)) {
+    return next(new HttpError(400, "Only one Course ID can be requested"));
+  }
+
+  const { simulations } = req.body;
+
+  if (simulations && !Array.isArray(simulations)) {
+    return next(new HttpError(400, "Simulations must be an array"));
+  }
+
+  try {
+    const courseService = getCourseServices(prisma);
+    const result = await courseService.simulateCourseGrade(courseId, simulations);
+
+    logger.info(
+      { requestId: req.id, courseId },
+      "Course simulation calculated"
+    );
+
+    return res.json({
+      currentGrade: result.currentGrade.toNumber(),
+      maxPossibleGrade: result.maxPossibleGrade.toNumber(),
+      simulatedFinalGrade: result.simulatedFinalGrade.toNumber(),
+    });
+  } catch (error) {
+    logger.error(
+      { requestId: req.id, err: error },
+      "Failed to simulate course grade"
     );
     return next(error);
   }
