@@ -2,7 +2,7 @@ import { AssessmentStatus, Prisma, PrismaClient } from "@prisma/client";
 import { HttpError } from "../../utils/httpError";
 import { calculateCurrentGrade, calculateMaxPossibleGrade } from "../../domain/grade/gradeCalculator";
 import { Assessment, GradeSummary } from "../../types/backendTypes";
-import { simulateFinalGrade } from "src/domain/grade/simulation";
+import { simulateFinalGrade } from "../../domain/grade/simulation";
 
 interface CreateCourseInput {
   userId: string;

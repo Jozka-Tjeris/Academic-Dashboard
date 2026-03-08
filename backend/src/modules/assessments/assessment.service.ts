@@ -1,7 +1,7 @@
-import { deriveStatusFromDate } from "src/domain/assessments/deriveStatusFromDate";
+import { deriveStatusFromDate } from "../../domain/assessments/deriveStatusFromDate";
 import { HttpError } from "../../utils/httpError";
 import { AssessmentStatus, PrismaClient } from "@prisma/client";
-import { calculateUrgencyScore } from "src/domain/assessments/calculateUrgencyScore";
+import { calculateUrgencyScore } from "../../domain/assessments/calculateUrgencyScore";
 
 interface CreateAssessmentInput {
   userId: string;
