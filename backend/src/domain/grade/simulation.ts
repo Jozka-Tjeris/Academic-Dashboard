@@ -16,15 +16,14 @@ export function simulateFinalGrade(
   const totalWeight = assessments.reduce((acc, v) => acc.plus(v.weight), new Prisma.Decimal(0));
   if (!totalWeight.minus(1).abs().lte(EPSILON)) return new Prisma.Decimal(INVALID_GRADE);
 
-  const simMap: Record<string, Prisma.Decimal> = {};
-  simulationInputs.forEach((sim) => { 
-    simMap[sim.assessmentId] = sim.simulatedScore; 
-  });
+  const simMap: Map<string, Prisma.Decimal> = new Map(
+    simulationInputs.map(sim => [sim.assessmentId, sim.simulatedScore])
+  );
 
   let finalGrade = new Prisma.Decimal(0);
 
   for (const assessment of assessments) {
-    const scoreToUse = simMap[assessment.assessmentId] ?? assessment.score ?? assessment.maxScore ?? new Prisma.Decimal(DEFAULT_MAX_SCORE);
+    const scoreToUse = simMap.get(assessment.assessmentId) ?? assessment.score ?? assessment.maxScore ?? new Prisma.Decimal(DEFAULT_MAX_SCORE);
     const maxScore = assessment.maxScore ?? new Prisma.Decimal(DEFAULT_MAX_SCORE);
 
     finalGrade = finalGrade.plus(scoreToUse.div(maxScore).mul(assessment.weight));

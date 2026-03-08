@@ -1,7 +1,8 @@
-import { AssessmentStatus, PrismaClient } from "@prisma/client";
+import { AssessmentStatus, Prisma, PrismaClient } from "@prisma/client";
 import { HttpError } from "../../utils/httpError";
 import { calculateCurrentGrade, calculateMaxPossibleGrade } from "../../domain/grade/gradeCalculator";
 import { Assessment, GradeSummary } from "../../types/backendTypes";
+import { simulateFinalGrade } from "../../domain/grade/simulation";
 
 interface CreateCourseInput {
   userId: string;
@@ -115,5 +116,46 @@ export function getCourseServices(prisma: PrismaClient){
 
       return { message: "Course deleted successfully" };
     },
+    async simulateCourseGrade(courseId: string, simulations: { assessmentId: string; simulatedScore: number }[]){
+      const assessments = await prisma.assessment.findMany({
+        where: {
+          courseId,
+        },
+      });
+  
+      if (assessments.length === 0) {
+        throw new HttpError(404, "No assessments found for this course");
+      }
+      
+      const simulationInputs =
+        simulations?.map((sim: { assessmentId: string; simulatedScore: number }) => {
+          if (!sim.assessmentId || typeof sim.simulatedScore !== "number") {
+            throw new HttpError(400, "Invalid simulation input");
+          }
+
+          return {
+            assessmentId: sim.assessmentId,
+            simulatedScore: new Prisma.Decimal(sim.simulatedScore),
+          };
+        }) ?? [];
+
+      const assessmentIds = new Set(assessments.map(a => a.assessmentId));
+
+      for (const sim of simulationInputs) {
+        if (!assessmentIds.has(sim.assessmentId)) {
+          throw new HttpError(400, "Simulation references invalid assessment");
+        }
+      }
+
+      const currentGrade = calculateCurrentGrade(assessments);
+      const maxPossibleGrade = calculateMaxPossibleGrade(assessments);
+      const simulatedFinalGrade = simulateFinalGrade(assessments, simulationInputs);
+
+      return {
+        currentGrade,
+        maxPossibleGrade,
+        simulatedFinalGrade,
+      };
+    }
   }
 }
