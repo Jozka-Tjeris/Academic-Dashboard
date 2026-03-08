@@ -1,5 +1,5 @@
 import { AssessmentStatus, Prisma } from "@prisma/client";
-import { deriveStatusFromDate } from "../../../../src/domain/grade/status";
+import { deriveStatusFromDate } from "../../../../src/domain/assessments/deriveStatusFromDate";
 
 describe("Status", () => {
   describe("deriveStatusFromDate", () => {

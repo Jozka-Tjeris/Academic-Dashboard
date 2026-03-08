@@ -1,5 +1,5 @@
 import { AssessmentStatus, Prisma } from "@prisma/client";
-import { calculateUrgencyScore } from "../../../../src/domain/grade/urgency";
+import { calculateUrgencyScore } from "../../../../src/domain/assessments/calculateUrgencyScore";
 import { Assessment } from "../../../../src/types/backendTypes";
 
 describe("Urgency", () => {
