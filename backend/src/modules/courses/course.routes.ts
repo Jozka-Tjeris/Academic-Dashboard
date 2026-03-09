@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createCourseHandler, deleteCourseHandler, getCourseAnalytics, simulateCourseHandler } from "./course.controller";
+import { createCourseHandler, deleteCourseHandler, getCourseAnalytics, getCourseDashboard, simulateCourseHandler } from "./course.controller";
 import { requireAuth } from "../auth/auth.middleware";
 import { getCoursesHandler } from "./course.controller";
 import { getCourseByIdHandler } from "./course.controller";
@@ -30,6 +30,12 @@ router.get(
   "/courses/:id/analytics",
   requireAuth,
   getCourseAnalytics
+);
+
+router.get(
+  "/courses/:id/dashboard",
+  requireAuth,
+  getCourseDashboard
 );
 
 export default router;
