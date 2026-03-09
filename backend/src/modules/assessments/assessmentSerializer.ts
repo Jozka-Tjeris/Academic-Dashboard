@@ -1,7 +1,7 @@
-import { AssessmentStatus, DEFAULT_MAX_SCORE } from "@internal_package/shared";
-import { AssessmentBackend } from "src/types/backendTypes";
+import { DEFAULT_MAX_SCORE } from "@internal_package/shared";
+import { AssessmentBackend } from "../../types/backendTypes";
 import { AssessmentShared } from "@internal_package/shared";
-import { deriveStatusFromDate } from "src/domain/assessments/deriveStatusFromDate";
+import { deriveStatusFromDate } from "../../domain/assessments/deriveStatusFromDate";
 
 export function serializeAssessment(assessment: AssessmentBackend): AssessmentShared {
   return {
