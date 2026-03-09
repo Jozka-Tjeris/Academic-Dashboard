@@ -11,14 +11,13 @@ export type CourseBackend = Omit<CourseShared, 'assessments' | 'gradeSummary'> &
   gradeSummary: GradeSummary;
 }
 
-export type AssessmentBackend = Omit<AssessmentShared, 'score' | 'targetScore' | 'maxScore' | 'weight' | 'status' | 'latePenalty' | 'simulatedScore' > & {
+export type AssessmentBackend = Omit<AssessmentShared, 'score' | 'targetScore' | 'maxScore' | 'weight' | 'status' | 'latePenalty' > & {
   status: AssessmentStatus,
   score: Prisma.Decimal | null
   targetScore: Prisma.Decimal | null
   maxScore: Prisma.Decimal | null
   weight: Prisma.Decimal,
   latePenalty: Prisma.Decimal | null,
-  simulatedScore: Prisma.Decimal | null,
 }
 
 export type GradeComponent = Pick<AssessmentBackend, "assessmentId" | "weight" | "score" | "maxScore">;

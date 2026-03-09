@@ -10,7 +10,6 @@ export function serializeAssessment(assessment: AssessmentBackend): AssessmentSh
     weight: assessment.weight.toNumber(),
     latePenalty: assessment.latePenalty?.toNumber() ?? null,
     maxScore: assessment.maxScore?.toNumber() ?? DEFAULT_MAX_SCORE,
-    simulatedScore: assessment.simulatedScore?.toNumber() ?? null,
   };
 }
 
