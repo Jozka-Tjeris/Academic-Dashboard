@@ -31,3 +31,5 @@ export type Assessment = {
   createdAt: Date,
   updatedAt: Date,
 }
+
+export type GradeComponent = Pick<Assessment, "assessmentId" | "weight" | "score" | "maxScore">;
