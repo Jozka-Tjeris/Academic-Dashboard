@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 const testId = uuidv4().split('-')[0];
 const COURSE_NAME = `GET_Test_Course_${testId}`;
 const COURSE_FOR_OVERFLOW = `OVERFLOW_Test_Course_${testId}`;
+const COURSE_FOR_PUT = `PUT_Test_Course_${testId}`;
 const ASSESS_FOR_DELETE = `DELETE_Test_Assess_${testId}`;
 const ASSESS_FOR_WEIGHT_OVERFLOW = `OVERFLOW_Test_Assess_${testId}`;
 
