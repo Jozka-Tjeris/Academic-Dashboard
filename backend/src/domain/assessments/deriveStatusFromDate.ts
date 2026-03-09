@@ -1,5 +1,5 @@
-import { TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
-import { AssessmentStatus, Prisma } from "@prisma/client";
+import { AssessmentStatus, TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
+import { Prisma } from "@prisma/client";
 
 export function deriveStatusFromDate(
   dueDate: Date,

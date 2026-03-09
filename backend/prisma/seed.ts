@@ -1,7 +1,7 @@
-import { AssessmentStatus, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { TWENTYFOUR_HOURS_IN_MS } from '@internal_package/shared';
+import { TWENTYFOUR_HOURS_IN_MS, AssessmentStatus } from '@internal_package/shared';
 import { validateTestEnvironment } from './db-guard';
 
 validateTestEnvironment();
@@ -76,7 +76,6 @@ async function main() {
       weight: 20,
       latePenalty: 5,
       maxScore: 100,
-      isSimulated: false,
       submitted: false,
     },
     {
@@ -92,7 +91,6 @@ async function main() {
       weight: 30,
       latePenalty: 10,
       maxScore: 100,
-      isSimulated: false,
       submitted: false,
     },
   ];

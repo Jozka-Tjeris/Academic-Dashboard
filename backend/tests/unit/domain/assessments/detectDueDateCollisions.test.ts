@@ -1,6 +1,6 @@
 import { detectDueDateCollisions } from "../../../../src/domain/assessments/detectDueDateCollisions";
 import { AssessmentBackend } from "../../../../src/types/backendTypes";
-import { Prisma, AssessmentStatus } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 // Reusable base assessments
 const baseAssessments: Omit<AssessmentBackend, "assessmentId" | "dueDate">[] = [
@@ -8,13 +8,11 @@ const baseAssessments: Omit<AssessmentBackend, "assessmentId" | "dueDate">[] = [
     courseId: "c1",
     title: "Quiz",
     description: null,
-    status: AssessmentStatus.UPCOMING,
     score: new Prisma.Decimal(80),
     targetScore: null,
     weight: new Prisma.Decimal(0.4),
     latePenalty: null,
     maxScore: null,
-    isSimulated: null,
     submitted: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -23,13 +21,11 @@ const baseAssessments: Omit<AssessmentBackend, "assessmentId" | "dueDate">[] = [
     courseId: "c2",
     title: "Exam",
     description: null,
-    status: AssessmentStatus.UPCOMING,
     score: null,
     targetScore: null,
     weight: new Prisma.Decimal(0.3),
     latePenalty: null,
     maxScore: null,
-    isSimulated: null,
     submitted: true,
     createdAt: new Date(),
     updatedAt: new Date(),

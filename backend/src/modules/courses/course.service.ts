@@ -1,7 +1,7 @@
-import { AssessmentStatus, Prisma, PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { HttpError } from "../../utils/httpError";
 import { calculateCurrentGrade, calculateMaxPossibleGrade } from "../../domain/grade/gradeCalculator";
-import { AssessmentBackend, GradeSummary } from "../../types/backendTypes";
+import { GradeSummary } from "../../types/backendTypes";
 import { simulateFinalGrade } from "../../domain/grade/simulation";
 
 interface CreateCourseInput {
@@ -46,18 +46,9 @@ export function getCourseServices(prisma: PrismaClient){
 
       // Compute grade summary for each course
       const coursesWithSummary = courses.map((course) => {
-        const assessments: AssessmentBackend[] = course.assessments.map((v) => {
-          if(v.status in AssessmentStatus !== true){
-            throw new HttpError(422, "Unprocessable Entity error");
-          }
-          return {
-            ...v,
-            status: v.status as AssessmentStatus
-          }
-        })
         const gradeSummary: GradeSummary = {
-          currentGrade: calculateCurrentGrade(assessments),
-          maxPossibleGrade: calculateMaxPossibleGrade(assessments),
+          currentGrade: calculateCurrentGrade(course.assessments),
+          maxPossibleGrade: calculateMaxPossibleGrade(course.assessments),
         }
         return {
           ...course,
@@ -82,19 +73,9 @@ export function getCourseServices(prisma: PrismaClient){
         throw new HttpError(404, "Course not found");
       }
 
-      const assessments: AssessmentBackend[] = course.assessments.map((v) => {
-        if(v.status in AssessmentStatus !== true){
-          throw new HttpError(422, "Unprocessable Entity error");
-        }
-        return {
-          ...v,
-          status: v.status as AssessmentStatus
-        }
-      })
-
       const gradeSummary: GradeSummary = {
-        currentGrade: calculateCurrentGrade(assessments),
-        maxPossibleGrade: calculateMaxPossibleGrade(assessments),
+        currentGrade: calculateCurrentGrade(course.assessments),
+        maxPossibleGrade: calculateMaxPossibleGrade(course.assessments),
       }
       return {
         ...course,

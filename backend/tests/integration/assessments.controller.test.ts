@@ -1,7 +1,7 @@
 import request from "supertest";
 import { app } from "../../src/app";
 import { prisma } from "../../src/lib/prisma";
-import { AssessmentStatus, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -58,9 +58,9 @@ describe("Assessments controller", () => {
     await prisma.assessment.createMany({
       data: [
         { courseId, userId, title: ASSESS_FOR_DELETE, dueDate: new Date(), 
-          status: AssessmentStatus.UPCOMING, weight: new Prisma.Decimal(0), submitted: false },
+          weight: new Prisma.Decimal(0), submitted: false },
         { courseId, userId, title: ASSESS_FOR_WEIGHT_OVERFLOW, dueDate: new Date(), 
-          status: AssessmentStatus.UPCOMING, weight: new Prisma.Decimal(80), submitted: false },
+          weight: new Prisma.Decimal(80), submitted: false },
       ]
     })
 
@@ -139,7 +139,6 @@ describe("Assessments controller", () => {
           dueDate: new Date(),
           weight: 20,
           submitted: false,
-          status: AssessmentStatus.UPCOMING,
           maxScore: 100,
         },
       });

@@ -1,20 +1,20 @@
 import { AssessmentBackend } from "../../../../src/types/backendTypes";
 import { simulateFinalGrade } from "../../../../src/domain/grade/simulation";
 import { INVALID_GRADE } from "@internal_package/shared";
-import { AssessmentStatus, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 describe("Grade Simulation Functions", () => {
   const assessments: AssessmentBackend[] = [
     {
       assessmentId: "a1",    courseId: "c1",        title: "Quiz",  description: null,
-      dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: new Prisma.Decimal(80),      targetScore: null,
-      weight: new Prisma.Decimal(0.4),           latePenalty: null,     maxScore: null, isSimulated: null,
+      dueDate: new Date(),   score: new Prisma.Decimal(80),      targetScore: null,
+      weight: new Prisma.Decimal(0.4),           latePenalty: null,     maxScore: null,
       submitted: true,       createdAt: new Date(), updatedAt: new Date(),
     },
     {
       assessmentId: "a2",    courseId: "c1",        title: "Exam",  description: null,
-      dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: null,    targetScore: null,
-      weight: new Prisma.Decimal(0.6),           latePenalty: null,     maxScore: null, isSimulated: null,
+      dueDate: new Date(),   score: null,    targetScore: null,
+      weight: new Prisma.Decimal(0.6),           latePenalty: null,     maxScore: null,
       submitted: true,       createdAt: new Date(), updatedAt: new Date(),
     }
   ];
@@ -47,13 +47,13 @@ describe("Grade Simulation - Edge Cases", () => {
     test("simulate all assessments with custom scores", () => {
       const assessments: AssessmentBackend[] = [
         { assessmentId: "a1",    courseId: "c1",        title: "Test1", description: null, 
-          dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: new Prisma.Decimal(50),    targetScore: null, 
-          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, isSimulated: null,
+          dueDate: new Date(),   score: new Prisma.Decimal(50),    targetScore: null, 
+          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null,
           submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         },
         { assessmentId: "a2",    courseId: "c1",        title: "Test2", description: null, 
-          dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: null,    targetScore: null, 
-          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, isSimulated: null,
+          dueDate: new Date(),   score: null,    targetScore: null, 
+          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null,
           submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         }
       ];
@@ -69,13 +69,13 @@ describe("Grade Simulation - Edge Cases", () => {
     test("simulate with some scores missing", () => {
       const assessments: AssessmentBackend[] = [
         { assessmentId: "a1",    courseId: "c1",        title: "Test1", description: null, 
-          dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: null,    targetScore: null, 
-          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, isSimulated: null,
+          dueDate: new Date(),   score: null,    targetScore: null, 
+          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null,
           submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         },
         { assessmentId: "a2",    courseId: "c1",        title: "Test2", description: null, 
-          dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: null,    targetScore: null, 
-          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, isSimulated: null,
+          dueDate: new Date(),   score: null,    targetScore: null, 
+          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null,
           submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         }
       ];
