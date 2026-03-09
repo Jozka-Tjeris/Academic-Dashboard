@@ -9,4 +9,4 @@ export const EPSILON = 0.0001;
 // 24 hours in milliseconds (1000ms * 60s * 60m * 24h)
 export const TWENTYFOUR_HOURS_IN_MS = 1000 * 60 * 60 * 24;
 
-export const DUEDATE_COLLISION_WINDOW_DAYS = 0;
+export const DUEDATE_COLLISION_WINDOW_DAYS = 3;

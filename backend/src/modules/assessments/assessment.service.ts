@@ -2,7 +2,8 @@ import { deriveStatusFromDate } from "../../domain/assessments/deriveStatusFromD
 import { HttpError } from "../../utils/httpError";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { calculateUrgencyScore } from "../../domain/assessments/calculateUrgencyScore";
-import { AssessmentShared } from "@internal_package/shared";
+import { AssessmentShared, DUEDATE_COLLISION_WINDOW_DAYS, TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
+import { detectDueDateCollisions } from "src/domain/assessments/detectDueDateCollisions";
 
 interface CreateAssessmentInput {
   userId: string;
@@ -182,6 +183,19 @@ export function getAssessmentServices(prisma: PrismaClient){
       });
 
       return { message: "Assessment deleted successfully" };
-    }
+    },
+    async getAssessmentCollisions(userId: string, daysWindow: number = DUEDATE_COLLISION_WINDOW_DAYS){
+      const assessments = await prisma.assessment.findMany({
+        where: {
+          course: { userId },
+          submitted: false
+        },
+        orderBy: {
+          dueDate: "asc"
+        }
+      });
+
+      return { clusters: detectDueDateCollisions(assessments, daysWindow) };
+    },
   }
 }

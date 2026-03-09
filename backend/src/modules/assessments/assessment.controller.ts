@@ -167,3 +167,28 @@ export async function deleteAssessmentHandler(req: AuthenticatedRequest, res: Re
     return next(error);
   }
 }
+
+export const getAssessmentCollisions = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const userId = req.jwt?.sub;
+
+  if (!userId) {
+    return next(new HttpError(401, "Authentication required"));
+  }
+
+  try {
+    const days = req.query.days ? Number(req.query.days) : undefined;
+    const assessmentService = getAssessmentServices(prisma);
+    const collisions = await assessmentService.getAssessmentCollisions(
+      userId,
+      days
+    );
+
+    res.json(collisions);
+  } catch (err) {
+    next(err);
+  }
+};

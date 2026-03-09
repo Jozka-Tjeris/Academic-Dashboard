@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { requireAuth } from "../auth/auth.middleware";
-import { createAssessmentHandler, deleteAssessmentHandler, getAssessmentByIdHandler } from "./assessment.controller";
+import { createAssessmentHandler, deleteAssessmentHandler, getAssessmentByIdHandler, getAssessmentCollisions } from "./assessment.controller";
 import { updateAssessmentHandler } from "./assessment.controller";
 import { csrfProtection } from "../auth/csrfProtection";
 
@@ -31,6 +31,12 @@ router.delete(
   requireAuth,
   csrfProtection,
   deleteAssessmentHandler
+);
+
+router.get(
+  "/assessments/collisions",
+  requireAuth,
+  getAssessmentCollisions
 );
 
 export default router;
