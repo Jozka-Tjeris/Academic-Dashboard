@@ -1,7 +1,8 @@
 import { deriveStatusFromDate } from "../../domain/assessments/deriveStatusFromDate";
 import { HttpError } from "../../utils/httpError";
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { calculateUrgencyScore } from "../../domain/assessments/calculateUrgencyScore";
+import { AssessmentShared } from "@internal_package/shared";
 
 interface CreateAssessmentInput {
   userId: string;
@@ -17,10 +18,16 @@ interface CreateAssessmentInput {
 interface UpdateAssessmentInput {
   userId: string;
   assessmentId: string;
-  score?: number;
-  submitted?: boolean;
-  targetScore?: number;
+  updates: Partial<AssessmentShared>;
 }
+
+const IMMUTABLE_FIELDS = new Set([
+  "assessmentId",
+  "courseId",
+  "userId",
+  "createdAt",
+  "updatedAt",
+]);
 
 export function getAssessmentServices(prisma: PrismaClient){
   return {
@@ -114,7 +121,17 @@ export function getAssessmentServices(prisma: PrismaClient){
       });
     },
     async updateAssessment(input: UpdateAssessmentInput){
-      const { userId, assessmentId, score, submitted, targetScore } = input;
+      const { userId, assessmentId, updates } = input;
+
+      if (!updates || typeof updates !== "object") {
+        throw new HttpError(400, "Updates object is required");
+      }
+
+      for (const key of Object.keys(updates)) {
+        if (IMMUTABLE_FIELDS.has(key)) {
+          throw new HttpError(400, `Field '${key}' cannot be updated`);
+        }
+      }
 
       const assessment = await prisma.assessment.findFirst({
         where: {
@@ -127,12 +144,20 @@ export function getAssessmentServices(prisma: PrismaClient){
         throw new HttpError(404, "Assessment not found");
       }
 
-      if(score !== undefined){
-        if(typeof score !== "number" || score < 0){
+      const updateData: Prisma.AssessmentUpdateInput = {
+        ...updates,
+        maxScore: updates.maxScore ?? assessment.maxScore,
+      };
+
+      if(updates.score !== undefined){
+        if(typeof updates.score !== "number" || updates.score < 0){
           throw new HttpError(400, "Score must be a positive number");
         }
-        if(assessment.maxScore !== null && assessment.maxScore !== undefined && score > assessment.maxScore.toNumber()){
+        if(assessment.maxScore !== null && assessment.maxScore !== undefined && updates.score > assessment.maxScore.toNumber()){
           throw new HttpError(400, "Score cannot exceed maxScore");
+        }
+        if (updates.score !== null) {
+          updateData.submitted = true;
         }
       }
 
@@ -140,11 +165,7 @@ export function getAssessmentServices(prisma: PrismaClient){
         where: {
           assessmentId, userId,
         },
-        data: {
-          ...(score !== undefined && { score }),
-          ...(submitted !== undefined && { submitted }),
-          ...(targetScore !== undefined && { targetScore }),
-        },
+        data: updateData,
       });
     },
     async deleteAssessment(userId: string, assessmentId: string){

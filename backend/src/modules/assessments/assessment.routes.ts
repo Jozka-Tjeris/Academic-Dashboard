@@ -19,7 +19,7 @@ router.post(
   createAssessmentHandler
 );
 
-router.put(
+router.patch(
   "/assessments/:id",
   requireAuth,
   csrfProtection,

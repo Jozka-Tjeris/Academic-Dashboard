@@ -180,7 +180,9 @@ describe("Assessment Service", () => {
       const result = await service.updateAssessment({
         userId: "user1",
         assessmentId: "a1",
-        score: 80,
+        updates: {
+          score: 80,
+        }
       });
 
       expect(result.score?.toNumber()).toBe(80);
@@ -208,7 +210,9 @@ describe("Assessment Service", () => {
         service.updateAssessment({
           userId: "user1",
           assessmentId: "a1",
-          score: 80,
+          updates: {
+            score: 80,
+          }
         })
       ).rejects.toMatchObject({ status: 400 });
     });
@@ -235,7 +239,9 @@ describe("Assessment Service", () => {
         service.updateAssessment({
           userId: "user1",
           assessmentId: "a1",
-          score: -80,
+          updates: {
+            score: -80,
+          }
         })
       ).rejects.toMatchObject({ status: 400 });
     });
@@ -247,7 +253,9 @@ describe("Assessment Service", () => {
         service.updateAssessment({
           userId: "user1",
           assessmentId: "a1",
-          score: 80,
+          updates: {
+            score: 80,
+          }
         })
       ).rejects.toMatchObject({ status: 404 });
     });

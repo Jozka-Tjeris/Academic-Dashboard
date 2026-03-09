@@ -110,16 +110,12 @@ export async function updateAssessmentHandler(req: AuthenticatedRequest, res: Re
     return next(new HttpError(400, "Only one Assessment ID can be requested"))
   }
 
-  const { score, submitted, targetScore } = req.body;
-
   try {
     const assessmentService = getAssessmentServices(prisma);
     const updated = await assessmentService.updateAssessment({
       userId,
       assessmentId,
-      score,
-      submitted,
-      targetScore,
+      updates: req.body,
     });
 
     logger.info(
