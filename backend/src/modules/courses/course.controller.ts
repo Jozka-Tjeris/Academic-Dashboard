@@ -5,8 +5,6 @@ import { logger } from "../../lib/logger";
 import { prisma } from "../../lib/prisma";
 import { AuthenticatedRequest } from "../../types/express";
 import { serializeCourse, serializeCourses } from "./courseSerializer";
-import { simulateFinalGrade } from "../../domain/grade/simulation";
-import { calculateCurrentGrade, calculateMaxPossibleGrade } from "../../domain/grade/gradeCalculator";
 
 export async function createCourseHandler(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const { name, description } = req.body;

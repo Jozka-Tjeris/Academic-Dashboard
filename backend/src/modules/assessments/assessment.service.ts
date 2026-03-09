@@ -43,7 +43,8 @@ export function getAssessmentServices(prisma: PrismaClient){
       const urgencyScore = calculateUrgencyScore(assessment);
 
       const { course, ...assessmentWithoutCourse } = assessment;
-  
+      void course;
+      
       const response = {
         assessment: {
           ...assessmentWithoutCourse,
