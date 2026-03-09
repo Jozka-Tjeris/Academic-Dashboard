@@ -7,6 +7,7 @@ import { deriveStatusFromDate } from "src/domain/assessments/deriveStatusFromDat
 import { AssessmentStatus, TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
 import { calculateUrgencyScore } from "src/domain/assessments/calculateUrgencyScore";
 import { detectDueDateCollisions } from "src/domain/assessments/detectDueDateCollisions";
+import { rankAssessmentsByUrgency } from "src/domain/assessments/rankAssessmentsByUrgency";
 
 interface CreateCourseInput {
   userId: string;
@@ -188,6 +189,8 @@ export function getCourseServices(prisma: PrismaClient){
 
       const activeAssessments = assessments.filter(a => !a.submitted);
 
+      const ranked = rankAssessmentsByUrgency(activeAssessments, now);
+
       const urgencyScores = activeAssessments.map(a => ({
         assessmentId: a.assessmentId,
         title: a.title,
@@ -205,9 +208,7 @@ export function getCourseServices(prisma: PrismaClient){
           ? new Prisma.Decimal(0)
           : totalUrgency.div(urgencyScores.length);
 
-      const topAssessments = urgencyScores
-        .sort((a, b) => b.urgency.comparedTo(a.urgency))
-        .slice(0, 3);
+      const topAssessments = ranked.slice(0, 3);
 
       return {
         currentGrade,
@@ -256,12 +257,7 @@ export function getCourseServices(prisma: PrismaClient){
 
       const upcoming = assessments.filter(a => !a.submitted);
 
-      const urgencyRanked = upcoming
-        .map(a => ({
-          ...a,
-          urgency: calculateUrgencyScore(a, now)
-        }))
-        .sort((a, b) => b.urgency.comparedTo(a.urgency));
+      const urgencyRanked = rankAssessmentsByUrgency(upcoming, now);
 
       // Workload Stats
 
