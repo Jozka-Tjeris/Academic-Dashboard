@@ -1,4 +1,4 @@
-import { Assessment } from "@internal_package/shared";
+import { AssessmentShared } from "@internal_package/shared";
 import { apiFetch } from "../lib/queryClient";
 
 async function fetcher<T>(url: string, options?: RequestInit): Promise<T> {
@@ -16,7 +16,7 @@ export const createAssessment = (
     latePenalty?: number;
   }
 ) =>
-  fetcher<Assessment>(`/courses/${courseId}/assessments`, {
+  fetcher<AssessmentShared>(`/courses/${courseId}/assessments`, {
     method: "POST",
     body: JSON.stringify(data),
   });
@@ -26,7 +26,7 @@ export const updateAssessment = (assessmentId: string, data: {
   submitted?: boolean,
   targetScore?: number
 }) => 
-  fetcher<Assessment>(`/assessments/${assessmentId}`, {
+  fetcher<AssessmentShared>(`/assessments/${assessmentId}`, {
     method: "PUT",
     body: JSON.stringify(data),
   });

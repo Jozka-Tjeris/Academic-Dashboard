@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Assessment } from "@internal_package/shared";
+import { AssessmentShared } from "@internal_package/shared";
 import { useUpdateAssessment } from "@/hooks/useAssessments";
 
 interface EditableScoreProps {
-  assessment: Assessment;
+  assessment: AssessmentShared;
   courseId: string;
 }
 

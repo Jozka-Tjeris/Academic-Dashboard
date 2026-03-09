@@ -1,10 +1,10 @@
 import { calculateCurrentGrade, calculateMaxPossibleGrade } from "../../../../src/domain/grade/gradeCalculator";
-import { Assessment } from "../../../../src/types/backendTypes";
+import { AssessmentBackend } from "../../../../src/types/backendTypes";
 import { INVALID_GRADE } from "@internal_package/shared";
 import { AssessmentStatus, Prisma } from "@prisma/client";
 
 describe("Grade Calculation Functions", () => {
-  const assessments: Assessment[] = [
+  const assessments: AssessmentBackend[] = [
     {
       assessmentId: "a1",    courseId: "c1",        title: "Quiz",  description: null,
       dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: new Prisma.Decimal(80),      targetScore: null,
@@ -50,7 +50,7 @@ describe("Grade Calculation Functions", () => {
 describe("Grade Calculation Functions - Edge Cases", () => {
   describe("calculateCurrentGrade", () => {
     test("all scores null should return 0", () => {
-      const assessments: Assessment[] = [
+      const assessments: AssessmentBackend[] = [
         { assessmentId: "a1",    courseId: "c1",        title: "Test1", description: null, 
           dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: null,    targetScore: null, 
           weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, isSimulated: null,
@@ -67,7 +67,7 @@ describe("Grade Calculation Functions - Edge Cases", () => {
     });
 
     test("weights sum slightly off due to floating point", () => {
-      const assessments: Assessment[] = [
+      const assessments: AssessmentBackend[] = [
         { assessmentId: "a1",    courseId: "c1",        title: "Test1", description: null, 
           dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: new Prisma.Decimal(80),      targetScore: null, 
           weight: new Prisma.Decimal(0.3333333),     latePenalty: null,     maxScore: null, isSimulated: null,
@@ -84,7 +84,7 @@ describe("Grade Calculation Functions - Edge Cases", () => {
     });
 
     test("weight sum far off should return INVALID_GRADE", () => {
-      const assessments: Assessment[] = [
+      const assessments: AssessmentBackend[] = [
         { assessmentId: "a1",    courseId: "c1",        title: "Test1", description: null, 
           dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: new Prisma.Decimal(80),      targetScore: null, 
           weight: new Prisma.Decimal(0.3),           latePenalty: null,     maxScore: null, isSimulated: null,
@@ -101,7 +101,7 @@ describe("Grade Calculation Functions - Edge Cases", () => {
     });
 
     test("zero weight assessments should not affect grade", () => {
-      const assessments: Assessment[] = [
+      const assessments: AssessmentBackend[] = [
         { assessmentId: "a1",    courseId: "c1",      title: "Test1", description: null, 
           dueDate: new Date(),   status: AssessmentStatus.UPCOMING,  score: new Prisma.Decimal(80),      targetScore: null, 
           weight: new Prisma.Decimal(0),             latePenalty: null,   maxScore: null, isSimulated: null,
@@ -120,7 +120,7 @@ describe("Grade Calculation Functions - Edge Cases", () => {
 
   describe("calculateMaxPossibleGrade", () => {
     test("all scores null should return 1 (max possible)", () => {
-      const assessments: Assessment[] = [
+      const assessments: AssessmentBackend[] = [
         { assessmentId: "a1",    courseId: "c1",        title: "Test1", description: null, 
           dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: null,    targetScore: null, 
           weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, isSimulated: null,

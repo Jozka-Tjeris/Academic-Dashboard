@@ -1,9 +1,9 @@
 import { detectDueDateCollisions } from "../../../../src/domain/assessments/detectDueDateCollisions";
-import { Assessment } from "../../../../src/types/backendTypes";
+import { AssessmentBackend } from "../../../../src/types/backendTypes";
 import { Prisma, AssessmentStatus } from "@prisma/client";
 
 // Reusable base assessments
-const baseAssessments: Omit<Assessment, "assessmentId" | "dueDate">[] = [
+const baseAssessments: Omit<AssessmentBackend, "assessmentId" | "dueDate">[] = [
   {
     courseId: "c1",
     title: "Quiz",
@@ -37,7 +37,7 @@ const baseAssessments: Omit<Assessment, "assessmentId" | "dueDate">[] = [
 ];
 
 // Utility to clone and assign assessmentId + dueDate
-const makeAssessment = (baseIndex: number, assessmentId: string, dueDate: string): Assessment => ({
+const makeAssessment = (baseIndex: number, assessmentId: string, dueDate: string): AssessmentBackend => ({
   ...baseAssessments[baseIndex % baseAssessments.length],
   assessmentId,
   dueDate: new Date(dueDate)

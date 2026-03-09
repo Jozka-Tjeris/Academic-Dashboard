@@ -4,17 +4,17 @@ export interface GradeSummary {
   gradeMessage: string | null;
 }
 
-export type Course = {
+export type CourseShared = {
   courseId: string,
   name: string,
   description: string | null,
   createdAt: Date,
   updatedAt: Date,
-  assessments?: Assessment[];
+  assessments?: AssessmentShared[];
   gradeSummary: GradeSummary;
 }
 
-export type Assessment = {
+export type AssessmentShared = {
   assessmentId: string,
   courseId: string,
   title: string,
@@ -32,4 +32,4 @@ export type Assessment = {
   updatedAt: Date,
 }
 
-export type GradeComponent = Pick<Assessment, "assessmentId" | "weight" | "score" | "maxScore">;
+export type GradeComponent = Pick<AssessmentShared, "assessmentId" | "weight" | "score" | "maxScore">;

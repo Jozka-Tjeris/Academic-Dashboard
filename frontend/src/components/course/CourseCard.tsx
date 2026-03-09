@@ -1,8 +1,8 @@
-import { Course } from "@internal_package/shared";
+import { CourseShared } from "@internal_package/shared";
 import GradeProgress from "../grade/GradeProgress";
 import Link from "next/link";
 
-export default function CourseCard({ course }: { course: Course }) {
+export default function CourseCard({ course }: { course: CourseShared }) {
   const { currentGrade, maxPossibleGrade, gradeMessage } = course.gradeSummary;
 
   // Determine the display text for the grade

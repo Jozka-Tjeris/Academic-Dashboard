@@ -1,5 +1,5 @@
 import { DUEDATE_COLLISION_WINDOW_DAYS, TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
-import { Assessment } from "../../types/backendTypes";
+import { AssessmentBackend } from "../../types/backendTypes";
 
 type Collision = {
   startDate: string
@@ -9,7 +9,7 @@ type Collision = {
 }
 
 export function detectDueDateCollisions(
-  assessments: Assessment[], 
+  assessments: AssessmentBackend[], 
   windowDays = DUEDATE_COLLISION_WINDOW_DAYS): Collision[]{
 
   const sorted = [...assessments]

@@ -1,8 +1,8 @@
 import { DEFAULT_MAX_SCORE } from "@internal_package/shared";
-import { Assessment } from "src/types/backendTypes";
-import { Assessment as SharedAssessment } from "@internal_package/shared";
+import { AssessmentBackend } from "src/types/backendTypes";
+import { AssessmentShared } from "@internal_package/shared";
 
-export function serializeAssessment(assessment: Assessment): SharedAssessment {
+export function serializeAssessment(assessment: AssessmentBackend): AssessmentShared {
   return {
     ...assessment,
     score: assessment.score?.toNumber() ?? null,
@@ -13,6 +13,6 @@ export function serializeAssessment(assessment: Assessment): SharedAssessment {
   };
 }
 
-export function serializeAssessments(assessments: Assessment[]): SharedAssessment[] {
+export function serializeAssessments(assessments: AssessmentBackend[]): AssessmentShared[] {
   return assessments.map(serializeAssessment);
 }

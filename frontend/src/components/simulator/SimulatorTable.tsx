@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Assessment } from "@internal_package/shared";
+import { AssessmentShared } from "@internal_package/shared";
 import Button from "@/components/ui/Button";
 import { SimulationInput } from "@/api/simulator";
 
 interface SimulatorTableProps {
-  assessments: Assessment[];
+  assessments: AssessmentShared[];
   onRunSimulation: (data: SimulationInput[]) => void;
 }
 

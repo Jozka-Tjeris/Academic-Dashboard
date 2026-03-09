@@ -1,10 +1,10 @@
 import { TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
-import { Assessment } from "../../types/backendTypes";
+import { AssessmentBackend } from "../../types/backendTypes";
 import { deriveStatusFromDate } from "./deriveStatusFromDate";
 import { AssessmentStatus, Prisma } from "@prisma/client";
 
 export function calculateUrgencyScore(
-  assessment: Assessment,
+  assessment: AssessmentBackend,
   now: Date = new Date()
 ): Prisma.Decimal {
   const status = deriveStatusFromDate(assessment.dueDate, assessment.score, assessment.submitted, now);
