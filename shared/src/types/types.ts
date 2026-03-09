@@ -26,7 +26,7 @@ export type AssessmentShared = {
   maxScore: number | null,
   weight: number,
   latePenalty: number | null,
-  isSimulated: boolean | null,
+  simulatedScore: number | null,
   submitted: boolean,
   createdAt: Date,
   updatedAt: Date,

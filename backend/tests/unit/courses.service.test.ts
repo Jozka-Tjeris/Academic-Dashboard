@@ -114,7 +114,7 @@ describe("Course Services", () => {
             weight: new Prisma.Decimal(0),
             latePenalty: null,
             maxScore: new Prisma.Decimal(100),
-            isSimulated: null,
+            simulatedScore: null,
             submitted: false
           }
         ],
@@ -182,7 +182,7 @@ describe("Course Services", () => {
             weight: new Prisma.Decimal(0),
             latePenalty: null,
             maxScore: new Prisma.Decimal(100),
-            isSimulated: null,
+            simulatedScore: null,
             submitted: false
           }
         ],

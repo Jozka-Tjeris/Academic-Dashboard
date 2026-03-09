@@ -8,13 +8,13 @@ describe("Grade Calculation Functions", () => {
     {
       assessmentId: "a1",    courseId: "c1",        title: "Quiz",  description: null,
       dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: new Prisma.Decimal(80),      targetScore: null,
-      weight: new Prisma.Decimal(0.4),           latePenalty: null,     maxScore: null, isSimulated: null,
+      weight: new Prisma.Decimal(0.4),           latePenalty: null,     maxScore: null, simulatedScore: null,
       submitted: true,       createdAt: new Date(), updatedAt: new Date(),
     },
     {
       assessmentId: "a2",    courseId: "c1",        title: "Exam",  description: null,
       dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: null,    targetScore: null,
-      weight:  new Prisma.Decimal(0.6),           latePenalty: null,     maxScore: null, isSimulated: null,
+      weight:  new Prisma.Decimal(0.6),           latePenalty: null,     maxScore: null, simulatedScore: null,
       submitted: true,       createdAt: new Date(), updatedAt: new Date(),
     }
   ];
@@ -53,12 +53,12 @@ describe("Grade Calculation Functions - Edge Cases", () => {
       const assessments: AssessmentBackend[] = [
         { assessmentId: "a1",    courseId: "c1",        title: "Test1", description: null, 
           dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: null,    targetScore: null, 
-          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, isSimulated: null,
+          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, simulatedScore: null,
           submitted: true,       createdAt: new Date(), updatedAt: new Date(),
          },
         { assessmentId: "a2",    courseId: "c1",        title: "Test2", description: null, 
           dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: null,    targetScore: null, 
-          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, isSimulated: null,
+          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, simulatedScore: null,
           submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         }
       ];
@@ -70,12 +70,12 @@ describe("Grade Calculation Functions - Edge Cases", () => {
       const assessments: AssessmentBackend[] = [
         { assessmentId: "a1",    courseId: "c1",        title: "Test1", description: null, 
           dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: new Prisma.Decimal(80),      targetScore: null, 
-          weight: new Prisma.Decimal(0.3333333),     latePenalty: null,     maxScore: null, isSimulated: null,
+          weight: new Prisma.Decimal(0.3333333),     latePenalty: null,     maxScore: null, simulatedScore: null,
           submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         },
         { assessmentId: "a2",    courseId: "c1",        title: "Test2", description: null, 
           dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: new Prisma.Decimal(90),      targetScore: null, 
-          weight: new Prisma.Decimal(0.6666667),     latePenalty: null,     maxScore: null, isSimulated: null,
+          weight: new Prisma.Decimal(0.6666667),     latePenalty: null,     maxScore: null, simulatedScore: null,
           submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         }
       ];
@@ -87,12 +87,12 @@ describe("Grade Calculation Functions - Edge Cases", () => {
       const assessments: AssessmentBackend[] = [
         { assessmentId: "a1",    courseId: "c1",        title: "Test1", description: null, 
           dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: new Prisma.Decimal(80),      targetScore: null, 
-          weight: new Prisma.Decimal(0.3),           latePenalty: null,     maxScore: null, isSimulated: null,
+          weight: new Prisma.Decimal(0.3),           latePenalty: null,     maxScore: null, simulatedScore: null,
           submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         },
         { assessmentId: "a2",    courseId: "c1",        title: "Test2", description: null, 
           dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: new Prisma.Decimal(90),      targetScore: null, 
-          weight: new Prisma.Decimal(0.4),           latePenalty: null,     maxScore: null, isSimulated: null,
+          weight: new Prisma.Decimal(0.4),           latePenalty: null,     maxScore: null, simulatedScore: null,
           submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         }
       ];
@@ -104,12 +104,12 @@ describe("Grade Calculation Functions - Edge Cases", () => {
       const assessments: AssessmentBackend[] = [
         { assessmentId: "a1",    courseId: "c1",      title: "Test1", description: null, 
           dueDate: new Date(),   status: AssessmentStatus.UPCOMING,  score: new Prisma.Decimal(80),      targetScore: null, 
-          weight: new Prisma.Decimal(0),             latePenalty: null,   maxScore: null, isSimulated: null,
+          weight: new Prisma.Decimal(0),             latePenalty: null,   maxScore: null, simulatedScore: null,
           submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         },
         { assessmentId: "a2",    courseId: "c1",      title: "Test2", description: null, 
           dueDate: new Date(),   status: AssessmentStatus.UPCOMING,  score: new Prisma.Decimal(100),     targetScore: null, 
-          weight: new Prisma.Decimal(1),             latePenalty: null,   maxScore: null, isSimulated: null,
+          weight: new Prisma.Decimal(1),             latePenalty: null,   maxScore: null, simulatedScore: null,
           submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         }
       ];
@@ -123,12 +123,12 @@ describe("Grade Calculation Functions - Edge Cases", () => {
       const assessments: AssessmentBackend[] = [
         { assessmentId: "a1",    courseId: "c1",        title: "Test1", description: null, 
           dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: null,    targetScore: null, 
-          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, isSimulated: null,
+          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, simulatedScore: null,
           submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         },
         { assessmentId: "a2",    courseId: "c1",        title: "Test2", description: null, 
           dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: null,    targetScore: null, 
-          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, isSimulated: null,
+          weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, simulatedScore: null,
           submitted: true,       createdAt: new Date(), updatedAt: new Date(),
         }
       ];
