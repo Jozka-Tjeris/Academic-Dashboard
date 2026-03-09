@@ -168,11 +168,7 @@ export async function deleteAssessmentHandler(req: AuthenticatedRequest, res: Re
   }
 }
 
-export const getAssessmentCollisions = async (
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-) => {
+export async function getAssessmentCollisions(req: AuthenticatedRequest, res: Response, next: NextFunction){
   const userId = req.jwt?.sub;
 
   if (!userId) {
@@ -187,8 +183,17 @@ export const getAssessmentCollisions = async (
       days
     );
 
-    res.json(collisions);
-  } catch (err) {
-    next(err);
+    logger.info(
+      { requestId: req.id, userId },
+      "Assessment collisions have been computed"
+    );
+
+    return res.status(200).json(collisions);
+  } catch (error) {
+    logger.error(
+      { requestId: req.id, error },
+      "Failed to calculate assessment collisions"
+    );
+    return next(error);
   }
 };
