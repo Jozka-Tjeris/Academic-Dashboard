@@ -3,11 +3,11 @@ import { HttpError } from "../../utils/httpError";
 import { calculateCurrentGrade, calculateMaxPossibleGrade } from "../../domain/grade/gradeCalculator";
 import { GradeSummary } from "../../types/backendTypes";
 import { simulateFinalGrade } from "../../domain/grade/simulation";
-import { deriveStatusFromDate } from "src/domain/assessments/deriveStatusFromDate";
+import { deriveStatusFromDate } from "../../domain/assessments/deriveStatusFromDate";
 import { AssessmentStatus, TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
-import { calculateUrgencyScore } from "src/domain/assessments/calculateUrgencyScore";
-import { detectDueDateCollisions } from "src/domain/assessments/detectDueDateCollisions";
-import { rankAssessmentsByUrgency } from "src/domain/assessments/rankAssessmentsByUrgency";
+import { calculateUrgencyScore } from "../../domain/assessments/calculateUrgencyScore";
+import { detectDueDateCollisions } from "../../domain/assessments/detectDueDateCollisions";
+import { rankAssessmentsByUrgency } from "../../domain/assessments/rankAssessmentsByUrgency";
 
 interface CreateCourseInput {
   userId: string;

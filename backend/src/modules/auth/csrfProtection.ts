@@ -1,5 +1,5 @@
 import { NextFunction, Response } from "express";
-import { AuthenticatedRequest } from "src/types/express";
+import { AuthenticatedRequest } from "../../types/express";
 
 export function csrfProtection(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const csrfCookie = req.cookies.csrf_token;

@@ -3,7 +3,7 @@ import { HttpError } from "../../utils/httpError";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { calculateUrgencyScore } from "../../domain/assessments/calculateUrgencyScore";
 import { AssessmentShared, DUEDATE_COLLISION_WINDOW_DAYS } from "@internal_package/shared";
-import { detectDueDateCollisions } from "src/domain/assessments/detectDueDateCollisions";
+import { detectDueDateCollisions } from "../../domain/assessments/detectDueDateCollisions";
 
 interface CreateAssessmentInput {
   userId: string;
