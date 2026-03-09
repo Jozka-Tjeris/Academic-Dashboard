@@ -3,6 +3,7 @@ import { app } from "../../src/app";
 import { prisma } from "../../src/lib/prisma";
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
+import { CourseBackend } from "../../src/types/backendTypes";
 
 const testId = uuidv4().split('-')[0];
 const COURSE_FOR_GET = `GET_Test_Course_${testId}`;
@@ -95,7 +96,7 @@ describe("Courses controller test", () => {
         .get("/courses")
         .set("Cookie", [`access_token=${token}`]);
 
-      const myCourse = res.body.find((c: any) => c.name === COURSE_FOR_GET);
+      const myCourse = res.body.find((c: CourseBackend) => c.name === COURSE_FOR_GET);
       expect(res.status).toBe(200);
       expect(myCourse).toBeDefined();
       expect(myCourse).toHaveProperty("gradeSummary");
