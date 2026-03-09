@@ -1,10 +1,10 @@
-import { Assessment } from "../../../../src/types/backendTypes";
+import { AssessmentBackend } from "../../../../src/types/backendTypes";
 import { simulateFinalGrade } from "../../../../src/domain/grade/simulation";
 import { INVALID_GRADE } from "@internal_package/shared";
 import { AssessmentStatus, Prisma } from "@prisma/client";
 
 describe("Grade Simulation Functions", () => {
-  const assessments: Assessment[] = [
+  const assessments: AssessmentBackend[] = [
     {
       assessmentId: "a1",    courseId: "c1",        title: "Quiz",  description: null,
       dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: new Prisma.Decimal(80),      targetScore: null,
@@ -45,7 +45,7 @@ describe("Grade Simulation Functions", () => {
 describe("Grade Simulation - Edge Cases", () => {
   describe("simulateFinalGrade", () => {
     test("simulate all assessments with custom scores", () => {
-      const assessments: Assessment[] = [
+      const assessments: AssessmentBackend[] = [
         { assessmentId: "a1",    courseId: "c1",        title: "Test1", description: null, 
           dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: new Prisma.Decimal(50),    targetScore: null, 
           weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, isSimulated: null,
@@ -67,7 +67,7 @@ describe("Grade Simulation - Edge Cases", () => {
     });
 
     test("simulate with some scores missing", () => {
-      const assessments: Assessment[] = [
+      const assessments: AssessmentBackend[] = [
         { assessmentId: "a1",    courseId: "c1",        title: "Test1", description: null, 
           dueDate: new Date(),   status: AssessmentStatus.UPCOMING,    score: null,    targetScore: null, 
           weight: new Prisma.Decimal(0.5),           latePenalty: null,     maxScore: null, isSimulated: null,

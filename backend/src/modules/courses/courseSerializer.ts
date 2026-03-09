@@ -1,5 +1,5 @@
-import { Course } from "src/types/backendTypes";
-import { Course as SharedCourse } from "@internal_package/shared";
+import { CourseBackend } from "src/types/backendTypes";
+import { CourseShared } from "@internal_package/shared";
 import { serializeAssessments } from "../assessments/assessmentSerializer";
 import { Prisma } from "@prisma/client";
 
@@ -18,7 +18,7 @@ function decimalToNumberOrNull(d?: Prisma.Decimal | null): number | null {
  * Serializes a single course, normalizes grade values,
  * and adds optional messages depending on the grade state.
  */
-export function serializeCourse(course: Course): SharedCourse {
+export function serializeCourse(course: CourseBackend): CourseShared {
   const currentGrade = decimalToNumberOrNull(course.gradeSummary.currentGrade);
   const maxPossibleGrade = decimalToNumberOrNull(course.gradeSummary.maxPossibleGrade);
 
@@ -48,6 +48,6 @@ export function serializeCourse(course: Course): SharedCourse {
 /**
  * Serializes multiple courses
  */
-export function serializeCourses(courses: Course[]): SharedCourse[] {
+export function serializeCourses(courses: CourseBackend[]): CourseShared[] {
   return courses.map(serializeCourse);
 }

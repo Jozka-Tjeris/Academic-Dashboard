@@ -1,12 +1,12 @@
 "use client";
 
-import { Assessment } from "@internal_package/shared";
+import { AssessmentShared } from "@internal_package/shared";
 import EditableScore from "./EditableScore";
 import { useDeleteAssessment } from "@/hooks/useAssessments";
 import Button from "@/components/ui/Button";
 
 interface AssessmentTableProps {
-  assessments: Assessment[];
+  assessments: AssessmentShared[];
   courseId: string;
 }
 
