@@ -162,3 +162,38 @@ export async function simulateCourseHandler(
     return next(error);
   }
 }
+
+export const getCourseAnalytics = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const userId = req.jwt?.sub;
+  const courseId = req.params.id;
+
+  if (!userId) {
+    return next(new HttpError(401, "Authentication required"));
+  }
+
+  if (Array.isArray(courseId)) {
+    return next(new HttpError(400, "Only one Course ID can be requested"));
+  }
+
+  try {
+    const courseService = getCourseServices(prisma);
+    const analytics = await courseService.getCourseAnalytics(userId, courseId);
+
+    logger.info(
+      { requestId: req.id, courseId },
+      "Course analytics calculated"
+    );
+
+    res.json(analytics);
+  } catch (err) {
+    logger.error(
+      { requestId: req.id, err },
+      "Failed to get course analytics"
+    );
+    return next(err);
+  }
+};

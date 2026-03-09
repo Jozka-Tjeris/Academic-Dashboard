@@ -3,6 +3,9 @@ import { HttpError } from "../../utils/httpError";
 import { calculateCurrentGrade, calculateMaxPossibleGrade } from "../../domain/grade/gradeCalculator";
 import { GradeSummary } from "../../types/backendTypes";
 import { simulateFinalGrade } from "../../domain/grade/simulation";
+import { deriveStatusFromDate } from "src/domain/assessments/deriveStatusFromDate";
+import { AssessmentStatus } from "@internal_package/shared";
+import { calculateUrgencyScore } from "src/domain/assessments/calculateUrgencyScore";
 
 interface CreateCourseInput {
   userId: string;
@@ -137,6 +140,93 @@ export function getCourseServices(prisma: PrismaClient){
         maxPossibleGrade,
         simulatedFinalGrade,
       };
-    }
+    },
+    async getCourseAnalytics(userId: string, courseId: string){
+      const course = await prisma.course.findFirst({
+        where: {
+          courseId,
+          userId
+        },
+        include: {
+          assessments: true
+        }
+      });
+
+      if (!course) {
+        throw new HttpError(404, "Course not found");
+      }
+
+      const assessments = course.assessments;
+
+      const now = new Date();
+
+      // ---------- Grade Metrics ----------
+
+      const currentGrade = calculateCurrentGrade(assessments);
+      const maxPossibleGrade = calculateMaxPossibleGrade(assessments);
+
+      // ---------- Status Counts ----------
+
+      let submitted = 0;
+      let graded = 0;
+      let pending = 0;
+      let in24hrs = 0;
+      let overdue = 0;
+
+      for (const a of assessments) {
+        const status = deriveStatusFromDate(a.dueDate, a.score, a.submitted, now);
+
+        if (status === AssessmentStatus.SUBMITTED) submitted++;
+        else if (status === AssessmentStatus.GRADED) graded++;
+        else if (status === AssessmentStatus.OVERDUE) overdue++;
+        else if (status === AssessmentStatus.DUE_IN_24_HOURS) in24hrs++;
+        else pending++;
+      }
+
+      // ---------- Urgency Metrics ----------
+
+      const activeAssessments = assessments.filter(a => !a.submitted);
+
+      const urgencyScores = activeAssessments.map(a => ({
+        assessmentId: a.assessmentId,
+        title: a.title,
+        dueDate: a.dueDate,
+        urgency: calculateUrgencyScore(a, now)
+      }));
+
+      const totalUrgency = urgencyScores.reduce(
+        (sum, a) => sum.add(a.urgency),
+        new Prisma.Decimal(0)
+      );
+
+      const averageUrgency =
+        urgencyScores.length === 0
+          ? new Prisma.Decimal(0)
+          : totalUrgency.div(urgencyScores.length);
+
+      const topAssessments = urgencyScores
+        .sort((a, b) => b.urgency.comparedTo(a.urgency))
+        .slice(0, 3);
+
+      return {
+        currentGrade,
+        maxPossibleGrade,
+
+        assessmentCounts: {
+          total: assessments.length,
+          submitted,
+          graded,
+          in24hrs,
+          pending,
+          overdue
+        },
+
+        urgency: {
+          totalUrgency,
+          averageUrgency,
+          topAssessments
+        }
+      };
+    },
   }
 }
