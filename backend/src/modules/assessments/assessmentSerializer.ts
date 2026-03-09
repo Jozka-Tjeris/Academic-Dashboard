@@ -1,6 +1,7 @@
 import { DEFAULT_MAX_SCORE } from "@internal_package/shared";
-import { AssessmentBackend } from "src/types/backendTypes";
+import { AssessmentBackend } from "../../types/backendTypes";
 import { AssessmentShared } from "@internal_package/shared";
+import { deriveStatusFromDate } from "../../domain/assessments/deriveStatusFromDate";
 
 export function serializeAssessment(assessment: AssessmentBackend): AssessmentShared {
   return {
@@ -10,6 +11,7 @@ export function serializeAssessment(assessment: AssessmentBackend): AssessmentSh
     weight: assessment.weight.toNumber(),
     latePenalty: assessment.latePenalty?.toNumber() ?? null,
     maxScore: assessment.maxScore?.toNumber() ?? DEFAULT_MAX_SCORE,
+    status: deriveStatusFromDate(assessment.dueDate, assessment.score, assessment.submitted),
   };
 }
 

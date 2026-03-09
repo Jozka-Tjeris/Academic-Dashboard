@@ -89,45 +89,6 @@ describe("Course Services", () => {
       });
     });
 
-    it("throws 422 if assessment status is invalid", async () => {
-      const mockCourse: CourseWithAssessments[] = [{
-        courseId: "course1",
-        userId: "user1",
-        name: "Calculus 101",
-        description: "",
-        createdAt: new Date("2025"),
-        updatedAt: new Date(),
-        assessments: [
-          {
-            courseId: "course1",
-            userId: "user1",
-            description: null,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            assessmentId: "a1",
-            title: "asdf",
-            dueDate: new Date(),
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            status: "invalid-type-here" as any,
-            score: null,
-            targetScore: null,
-            weight: new Prisma.Decimal(0),
-            latePenalty: null,
-            maxScore: new Prisma.Decimal(100),
-            isSimulated: null,
-            submitted: false
-          }
-        ],
-      }];
-
-      prismaMock.course.findMany.mockResolvedValue(mockCourse);
-
-      await expect(service.getCoursesForUser("user1"))
-        .rejects.toMatchObject({ status: 422 });
-
-      expect(prismaMock.course.findMany).toHaveBeenCalled();
-    });
-
     it("throws 404 if course not found", async () => {
       prismaMock.course.findFirst.mockResolvedValue(null);
 
@@ -155,45 +116,6 @@ describe("Course Services", () => {
 
       expect(prismaMock.course.findFirst).toHaveBeenCalled();
       expect(result).toHaveProperty("gradeSummary");
-    });
-
-    it("throws 422 if assessment status is invalid", async () => {
-      const mockCourse: CourseWithAssessments = {
-        courseId: "course1",
-        userId: "user1",
-        name: "Calculus 101",
-        description: "",
-        createdAt: new Date("2025"),
-        updatedAt: new Date(),
-        assessments: [
-          {
-            courseId: "course1",
-            userId: "user1",
-            description: null,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            assessmentId: "a1",
-            title: "asdf",
-            dueDate: new Date(),
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            status: "invalid-type-here" as any,
-            score: null,
-            targetScore: null,
-            weight: new Prisma.Decimal(0),
-            latePenalty: null,
-            maxScore: new Prisma.Decimal(100),
-            isSimulated: null,
-            submitted: false
-          }
-        ],
-      };
-
-      prismaMock.course.findFirst.mockResolvedValue(mockCourse);
-
-      await expect(service.getCourseById("user1", "course1"))
-        .rejects.toMatchObject({ status: 422 });
-
-      expect(prismaMock.course.findFirst).toHaveBeenCalled();
     });
 
     it("throws 404 if course not found", async () => {

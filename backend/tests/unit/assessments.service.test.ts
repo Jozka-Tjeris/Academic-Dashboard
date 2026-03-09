@@ -1,4 +1,4 @@
-import { AssessmentStatus, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { prismaMock } from "../mocks/mockPrismaSingleton";
 import { getAssessmentServices } from "../../src/modules/assessments/assessment.service";
 
@@ -38,12 +38,10 @@ describe("Assessment Service", () => {
         updatedAt: new Date(),
         title: "",
         dueDate: new Date(),
-        status: AssessmentStatus.UPCOMING,
         score: null,
         targetScore: null,
         latePenalty: null,
         maxScore: new Prisma.Decimal(100),
-        isSimulated: null,
         submitted: false
       });
 
@@ -107,12 +105,10 @@ describe("Assessment Service", () => {
         updatedAt: new Date(),
         title: "",
         dueDate: new Date(),
-        status: AssessmentStatus.UPCOMING,
         score: null,
         targetScore: null,
         latePenalty: null,
         maxScore: new Prisma.Decimal(100),
-        isSimulated: null,
         submitted: false
       });
 
@@ -157,12 +153,10 @@ describe("Assessment Service", () => {
         updatedAt: new Date(),
         title: "",
         dueDate: new Date(),
-        status: AssessmentStatus.UPCOMING,
         score: null,
         targetScore: null,
         weight: new Prisma.Decimal(0),
         latePenalty: null,
-        isSimulated: null,
         submitted: false
       });
 
@@ -176,8 +170,6 @@ describe("Assessment Service", () => {
         maxScore: new Prisma.Decimal(100),
         title: "",
         dueDate: new Date(),
-        status: AssessmentStatus.UPCOMING,
-        isSimulated: null,
         submitted: false,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -203,12 +195,10 @@ describe("Assessment Service", () => {
         title: "",
         description: null,
         dueDate: new Date(),
-        status: AssessmentStatus.UPCOMING,
         score: null,
         targetScore: null,
         weight: new Prisma.Decimal(0),
         latePenalty: null,
-        isSimulated: null,
         submitted: false,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -232,12 +222,10 @@ describe("Assessment Service", () => {
         title: "",
         description: null,
         dueDate: new Date(),
-        status: AssessmentStatus.UPCOMING,
         score: null,
         targetScore: null,
         weight: new Prisma.Decimal(0),
         latePenalty: null,
-        isSimulated: null,
         submitted: false,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -274,13 +262,11 @@ describe("Assessment Service", () => {
         title: "",
         description: null,
         dueDate: new Date(),
-        status: AssessmentStatus.UPCOMING,
         score: null,
         targetScore: null,
         weight: new Prisma.Decimal(0),
         latePenalty: null,
         maxScore: new Prisma.Decimal(100),
-        isSimulated: null,
         submitted: false,
         createdAt: new Date(),
         updatedAt: new Date()

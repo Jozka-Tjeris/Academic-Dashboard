@@ -1,5 +1,5 @@
 import { AssessmentShared, CourseShared } from "@internal_package/shared";
-import { AssessmentStatus, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 export interface GradeSummary {
   currentGrade: Prisma.Decimal;
@@ -11,8 +11,7 @@ export type CourseBackend = Omit<CourseShared, 'assessments' | 'gradeSummary'> &
   gradeSummary: GradeSummary;
 }
 
-export type AssessmentBackend = Omit<AssessmentShared, 'score' | 'targetScore' | 'maxScore' | 'weight' | 'status' | 'latePenalty' > & {
-  status: AssessmentStatus,
+export type AssessmentBackend = Omit<AssessmentShared, 'score' | 'targetScore' | 'maxScore' | 'weight' | 'latePenalty' | 'status' > & {
   score: Prisma.Decimal | null
   targetScore: Prisma.Decimal | null
   maxScore: Prisma.Decimal | null

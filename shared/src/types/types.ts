@@ -14,19 +14,26 @@ export type CourseShared = {
   gradeSummary: GradeSummary;
 }
 
+export enum AssessmentStatus {
+  "UPCOMING",
+  "SUBMITTED",
+  "DUE_IN_24_HOURS",
+  "OVERDUE",
+  "GRADED",
+}
+
 export type AssessmentShared = {
   assessmentId: string,
   courseId: string,
   title: string,
   description: string | null,
   dueDate: Date,
-  status: "UPCOMING" | "SUBMITTED" | "DUE_IN_24_HOURS" | "OVERDUE" | "GRADED",
+  status: AssessmentStatus,
   score: number | null,
   targetScore: number | null,
   maxScore: number | null,
   weight: number,
   latePenalty: number | null,
-  isSimulated: boolean | null,
   submitted: boolean,
   createdAt: Date,
   updatedAt: Date,
