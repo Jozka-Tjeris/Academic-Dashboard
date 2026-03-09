@@ -118,11 +118,7 @@ export async function deleteCourseHandler(req: AuthenticatedRequest, res: Respon
   }
 }
 
-export async function simulateCourseHandler(
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
-) {
+export async function simulateCourseHandler(req: AuthenticatedRequest, res: Response, next: NextFunction){
   const userId = req.jwt?.sub;
   const courseId = req.params.id;
 
@@ -162,3 +158,65 @@ export async function simulateCourseHandler(
     return next(error);
   }
 }
+
+export async function getCourseAnalytics(req: AuthenticatedRequest, res: Response, next: NextFunction){
+  const userId = req.jwt?.sub;
+  const courseId = req.params.id;
+
+  if (!userId) {
+    return next(new HttpError(401, "Authentication required"));
+  }
+
+  if (Array.isArray(courseId)) {
+    return next(new HttpError(400, "Only one Course ID can be requested"));
+  }
+
+  try {
+    const courseService = getCourseServices(prisma);
+    const analytics = await courseService.getCourseAnalytics(userId, courseId);
+
+    logger.info(
+      { requestId: req.id, courseId },
+      "Course analytics calculated"
+    );
+
+    return res.status(200).json(analytics);
+  } catch (error) {
+    logger.error(
+      { requestId: req.id, error },
+      "Failed to get course analytics"
+    );
+    return next(error);
+  }
+};
+
+export async function getCourseDashboard(req: AuthenticatedRequest, res: Response, next: NextFunction){
+  const userId = req.jwt?.sub;
+  const courseId = req.params.id;
+
+  if (!userId) {
+    return next(new HttpError(401, "Authentication required"));
+  }
+
+  if (Array.isArray(courseId)) {
+    return next(new HttpError(400, "Only one Course ID can be requested"));
+  }
+
+  try {
+    const courseService = getCourseServices(prisma);
+    const dashboard = await courseService.getCourseDashboard(userId, courseId);
+
+    logger.info(
+      { requestId: req.id, courseId },
+      "Course dashboard retrieved"
+    );
+
+    return res.status(200).json(dashboard);
+  } catch (error) {
+    logger.error(
+      { requestId: req.id, error },
+      "Failed to get course dashboard"
+    );
+    return next(error);
+  }
+};

@@ -126,7 +126,7 @@ describe("Assessments controller", () => {
     });
   });
 
-  describe("PUT /assessments/:id", () => {
+  describe("PATCH /assessments/:id", () => {
     let assessId_for_put: string;
 
     beforeAll(async () => {
@@ -147,7 +147,7 @@ describe("Assessments controller", () => {
 
     it("updates score successfully", async () => {
       const res = await request(app)
-        .put(`/assessments/${assessId_for_put}`)
+        .patch(`/assessments/${assessId_for_put}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken)
         .send({ score: 85 });
@@ -158,7 +158,7 @@ describe("Assessments controller", () => {
 
     it("rejects score above maxScore", async () => {
       const res = await request(app)
-        .put(`/assessments/${assessId_for_put}`)
+        .patch(`/assessments/${assessId_for_put}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken)
         .send({ score: 150 });
@@ -168,7 +168,7 @@ describe("Assessments controller", () => {
 
     it("returns 404 for invalid id", async () => {
       const res = await request(app)
-        .put("/assessments/nonexistent-id")
+        .patch("/assessments/nonexistent-id")
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken)
         .send({ score: 50 });

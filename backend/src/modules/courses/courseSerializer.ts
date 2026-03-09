@@ -1,4 +1,4 @@
-import { CourseBackend } from "src/types/backendTypes";
+import { CourseBackend } from "../../types/backendTypes";
 import { CourseShared } from "@internal_package/shared";
 import { serializeAssessments } from "../assessments/assessmentSerializer";
 import { Prisma } from "@prisma/client";

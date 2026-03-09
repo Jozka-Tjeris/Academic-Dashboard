@@ -27,7 +27,7 @@ export const updateAssessment = (assessmentId: string, data: {
   targetScore?: number
 }) => 
   fetcher<AssessmentShared>(`/assessments/${assessmentId}`, {
-    method: "PUT",
+    method: "PATCH",
     body: JSON.stringify(data),
   });
 

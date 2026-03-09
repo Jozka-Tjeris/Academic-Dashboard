@@ -110,16 +110,12 @@ export async function updateAssessmentHandler(req: AuthenticatedRequest, res: Re
     return next(new HttpError(400, "Only one Assessment ID can be requested"))
   }
 
-  const { score, submitted, targetScore } = req.body;
-
   try {
     const assessmentService = getAssessmentServices(prisma);
     const updated = await assessmentService.updateAssessment({
       userId,
       assessmentId,
-      score,
-      submitted,
-      targetScore,
+      updates: req.body,
     });
 
     logger.info(
@@ -171,3 +167,33 @@ export async function deleteAssessmentHandler(req: AuthenticatedRequest, res: Re
     return next(error);
   }
 }
+
+export async function getAssessmentCollisions(req: AuthenticatedRequest, res: Response, next: NextFunction){
+  const userId = req.jwt?.sub;
+
+  if (!userId) {
+    return next(new HttpError(401, "Authentication required"));
+  }
+
+  try {
+    const days = req.query.days ? Number(req.query.days) : undefined;
+    const assessmentService = getAssessmentServices(prisma);
+    const collisions = await assessmentService.getAssessmentCollisions(
+      userId,
+      days
+    );
+
+    logger.info(
+      { requestId: req.id, userId },
+      "Assessment collisions have been computed"
+    );
+
+    return res.status(200).json(collisions);
+  } catch (error) {
+    logger.error(
+      { requestId: req.id, error },
+      "Failed to calculate assessment collisions"
+    );
+    return next(error);
+  }
+};
