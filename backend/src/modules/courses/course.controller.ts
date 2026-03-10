@@ -162,8 +162,7 @@ export async function simulateCourseHandler(req: AuthenticatedRequest, res: Resp
 export async function getCourseAnalytics(req: AuthenticatedRequest, res: Response, next: NextFunction){
   const userId = req.jwt?.sub;
   const courseId = req.params.id;
-
-  const { dateNow } = req.body;
+  const date = typeof req.query.date === "string" ? new Date(req.query.date) : undefined;
 
   if (!userId) {
     return next(new HttpError(401, "Authentication required"));
@@ -175,7 +174,7 @@ export async function getCourseAnalytics(req: AuthenticatedRequest, res: Respons
 
   try {
     const courseService = getCourseServices(prisma);
-    const analytics = await courseService.getCourseAnalytics(userId, courseId, dateNow);
+    const analytics = await courseService.getCourseAnalytics(userId, courseId, date);
 
     logger.info(
       { requestId: req.id, courseId },
@@ -195,8 +194,7 @@ export async function getCourseAnalytics(req: AuthenticatedRequest, res: Respons
 export async function getCourseDashboard(req: AuthenticatedRequest, res: Response, next: NextFunction){
   const userId = req.jwt?.sub;
   const courseId = req.params.id;
-
-  const { dateNow } = req.body;
+  const date = typeof req.query.date === "string" ? new Date(req.query.date) : undefined;
 
   if (!userId) {
     return next(new HttpError(401, "Authentication required"));
@@ -208,7 +206,7 @@ export async function getCourseDashboard(req: AuthenticatedRequest, res: Respons
 
   try {
     const courseService = getCourseServices(prisma);
-    const dashboard = await courseService.getCourseDashboard(userId, courseId, dateNow);
+    const dashboard = await courseService.getCourseDashboard(userId, courseId, date);
 
     logger.info(
       { requestId: req.id, courseId },

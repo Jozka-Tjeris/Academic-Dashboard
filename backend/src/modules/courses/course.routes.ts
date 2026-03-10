@@ -27,13 +27,13 @@ router.post(
 );
 
 router.get(
-  "/courses/:id/analytics",
+  "/:id/analytics",
   requireAuth,
   getCourseAnalytics
 );
 
 router.get(
-  "/courses/:id/dashboard",
+  "/:id/dashboard",
   requireAuth,
   getCourseDashboard
 );
