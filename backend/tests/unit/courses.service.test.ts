@@ -378,19 +378,26 @@ describe("Course Services", () => {
         description: "",
         createdAt: new Date("2026-03-10"),
         updatedAt: new Date("2026-03-10"),
-        assessments
+        assessments,
       };
+
+      const courseWithAssessmentsAndGradeSummary = {
+        ...courseWithAssessments,
+        gradeSummary: {
+          currentGrade: new Prisma.Decimal(NaN),
+          maxPossibleGrade: new Prisma.Decimal(NaN),
+        }
+      }
 
       prismaMock.course.findFirst.mockResolvedValue(courseWithAssessments);
 
       const result = await service.getCourseDashboard("course1", "user1", new Date("2026-03-10"));
 
-      expect(result).toHaveProperty("analytics");
       expect(result).toHaveProperty("workload");
       expect(result).toHaveProperty("collisions");
       expect(result).toHaveProperty("course");
 
-      expect(result.course).toEqual(courseWithAssessments);
+      expect(result.course).toEqual(courseWithAssessmentsAndGradeSummary);
       expect(result.workload.upcomingAssessments.length).toEqual(3);
       expect(result.workload.stats).toMatchObject({
         dueNext7Days: 2,
@@ -436,7 +443,7 @@ describe("Course Services", () => {
 
       const result = await service.getCourseDashboard("course1", "user1");
 
-      expect(result.analytics).toEqual({
+      expect(result.course.gradeSummary).toEqual({
         "currentGrade": new Prisma.Decimal(NaN), 
         "maxPossibleGrade": new Prisma.Decimal(NaN)
       });

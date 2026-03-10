@@ -4,6 +4,7 @@ import { prisma } from "../../src/lib/prisma";
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { CourseBackend } from "../../src/types/backendTypes";
+import { TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
 
 const testId = uuidv4().split('-')[0];
 const COURSE_FOR_GET = `GET_Test_Course_${testId}`;
@@ -139,6 +140,196 @@ describe("Courses controller test", () => {
         .set("Cookie", [`access_token=${token}`]);
 
       expect(res.status).toBe(404);
+    });
+  });
+
+  describe("POST /courses/:id/simulate", () => {
+    let courseId: string;
+
+    beforeAll(async () => {
+      const course = await prisma.course.create({
+        data: {
+          userId,
+          name: `SIMULATE_Test_Course_${testId}`,
+        },
+      });
+
+      courseId = course.courseId;
+
+      await prisma.assessment.createMany({
+        data: [
+          {
+            userId,
+            courseId,
+            assessmentId: `SIM_A_${testId}`,
+            title: `SIM_A_${testId}`,
+            dueDate: new Date(),
+            weight: 0.5,
+            submitted: true,
+            score: 80,
+            maxScore: 100,
+          },
+          {
+            userId,
+            courseId,
+            assessmentId: `SIM_B_${testId}`,
+            title: `SIM_B_${testId}`,
+            dueDate: new Date(),
+            weight: 0.5,
+            submitted: false,
+            maxScore: 100,
+          },
+        ],
+      });
+    });
+
+    it("calculates course grade simulation", async () => {
+      const res = await request(app)
+        .post(`/courses/${courseId}/simulate`)
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken)
+        .send({
+          simulations: [
+            { assessmentId: `SIM_B_${testId}`, simulatedScore: 90 }
+          ],
+        });
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty("currentGrade");
+      expect(res.body).toHaveProperty("maxPossibleGrade");
+      expect(res.body).toHaveProperty("simulatedFinalGrade");
+
+      expect(typeof res.body.currentGrade).toBe("number");
+      expect(typeof res.body.simulatedFinalGrade).toBe("number");
+    });
+
+    it("rejects invalid simulations payload", async () => {
+      const res = await request(app)
+        .post(`/courses/${courseId}/simulate`)
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken)
+        .send({
+          simulations: "not-an-array",
+        });
+
+      expect(res.status).toBe(400);
+    });
+
+    it("returns 401 if unauthenticated", async () => {
+      const res = await request(app)
+        .post(`/courses/${courseId}/simulate`);
+
+      expect(res.status).toBe(401);
+    });
+  });
+
+  describe("GET /courses/:id/analytics", () => {
+    let courseId: string;
+
+    beforeAll(async () => {
+      const course = await prisma.course.create({
+        data: {
+          userId,
+          name: `ANALYTICS_Test_Course_${testId}`,
+        },
+      });
+
+      courseId = course.courseId;
+
+      await prisma.assessment.createMany({
+        data: [
+          {
+            userId,
+            courseId,
+            title: `AN_A_${testId}`,
+            dueDate: new Date(),
+            weight: 40,
+            submitted: true,
+            score: 75,
+            maxScore: 100,
+          },
+          {
+            userId,
+            courseId,
+            title: `AN_B_${testId}`,
+            dueDate: new Date(),
+            weight: 60,
+            submitted: false,
+            maxScore: 100,
+          },
+        ],
+      });
+    });
+
+    it("returns course analytics", async () => {
+      const res = await request(app)
+        .get(`/courses/${courseId}/analytics?date=${new Date().toISOString()}`)
+        .set("Cookie", [`access_token=${token}`]);
+
+      expect(res.status).toBe(200);
+      expect(res.body).toBeDefined();
+    });
+
+    it("returns 401 if unauthenticated", async () => {
+      const res = await request(app)
+        .get(`/courses/${courseId}/analytics`);
+
+      expect(res.status).toBe(401);
+    });
+  });
+
+  describe("GET /courses/:id/dashboard", () => {
+    let courseId: string;
+
+    beforeAll(async () => {
+      const course = await prisma.course.create({
+        data: {
+          userId,
+          name: `DASHBOARD_Test_Course_${testId}`,
+        },
+      });
+
+      courseId = course.courseId;
+
+      await prisma.assessment.createMany({
+        data: [
+          {
+            userId,
+            courseId,
+            title: `DB_A_${testId}`,
+            dueDate: new Date(Date.now() + TWENTYFOUR_HOURS_IN_MS),
+            weight: 0.5,
+            submitted: false,
+            maxScore: 100,
+          },
+          {
+            userId,
+            courseId,
+            title: `DB_B_${testId}`,
+            dueDate: new Date(),
+            weight: 0.5,
+            submitted: true,
+            score: 88,
+            maxScore: 100,
+          },
+        ],
+      });
+    });
+
+    it("returns course dashboard data", async () => {
+      const res = await request(app)
+        .get(`/courses/${courseId}/dashboard?date=${new Date().toISOString()}`)
+        .set("Cookie", [`access_token=${token}`]);
+
+      expect(res.status).toBe(200);
+      expect(res.body).toBeDefined();
+    });
+
+    it("returns 401 if unauthenticated", async () => {
+      const res = await request(app)
+        .get(`/courses/${courseId}/dashboard`);
+
+      expect(res.status).toBe(401);
     });
   });
 

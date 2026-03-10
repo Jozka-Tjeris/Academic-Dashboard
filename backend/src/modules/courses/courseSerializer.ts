@@ -7,7 +7,7 @@ import { Prisma } from "@prisma/client";
  * Safely converts Prisma.Decimal to number | null.
  * Returns null if the value is NaN, Infinity, or undefined.
  */
-function decimalToNumberOrNull(d?: Prisma.Decimal | null): number | null {
+export function decimalToNumberOrNull(d?: Prisma.Decimal | null): number | null {
   if (!d) return null;
 
   const n = d.toNumber();
