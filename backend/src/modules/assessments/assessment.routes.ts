@@ -7,6 +7,12 @@ import { csrfProtection } from "../auth/csrfProtection";
 const router = Router();
 
 router.get(
+  "/assessments/collisions",
+  requireAuth,
+  getAssessmentCollisions
+);
+
+router.get(
   "/assessments/:id",
   requireAuth,
   getAssessmentByIdHandler
@@ -31,12 +37,6 @@ router.delete(
   requireAuth,
   csrfProtection,
   deleteAssessmentHandler
-);
-
-router.get(
-  "/assessments/collisions",
-  requireAuth,
-  getAssessmentCollisions
 );
 
 export default router;

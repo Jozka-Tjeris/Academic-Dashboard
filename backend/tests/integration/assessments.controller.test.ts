@@ -4,6 +4,7 @@ import { prisma } from "../../src/lib/prisma";
 import { Prisma } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from 'uuid';
+import { AssessmentStatus } from "@internal_package/shared";
 
 const testId = uuidv4().split('-')[0];
 const COURSE_NAME = `GET_Test_Course_${testId}`;
@@ -174,6 +175,140 @@ describe("Assessments controller", () => {
         .send({ score: 50 });
 
       expect(res.status).toBe(404);
+    });
+
+    it("sets submitted=true when score is provided", async () => {
+      const assessment = await prisma.assessment.create({
+        data: {
+          userId,
+          courseId,
+          title: `PATCH_RULE_Test_${testId}`,
+          dueDate: new Date(),
+          weight: new Prisma.Decimal(10),
+          submitted: false,
+          maxScore: new Prisma.Decimal(100),
+        },
+      });
+
+      const res = await request(app)
+        .patch(`/assessments/${assessment.assessmentId}`)
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken)
+        .send({ score: 70 });
+
+      expect(res.status).toBe(200);
+      expect(res.body.score).toBe(70);
+      expect(res.body.submitted).toBe(true);
+    });
+  });
+
+  describe("GET /assessments/:id", () => {
+    let assessmentId: string;
+
+    beforeAll(async () => {
+      const assessment = await prisma.assessment.create({
+        data: {
+          userId,
+          courseId,
+          title: `FETCH_Test_Assess_${testId}`,
+          dueDate: new Date(),
+          weight: new Prisma.Decimal(15),
+          submitted: false,
+          maxScore: new Prisma.Decimal(100),
+        },
+      });
+
+      assessmentId = assessment.assessmentId;
+    });
+
+    it("fetches an assessment successfully", async () => {
+      const res = await request(app)
+        .get(`/assessments/${assessmentId}`)
+        .set("Cookie", [`access_token=${token}`]);
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty("assessment");
+
+      const assessment = res.body.assessment;
+
+      expect(assessment.assessmentId).toBe(assessmentId);
+      expect(assessment.weight).toBe(15);
+      expect(typeof assessment.status).toBe(typeof AssessmentStatus.UPCOMING);
+    });
+
+    it("returns 404 for invalid id", async () => {
+      const res = await request(app)
+        .get("/assessments/nonexistent-id")
+        .set("Cookie", [`access_token=${token}`]);
+
+      expect(res.status).toBe(404);
+    });
+
+    it("returns 401 when not authenticated", async () => {
+      const res = await request(app)
+        .get(`/assessments/${assessmentId}`);
+
+      expect(res.status).toBe(401);
+    });
+  });
+
+  describe("GET /assessments/collisions", () => {
+    beforeAll(async () => {
+      const baseDate = new Date("2026-03-10T00:00:00.000Z");
+
+      await prisma.assessment.createMany({
+        data: [
+          {
+            userId,
+            courseId,
+            title: `COLLISION_A_${testId}`,
+            dueDate: baseDate,
+            weight: new Prisma.Decimal(0.5),
+            submitted: false,
+          },
+          {
+            userId,
+            courseId,
+            title: `COLLISION_B_${testId}`,
+            dueDate: baseDate,
+            weight: new Prisma.Decimal(0.5),
+            submitted: false,
+          },
+        ],
+      });
+    });
+
+    it("returns collisions when assessments fall in same window", async () => {
+      const res = await request(app)
+        .get("/assessments/collisions")
+        .set("Cookie", [`access_token=${token}`]);
+
+      expect(res.status).toBe(200);
+
+      expect(res.body).toHaveProperty("clusters");
+      expect(Array.isArray(res.body.clusters)).toBe(true);
+
+      const cluster = res.body.clusters[0];
+
+      expect(cluster).toHaveProperty("assessmentIds");
+      expect(cluster).toHaveProperty("count");
+      expect(cluster.count).toBeGreaterThanOrEqual(2);
+    });
+
+    it("respects days query filter", async () => {
+      const res = await request(app)
+        .get("/assessments/collisions?days=1")
+        .set("Cookie", [`access_token=${token}`]);
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty("clusters");
+    });
+
+    it("returns 401 when not authenticated", async () => {
+      const res = await request(app)
+        .get("/assessments/collisions");
+
+      expect(res.status).toBe(401);
     });
   });
 

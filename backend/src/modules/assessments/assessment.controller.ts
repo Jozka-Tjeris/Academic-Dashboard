@@ -43,7 +43,9 @@ export async function getAssessmentByIdHandler(
     if (error instanceof Error && "code" in error && error.code === "P2025") {
       return next(new HttpError(404, "Assessment not found"));
     }
-    return next(error);
+    else{
+      return next(error);
+    }
   }
 }
 
