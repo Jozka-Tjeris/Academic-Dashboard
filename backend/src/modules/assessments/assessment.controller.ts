@@ -24,7 +24,7 @@ export async function getAssessmentByIdHandler(
 
   try {
     const assessmentService = getAssessmentServices(prisma);
-    const response = await assessmentService.getAssessmentById(assessmentId);
+    const response = await assessmentService.getAssessmentById(assessmentId, userId);
 
     const serializedResponse = {
       ...response,

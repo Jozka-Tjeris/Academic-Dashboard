@@ -32,10 +32,11 @@ const IMMUTABLE_FIELDS = new Set([
 
 export function getAssessmentServices(prisma: PrismaClient){
   return {
-    async getAssessmentById(assessmentId: string){
+    async getAssessmentById(assessmentId: string, userId: string){
       const assessment = await prisma.assessment.findUniqueOrThrow({
         where: {
           assessmentId,
+          userId,
         },
         include: {
           course: true,
@@ -150,7 +151,7 @@ export function getAssessmentServices(prisma: PrismaClient){
         maxScore: updates.maxScore ?? assessment.maxScore,
       };
 
-      if(updates.score !== undefined){
+      if(updates.score !== undefined && updates.score !== null){
         if(typeof updates.score !== "number" || updates.score < 0){
           throw new HttpError(400, "Score must be a positive number");
         }
