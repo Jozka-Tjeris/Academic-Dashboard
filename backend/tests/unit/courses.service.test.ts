@@ -2,6 +2,62 @@ import { prismaMock } from "../mocks/mockPrismaSingleton";
 import { getCourseServices } from "../../src/modules/courses/course.service";
 import { Prisma } from "@prisma/client";
 
+const baseAssessments = [
+  {
+    userId: "user1",
+    courseId: "c1",
+    title: "Quiz",
+    description: null,
+    score: new Prisma.Decimal(80),
+    targetScore: null,
+    weight: new Prisma.Decimal(0.4),
+    latePenalty: null,
+    maxScore: null,
+    submitted: true,
+    createdAt: new Date("2026-03-10"),
+    updatedAt: new Date("2026-03-10"),
+  },
+  {
+    userId: "user1",
+    courseId: "c2",
+    title: "Exam",
+    description: null,
+    score: null,
+    targetScore: null,
+    weight: new Prisma.Decimal(0.3),
+    latePenalty: null,
+    maxScore: null,
+    submitted: true,
+    createdAt: new Date("2026-03-10"),
+    updatedAt: new Date("2026-03-10"),
+  },
+  {
+    userId: "user1",
+    courseId: "c3",
+    title: "Exam",
+    description: null,
+    score: null,
+    targetScore: null,
+    weight: new Prisma.Decimal(0.3),
+    latePenalty: null,
+    maxScore: null,
+    submitted: false,
+    createdAt: new Date("2026-03-10"),
+    updatedAt: new Date("2026-03-10"),
+  }
+];
+
+// Utility to clone and assign assessmentId + dueDate
+const makeAssessment = (baseIndex: number, assessmentId: string, dueDate: string,
+  score: number | null, maxScore: number, weight: number) => ({
+  ...baseAssessments[baseIndex % baseAssessments.length],
+  assessmentId,
+  score: score ? new Prisma.Decimal(score) : null,
+  maxScore: new Prisma.Decimal(maxScore),
+  weight: new Prisma.Decimal(weight),
+  dueDate: new Date(dueDate)
+});
+
 describe("Course Services", () => {
   type CourseWithAssessments = Prisma.CourseGetPayload<{
     include: { assessments: true };
@@ -164,4 +220,234 @@ describe("Course Services", () => {
       ).rejects.toMatchObject({ status: 404 });
     });
   });
+
+  describe("simulateCourseGrade", () => {
+    it("returns calculated course grade", async () => {
+      const assessments = [
+        makeAssessment(0, "a1", "", 0, 100, 0.5),
+        makeAssessment(1, "a2", "", 90, 100, 0.5),
+      ];
+
+      const simulations = [
+        { assessmentId: "a1", simulatedScore: 80 }
+      ];
+
+      prismaMock.assessment.findMany.mockResolvedValue(assessments);
+
+      const result = await service.simulateCourseGrade("course1", simulations);
+
+      expect(result.currentGrade.toNumber()).toBeCloseTo(0.45);
+      expect(result.maxPossibleGrade.toNumber()).toBeCloseTo(0.95);
+      expect(result.simulatedFinalGrade.toNumber()).toBeCloseTo(0.85);
+    });
+
+    it("handles missing scores", async () => {
+      const assessments = [
+        makeAssessment(0, "a1", "", null, 100, 0.5),
+        makeAssessment(1, "a2", "", 90, 100, 0.5),
+      ];
+
+      const simulations = [
+        { assessmentId: "a1", simulatedScore: 80 }
+      ];
+
+      prismaMock.assessment.findMany.mockResolvedValue(assessments);
+
+      const result = await service.simulateCourseGrade("course1", simulations);
+
+      expect(result.currentGrade.toNumber()).toBeCloseTo(0.45);
+      expect(result.maxPossibleGrade.toNumber()).toBeCloseTo(0.95);
+      expect(result.simulatedFinalGrade.toNumber()).toBeCloseTo(0.85);
+    });
+
+    it("throws 404 for missing assessments", async () => {
+      prismaMock.assessment.findMany.mockResolvedValue([]);
+
+      await expect(service.simulateCourseGrade("course1", []))
+      .rejects
+      .toMatchObject({ status: 404 });
+    })
+
+    it("throws 400 for bad simulated assessment data", async () => {
+      const assessments = [
+        makeAssessment(0, "a1", "", 0, 100, 0.5),
+        makeAssessment(1, "a2", "", 90, 100, 0.5),
+      ];
+
+      const simulations = [
+        { assessmentId: "a-bad", simulatedScore: 80 }
+      ];
+
+      prismaMock.assessment.findMany.mockResolvedValue(assessments);
+
+      await expect(service.simulateCourseGrade("course1", simulations))
+      .rejects
+      .toMatchObject({ status: 400 });
+    });
+  })
+
+  describe("getCourseAnalytics", () => {
+    it("returns grade statistics", async () => {
+      const assessments = [
+        makeAssessment(0, "a1", "2026-03-15", 80, 100, 0.25),
+        makeAssessment(1, "a2", "2026-03-15", 90, 100, 0.5),
+        makeAssessment(0, "a3", "2026-03-15", null, 100, 0.25),
+      ];
+
+      const courseWithAssessments: CourseWithAssessments = {
+        courseId: "course1",
+        userId: "user1",
+        name: "Calculus 101",
+        description: "",
+        createdAt: new Date("2026-03-10"),
+        updatedAt: new Date("2026-03-10"),
+        assessments
+      };
+
+      prismaMock.course.findFirst.mockResolvedValue(courseWithAssessments);
+      prismaMock.assessment.findMany.mockResolvedValue(assessments);
+
+      const result = await service.getCourseAnalytics("course1", "user1", new Date("2026-03-10"));
+
+      expect(result.currentGrade.toNumber()).toBeCloseTo(0.65);
+      expect(result.maxPossibleGrade.toNumber()).toBeCloseTo(0.90);
+    })
+
+    it("returns workload statistics", async () => {
+      const assessments = [
+        makeAssessment(0, "a1", "2026-03-15", 80, 100, 0.25), //graded
+        makeAssessment(1, "a2", "2026-03-15", null, 100, 0.5), //submitted
+        makeAssessment(2, "a3", "2026-03-10", null, 100, 0.25), //in24hrs
+        makeAssessment(2, "a4", "2026-03-15", null, 100, 0.25), //pending
+        makeAssessment(2, "a5", "2026-03-01", null, 100, 0.25), //overdue
+      ];
+
+      const courseWithAssessments: CourseWithAssessments = {
+        courseId: "course1",
+        userId: "user1",
+        name: "Calculus 101",
+        description: "",
+        createdAt: new Date("2026-03-10"),
+        updatedAt: new Date("2026-03-10"),
+        assessments
+      };
+
+      prismaMock.course.findFirst.mockResolvedValue(courseWithAssessments);
+      prismaMock.assessment.findMany.mockResolvedValue(assessments);
+
+      const result = await service.getCourseAnalytics("course1", "user1", new Date("2026-03-10"));
+      expect(result.assessmentCounts).toMatchObject({
+        total: 5,
+        submitted: 1,
+        graded: 1,
+        in24hrs: 1,
+        pending: 1,
+        overdue: 1,
+      });
+      expect(result.urgency.totalUrgency.toNumber()).toBeGreaterThan(0);
+      expect(result.urgency.averageUrgency.toNumber()).toBeGreaterThan(0);
+      expect(result.urgency.topAssessments.length).toBe(3);
+      expect(result.urgency.topAssessments[0].assessmentId).toEqual("a5");
+      expect(result.urgency.topAssessments[1].assessmentId).toEqual("a3");
+      expect(result.urgency.topAssessments[2].assessmentId).toEqual("a4");
+    })
+
+    it("throws 404 for missing course", async () => {
+      prismaMock.assessment.findMany.mockResolvedValue([]);
+
+      await expect(service.getCourseAnalytics("course1", "user1"))
+      .rejects
+      .toMatchObject({ status: 404 });
+    })
+  })
+
+  describe("getCourseDashboard", () => {
+    it("aggregates analytics and urgency ranking", async () => {
+      const assessments = [
+        makeAssessment(0, "a1", "2026-03-15", 80, 100, 0.25), //graded
+        makeAssessment(1, "a2", "2026-03-15", null, 100, 0.5), //submitted
+        makeAssessment(2, "a3", "2026-03-10", null, 100, 0.25), //in24hrs
+        makeAssessment(2, "a4", "2026-03-25", null, 100, 0.25), //pending
+        makeAssessment(2, "a5", "2026-03-01", null, 100, 0.25), //overdue
+      ];
+
+      const courseWithAssessments: CourseWithAssessments = {
+        courseId: "course1",
+        userId: "user1",
+        name: "Calculus 101",
+        description: "",
+        createdAt: new Date("2026-03-10"),
+        updatedAt: new Date("2026-03-10"),
+        assessments
+      };
+
+      prismaMock.course.findFirst.mockResolvedValue(courseWithAssessments);
+
+      const result = await service.getCourseDashboard("course1", "user1", new Date("2026-03-10"));
+
+      expect(result).toHaveProperty("analytics");
+      expect(result).toHaveProperty("workload");
+      expect(result).toHaveProperty("collisions");
+      expect(result).toHaveProperty("course");
+
+      expect(result.course).toEqual(courseWithAssessments);
+      expect(result.workload.upcomingAssessments.length).toEqual(3);
+      expect(result.workload.stats).toMatchObject({
+        dueNext7Days: 2,
+        dueNext14Days: 2,
+        totalUpcomingWeight: new Prisma.Decimal(0.75),
+        highestWeightUpcoming: {
+          assessmentId: "a3",
+          courseId: "c3",
+          createdAt: new Date("2026-03-10"),
+          description: null,
+          dueDate: new Date("2026-03-10"),
+          latePenalty: null,
+          maxScore: new Prisma.Decimal(100),
+          score: null,
+          submitted: false,
+          targetScore: null,
+          title: "Exam",
+          updatedAt: new Date("2026-03-10"),
+          userId: "user1",
+          weight: new Prisma.Decimal(0.25),
+        },
+        busiestWeek: {
+          assessmentCount: 1,
+          end: new Date("2026-03-08"),
+          start: new Date("2026-03-01"),
+        },
+      })
+    })
+
+    it("handles courses with no assessments", async () => {
+      const course: CourseWithAssessments = {
+        courseId: "course1",
+        userId: "user1",
+        name: "Calculus 101",
+        description: "",
+        createdAt: new Date("2026-03-10"),
+        updatedAt: new Date("2026-03-10"),
+        assessments: []
+      };
+
+      prismaMock.course.findFirst.mockResolvedValue(course);
+      prismaMock.assessment.findMany.mockResolvedValue([]);
+
+      const result = await service.getCourseDashboard("course1", "user1");
+
+      expect(result.analytics).toEqual({
+        "currentGrade": new Prisma.Decimal(NaN), 
+        "maxPossibleGrade": new Prisma.Decimal(NaN)
+      });
+    })
+
+    it("throws 404 for missing course", async () => {
+      prismaMock.course.findFirst.mockResolvedValue(null);
+
+      await expect(service.getCourseDashboard("course1", "user1"))
+      .rejects
+      .toMatchObject({ status: 404 });
+    })
+  })
 });

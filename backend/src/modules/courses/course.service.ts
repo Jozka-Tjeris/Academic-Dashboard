@@ -143,7 +143,7 @@ export function getCourseServices(prisma: PrismaClient){
         simulatedFinalGrade,
       };
     },
-    async getCourseAnalytics(userId: string, courseId: string){
+    async getCourseAnalytics(userId: string, courseId: string, now?: Date){
       const course = await prisma.course.findFirst({
         where: {
           courseId,
@@ -160,7 +160,7 @@ export function getCourseServices(prisma: PrismaClient){
 
       const assessments = course.assessments;
 
-      const now = new Date();
+      if(!now) now = new Date();
 
       // ---------- Grade Metrics ----------
 
@@ -230,7 +230,7 @@ export function getCourseServices(prisma: PrismaClient){
         }
       };
     },
-    async getCourseDashboard(userId: string, courseId: string){
+    async getCourseDashboard(userId: string, courseId: string, now?: Date){
       const course = await prisma.course.findFirst({
         where: {
           courseId,
@@ -245,7 +245,7 @@ export function getCourseServices(prisma: PrismaClient){
         throw new HttpError(404, "Course not found");
       }
 
-      const now = new Date();
+      if(!now) now = new Date();
       const assessments = course.assessments;
 
       // Grade Analytics
