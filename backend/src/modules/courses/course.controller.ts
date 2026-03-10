@@ -5,6 +5,8 @@ import { logger } from "../../lib/logger";
 import { prisma } from "../../lib/prisma";
 import { AuthenticatedRequest } from "../../types/express";
 import { serializeCourse, serializeCourses } from "./courseSerializer";
+import { serializeCourseAnalytics } from "./courseAnalyticsSerializer";
+import { serializeCourseDashboard } from "./courseDashboardSerializer";
 
 export async function createCourseHandler(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const { name, description } = req.body;
@@ -181,7 +183,7 @@ export async function getCourseAnalytics(req: AuthenticatedRequest, res: Respons
       "Course analytics calculated"
     );
 
-    return res.status(200).json(analytics);
+    return res.status(200).json(serializeCourseAnalytics(analytics));
   } catch (error) {
     logger.error(
       { requestId: req.id, error },
@@ -213,7 +215,7 @@ export async function getCourseDashboard(req: AuthenticatedRequest, res: Respons
       "Course dashboard retrieved"
     );
 
-    return res.status(200).json(dashboard);
+    return res.status(200).json(serializeCourseDashboard(dashboard));
   } catch (error) {
     logger.error(
       { requestId: req.id, error },

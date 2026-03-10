@@ -318,11 +318,12 @@ export function getCourseServices(prisma: PrismaClient){
       const collisions = detectDueDateCollisions(upcoming);
 
       return {
-        course,
-
-        analytics: {
-          currentGrade,
-          maxPossibleGrade
+        course: {
+          ...course,
+          gradeSummary: {
+            currentGrade,
+            maxPossibleGrade,
+          }
         },
 
         workload: {

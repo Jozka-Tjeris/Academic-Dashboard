@@ -4,6 +4,7 @@ import { prisma } from "../../src/lib/prisma";
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { CourseBackend } from "../../src/types/backendTypes";
+import { TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
 
 const testId = uuidv4().split('-')[0];
 const COURSE_FOR_GET = `GET_Test_Course_${testId}`;
@@ -296,8 +297,8 @@ describe("Courses controller test", () => {
             userId,
             courseId,
             title: `DB_A_${testId}`,
-            dueDate: new Date(Date.now() + 86400000),
-            weight: 50,
+            dueDate: new Date(Date.now() + TWENTYFOUR_HOURS_IN_MS),
+            weight: 0.5,
             submitted: false,
             maxScore: 100,
           },
@@ -306,7 +307,7 @@ describe("Courses controller test", () => {
             courseId,
             title: `DB_B_${testId}`,
             dueDate: new Date(),
-            weight: 50,
+            weight: 0.5,
             submitted: true,
             score: 88,
             maxScore: 100,

@@ -1,7 +1,7 @@
 import { DUEDATE_COLLISION_WINDOW_DAYS, TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
 import { AssessmentBackend } from "../../types/backendTypes";
 
-type Collision = {
+export type Collision = {
   startDate: string
   endDate: string
   assessmentIds: string[]
