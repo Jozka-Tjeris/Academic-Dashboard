@@ -1,7 +1,6 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import DashboardLayout from "@/components/layout/DashboardLayout";
 import { useCourse } from "@/hooks/useCourses";
 import SimulatorTable from "@/components/simulator/SimulatorTable";
 import { useCourseSimulation } from "@/hooks/useSimulator";

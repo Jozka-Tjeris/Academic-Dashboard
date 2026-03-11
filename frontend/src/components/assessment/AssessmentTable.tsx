@@ -37,14 +37,14 @@ export default function AssessmentTable({ assessments }: {
 
         <tbody>
 
-          {sorted.map((a: any) => (
+          {sorted.map(a => (
             <tr
               key={a.assessmentId}
               className="border-t hover:bg-muted/40"
             >
               <td className="p-3">
                 <UrgencyHeatBar
-                  urgency={a.urgency ?? 0}
+                  urgency={(a as any).urgency ?? 0}
                   weight={a.weight ?? 0}
                 />
               </td>
