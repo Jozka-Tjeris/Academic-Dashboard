@@ -29,8 +29,8 @@ router.get(
   googleCallback
 );
 
-router.post('/logout', logout);
+router.post('/logout', requireAuth, csrfProtection, logout);
 
-router.get('/me', requireAuth, csrfProtection, getCurrentUser);
+router.get('/me', requireAuth, getCurrentUser);
 
 export default router;

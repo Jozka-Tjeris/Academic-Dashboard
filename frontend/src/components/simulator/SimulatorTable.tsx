@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AssessmentShared } from "@internal_package/shared";
-import Button from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 import { SimulationInput } from "@/api/simulator";
 
 interface SimulatorTableProps {

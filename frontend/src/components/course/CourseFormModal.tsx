@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 import { useCreateCourse } from "@/hooks/useCourses";
 
 interface CourseFormModalProps {
@@ -61,7 +61,7 @@ export default function CourseFormModal({ open, onClose }: CourseFormModalProps)
 
         <Button
           onClick={handleSubmit}
-          loading={isPending}
+          variant={isPending ? "ghost" : "default"}
           className="w-full"
         >
           Create Course
