@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useApi } from "@/hooks/useApi";
 import {
   getCourses,
   getCourseById,
@@ -6,24 +7,30 @@ import {
   deleteCourse,
 } from "@/api/courses";
 
-export const useCourses = () =>
-  useQuery({
+export const useCourses = () => {
+  const { secureFetch } = useApi(); // 1. Get the fetcher here
+  return useQuery({
     queryKey: ["courses"],
-    queryFn: getCourses,
+    queryFn: () => getCourses(secureFetch), // 2. Pass it in
   });
+};
 
-export const useCourse = (id: string) =>
-  useQuery({
+export const useCourse = (id: string) => {
+  const { secureFetch } = useApi();
+  return useQuery({
     queryKey: ["course", id],
-    queryFn: () => getCourseById(id),
+    queryFn: () => getCourseById(secureFetch, id),
     enabled: !!id,
   });
+};
 
 export const useCreateCourse = () => {
   const qc = useQueryClient();
+  const { secureFetch } = useApi();
 
   return useMutation({
-    mutationFn: createCourse,
+    mutationFn: (data: { name: string; description?: string }) => 
+      createCourse(secureFetch, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["courses"] });
     },
@@ -32,9 +39,10 @@ export const useCreateCourse = () => {
 
 export const useDeleteCourse = () => {
   const qc = useQueryClient();
+  const { secureFetch } = useApi();
 
   return useMutation({
-    mutationFn: deleteCourse,
+    mutationFn: (id: string) => deleteCourse(secureFetch, id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["courses"] });
     },

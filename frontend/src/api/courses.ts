@@ -1,25 +1,27 @@
 import { CourseShared } from "@internal_package/shared";
-import { apiFetch } from "../lib/queryClient";
 
-async function fetcher<T>(url: string, options?: RequestInit): Promise<T> {
-  return apiFetch(url, options);
+// Define a type for our secure fetcher to keep TS happy
+type Fetcher = (url: string, options?: RequestInit) => Promise<Response>;
+
+async function handleResponse<T>(response: Response): Promise<T> {
+  if (!response.ok) throw new Error("Network response was not ok");
+  if (response.status === 204) return {} as T;
+  return response.json();
 }
 
-export const getCourses = () => fetcher<CourseShared[]>("/courses");
+export const getCourses = (fetcher: Fetcher) => 
+  fetcher("/courses").then(res => handleResponse<CourseShared[]>(res));
 
-export const getCourseById = (id: string) =>
-  fetcher<CourseShared>(`/courses/${id}`);
+export const getCourseById = (fetcher: Fetcher, id: string) =>
+  fetcher(`/courses/${id}`).then(res => handleResponse<CourseShared>(res));
 
-export const createCourse = (data: {
-  name: string;
-  description?: string;
-}) =>
-  fetcher<CourseShared>("/courses", {
+export const createCourse = (fetcher: Fetcher, data: { name: string; description?: string }) =>
+  fetcher("/courses", {
     method: "POST",
     body: JSON.stringify(data),
-  });
+  }).then(res => handleResponse<CourseShared>(res));
 
-export const deleteCourse = (id: string) =>
-  fetcher<void>(`/courses/${id}`, {
+export const deleteCourse = (fetcher: Fetcher, id: string) =>
+  fetcher(`/courses/${id}`, {
     method: "DELETE",
-  });
+  }).then(res => handleResponse<void>(res));
