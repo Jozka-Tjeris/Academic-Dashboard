@@ -46,7 +46,7 @@ app.use((req, res, next) => {
   ];
   const origin = req.headers.origin;
 
-  if (req.method !== "GET" && allowedOrigin.includes(origin ?? "")) {
+  if (req.method !== "GET" && !allowedOrigin.includes(origin ?? "")) {
     return res.status(403).json({ message: "Invalid origin" });
   }
 

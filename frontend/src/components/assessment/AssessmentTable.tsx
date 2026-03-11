@@ -3,7 +3,7 @@
 import { AssessmentShared } from "@internal_package/shared";
 import EditableScore from "./EditableScore";
 import { useDeleteAssessment } from "@/hooks/useAssessments";
-import Button from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 
 interface AssessmentTableProps {
   assessments: AssessmentShared[];
@@ -56,7 +56,7 @@ export default function AssessmentTable({ assessments, courseId }: AssessmentTab
 
               <td className="p-3 text-right">
                 <Button
-                  variant="danger"
+                  variant="destructive"
                   onClick={() =>
                     deleteAssessment(a.assessmentId)
                   }

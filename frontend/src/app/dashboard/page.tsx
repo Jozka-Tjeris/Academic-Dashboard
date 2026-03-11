@@ -5,7 +5,7 @@ import DashboardLayout from "@/components/layout/DashboardLayout";
 import { useCourses } from "@/hooks/useCourses";
 import CourseCard from "@/components/course/CourseCard";
 import CourseFormModal from "@/components/course/CourseFormModal";
-import Button from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 
 export default function DashboardPage() {
   const { data, isLoading, isError } = useCourses();
@@ -26,7 +26,7 @@ export default function DashboardPage() {
       )}
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {data?.map((course) => (
+        {Array.isArray(data) && data.map((course) => (
           <CourseCard key={course.courseId} course={course} />
         ))}
       </div>

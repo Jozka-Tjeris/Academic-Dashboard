@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 import { useCreateAssessment } from "@/hooks/useAssessments";
 
 interface AddAssessmentFormProps {
@@ -88,7 +88,7 @@ export default function AddAssessmentForm({ courseId }: AddAssessmentFormProps) 
       )}
 
       <div className="mt-3">
-        <Button onClick={handleSubmit} loading={isPending}>
+        <Button onClick={handleSubmit} variant={isPending ? "ghost" : "default"}>
           Add Assessment
         </Button>
       </div>
