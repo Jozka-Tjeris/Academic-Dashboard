@@ -1,69 +1,76 @@
 "use client";
 
 import { AssessmentShared } from "@internal_package/shared";
-import EditableScore from "./EditableScore";
-import { useDeleteAssessment } from "@/hooks/useAssessments";
-import { Button } from "@/components/ui/Button";
+import UrgencyHeatBar from "@/components/dashboard/UrgencyHeatBar";
+import { getStatusColor } from "@/lib/statusColor";
 
-interface AssessmentTableProps {
-  assessments: AssessmentShared[];
-  courseId: string;
-}
-
-export default function AssessmentTable({ assessments, courseId }: AssessmentTableProps) {
-  const { mutate: deleteAssessment } = useDeleteAssessment(courseId);
-
-  if (!assessments.length) {
-    return <p className="text-gray-500">No assessments yet.</p>;
+export default function AssessmentTable({ assessments }: {
+  assessments: AssessmentShared[]
+}) {
+  if (assessments.length === 0) {
+    return (
+      <div className="text-muted-foreground">
+        No assessments yet
+      </div>
+    );
   }
 
+  const sorted = [...assessments].sort(
+    (a: any, b: any) => (b.urgency ?? 0) - (a.urgency ?? 0)
+  );
+
   return (
-    <div className="bg-white border rounded-xl overflow-hidden">
+    <div className="border rounded-lg overflow-hidden">
+
       <table className="w-full text-sm">
-        <thead className="bg-gray-50 border-b">
-          <tr>
-            <th className="text-left p-3">Title</th>
-            <th className="text-left p-3">Due Date</th>
-            <th className="text-left p-3">Weight</th>
-            <th className="text-left p-3">Score</th>
-            <th className="text-left p-3">Max</th>
-            <th className="text-left p-3">Status</th>
-            <th className="text-right p-3"></th>
+
+        <thead className="bg-muted">
+          <tr className="text-left">
+            <th className="p-3">Urgency</th>
+            <th className="p-3">Title</th>
+            <th className="p-3">Weight</th>
+            <th className="p-3">Score</th>
+            <th className="p-3">Due Date</th>
+            <th className="p-3">Status</th>
           </tr>
         </thead>
 
         <tbody>
-          {assessments.map((a) => (
-            <tr key={a.assessmentId} className="border-b">
-              <td className="p-3">{a.title}</td>
+
+          {sorted.map(a => (
+            <tr
+              key={a.assessmentId}
+              className="border-t hover:bg-muted/40"
+            >
+              <td className="p-3">
+                <UrgencyHeatBar
+                  urgency={(a as any).urgency ?? 0}
+                  weight={a.weight ?? 0}
+                />
+              </td>
+
+              <td className="p-3 font-medium">
+                {a.title}
+              </td>
+
+              <td className="p-3">
+                {(a.weight * 100).toFixed(0)}%
+              </td>
+
+              <td className="p-3">
+                {a.score !== null && a.maxScore
+                  ? `${a.score}/${a.maxScore}`
+                  : "—"}
+              </td>
 
               <td className="p-3">
                 {new Date(a.dueDate).toLocaleDateString()}
               </td>
 
-              <td className="p-3">{a.weight}%</td>
-
-              <td className="p-3">
-                <EditableScore
-                  assessment={a}
-                  courseId={courseId}
-                />
+              <td className={`p-3 ${getStatusColor(a.status)}`}>
+                {a.status}
               </td>
 
-              <td className="p-3">{a.maxScore ?? "-"}</td>
-
-              <td className="p-3">{a.status}</td>
-
-              <td className="p-3 text-right">
-                <Button
-                  variant="destructive"
-                  onClick={() =>
-                    deleteAssessment(a.assessmentId)
-                  }
-                >
-                  Delete
-                </Button>
-              </td>
             </tr>
           ))}
         </tbody>

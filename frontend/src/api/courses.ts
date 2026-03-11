@@ -1,25 +1,23 @@
+import { Fetcher } from "@/types/fetcher";
 import { CourseShared } from "@internal_package/shared";
-import { apiFetch } from "../lib/queryClient";
+import { handleResponse } from "./handleResponse";
 
-async function fetcher<T>(url: string, options?: RequestInit): Promise<T> {
-  return apiFetch(url, options);
-}
+export const getCourses = (fetcher: Fetcher) => 
+  fetcher("/courses").then(res => handleResponse<CourseShared[]>(res));
 
-export const getCourses = () => fetcher<CourseShared[]>("/courses");
+export const getCourseById = (fetcher: Fetcher, id: string) =>
+  fetcher(`/courses/${id}`).then(res => handleResponse<CourseShared>(res));
 
-export const getCourseById = (id: string) =>
-  fetcher<CourseShared>(`/courses/${id}`);
-
-export const createCourse = (data: {
-  name: string;
-  description?: string;
-}) =>
-  fetcher<CourseShared>("/courses", {
+export const createCourse = (fetcher: Fetcher, data: { name: string; description?: string }) =>
+  fetcher("/courses", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(data),
-  });
+  }).then(res => handleResponse<CourseShared>(res));
 
-export const deleteCourse = (id: string) =>
-  fetcher<void>(`/courses/${id}`, {
+export const deleteCourse = (fetcher: Fetcher, id: string) =>
+  fetcher(`/courses/${id}`, {
     method: "DELETE",
-  });
+  }).then(res => handleResponse<void>(res));

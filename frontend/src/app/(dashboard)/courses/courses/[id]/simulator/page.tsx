@@ -1,7 +1,6 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import DashboardLayout from "@/components/layout/DashboardLayout";
 import { useCourse } from "@/hooks/useCourses";
 import SimulatorTable from "@/components/simulator/SimulatorTable";
 import { useCourseSimulation } from "@/hooks/useSimulator";
@@ -26,7 +25,7 @@ export default function SimulatorPage() {
   };
 
   return (
-    <DashboardLayout title={`${data.name} Simulator`}>
+    <div className="space-y-8">
       <SimulatorTable
         assessments={data.assessments ?? []}
         onRunSimulation={runSimulation}
@@ -39,11 +38,11 @@ export default function SimulatorPage() {
           </h3>
 
           <p className="text-lg font-bold">
-            {result.projectedGrade.toFixed(2)} /{" "}
+            {result.simulatedGrade.toFixed(2)} /{" "}
             {result.maxPossibleGrade.toFixed(2)}
           </p>
         </div>
       )}
-    </DashboardLayout>
+    </div>
   );
 }

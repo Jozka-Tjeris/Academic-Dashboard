@@ -3,7 +3,7 @@ import { decimalToNumberOrNull, serializeCourse } from "./courseSerializer";
 import { serializeAssessment } from "../assessments/assessmentSerializer";
 import { AssessmentWithUrgency } from "../../domain/assessments/rankAssessmentsByUrgency";
 import { AssessmentBackend, CourseBackend } from "src/types/backendTypes";
-import { Collision } from "src/domain/assessments/detectDueDateCollisions";
+import { Collision } from "@internal_package/shared";
 
 
 function serializeAssessmentWithUrgency(a: AssessmentWithUrgency) {

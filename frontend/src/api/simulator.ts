@@ -1,4 +1,5 @@
-import { apiFetch } from "@/lib/queryClient";
+import { Fetcher } from "@/types/fetcher";
+import { handleResponse } from "./handleResponse";
 
 export type SimulationInput = {
   assessmentId: string;
@@ -7,16 +8,18 @@ export type SimulationInput = {
 };
 
 export type SimulationResult = {
-  projectedGrade: number;
+  currentGrade: number;
+  simulatedGrade: number;
   maxPossibleGrade: number;
 };
 
-export function simulateCourse(
+export const simulateCourse = (
+  fetcher: Fetcher,
   courseId: string,
   data: SimulationInput[]
-) {
-  return apiFetch(`/courses/${courseId}/simulate`, {
+) => (
+  fetcher(`/courses/${courseId}/simulate`, {
     method: "POST",
     body: JSON.stringify({ assessments: data }),
-  });
-}
+  }).then((res) => handleResponse<SimulationResult>(res))
+);

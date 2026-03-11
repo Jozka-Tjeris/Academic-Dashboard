@@ -12,14 +12,12 @@ export function useApi() {
   const secureFetch = async (url: string, options: RequestInit = {}) => {
     const csrfToken = getCsrfToken();
     
-    const headers: Record<string, string> = {
-      ...options.headers as Record<string, string>,
-    };
+    const headers = new Headers(options.headers || {});
 
     // Only attach CSRF for mutating methods
     const method = options.method?.toUpperCase() || 'GET';
     if (csrfToken && ["POST", "PUT", "DELETE", "PATCH"].includes(method)) {
-      headers["X-CSRF-Token"] = csrfToken;
+      headers.set("X-CSRF-Token", csrfToken);
     }
 
     return apiFetch(url, {

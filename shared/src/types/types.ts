@@ -40,3 +40,10 @@ export type AssessmentShared = {
 }
 
 export type GradeComponent = Pick<AssessmentShared, "assessmentId" | "weight" | "score" | "maxScore">;
+
+export type Collision = {
+  startDate: string,
+  endDate: string,
+  assessmentIds: string[],
+  count: number,
+}
