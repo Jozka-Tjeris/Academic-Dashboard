@@ -1,15 +1,10 @@
-import { useApi } from "@/hooks/useApi";
+import { useCheckAuth } from "@/hooks/useAuth";
 import { redirect } from "next/navigation";
 
-export default async function Home() {
-  const { secureFetch } = useApi();
-  
+export default function Home() {
+  const { data } = useCheckAuth();
   try {
-    const res = await secureFetch("/api/auth/me", {
-      cache: "no-store",
-    });
-
-    if (res.ok) {
+    if (data?.ok) {
       redirect("/dashboard");
     }
   } catch (error) {

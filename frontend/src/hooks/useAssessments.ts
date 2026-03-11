@@ -2,9 +2,11 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createAssessment, updateAssessment, deleteAssessment } from "@/api/assessments";
+import { useApi } from "./useApi";
 
 export function useCreateAssessment(courseId: string) {
   const queryClient = useQueryClient();
+  const { secureFetch } = useApi();
 
   return useMutation({
     mutationFn: (data: {
@@ -13,7 +15,7 @@ export function useCreateAssessment(courseId: string) {
       weight: number;
       maxScore: number;
       description?: string;
-    }) => createAssessment(courseId, data),
+    }) => createAssessment(secureFetch, courseId, data),
 
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -25,6 +27,7 @@ export function useCreateAssessment(courseId: string) {
 
 export function useUpdateAssessment(courseId: string) {
   const queryClient = useQueryClient();
+  const { secureFetch } = useApi();
 
   return useMutation({
     mutationFn: ({
@@ -37,7 +40,7 @@ export function useUpdateAssessment(courseId: string) {
         submitted?: boolean;
         targetScore?: number;
       };
-    }) => updateAssessment(id, data),
+    }) => updateAssessment(secureFetch, id, data),
 
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -49,9 +52,14 @@ export function useUpdateAssessment(courseId: string) {
 
 export function useDeleteAssessment(courseId: string) {
   const queryClient = useQueryClient();
+  const { secureFetch } = useApi();
 
   return useMutation({
-    mutationFn: deleteAssessment,
+    mutationFn: ({
+      id,
+    }: {
+      id: string;
+    }) => deleteAssessment(secureFetch, id),
 
     onSuccess: () => {
       queryClient.invalidateQueries({
