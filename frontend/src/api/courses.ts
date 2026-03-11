@@ -1,13 +1,6 @@
+import { Fetcher } from "@/types/fetcher";
 import { CourseShared } from "@internal_package/shared";
-
-// Define a type for our secure fetcher to keep TS happy
-type Fetcher = (url: string, options?: RequestInit) => Promise<Response>;
-
-async function handleResponse<T>(response: Response): Promise<T> {
-  if (!response.ok) throw new Error("Network response was not ok");
-  if (response.status === 204) return {} as T;
-  return response.json();
-}
+import { handleResponse } from "./handleResponse";
 
 export const getCourses = (fetcher: Fetcher) => 
   fetcher("/courses").then(res => handleResponse<CourseShared[]>(res));
