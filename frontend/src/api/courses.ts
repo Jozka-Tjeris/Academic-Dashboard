@@ -18,6 +18,9 @@ export const getCourseById = (fetcher: Fetcher, id: string) =>
 export const createCourse = (fetcher: Fetcher, data: { name: string; description?: string }) =>
   fetcher("/courses", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(data),
   }).then(res => handleResponse<CourseShared>(res));
 
