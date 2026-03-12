@@ -25,10 +25,10 @@ export function serializeUserDashboard(dashboard: {
   collisions: Collision[];
 }){
   return {
-    course: serializeCourses(dashboard.courses),
+    courses: serializeCourses(dashboard.courses),
 
     workload: {
-      urgentAssessments:
+      upcomingAssessments:
         dashboard.workload.upcomingAssessments.map(
           serializeAssessmentWithUrgency
         ),

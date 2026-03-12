@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
-import { logger } from "src/lib/logger";
-import { AuthenticatedRequest } from "src/types/express";
-import { HttpError } from "src/utils/httpError";
+import { logger } from "../../lib/logger";
+import { AuthenticatedRequest } from "../../types/express";
+import { HttpError } from "../../utils/httpError";
 import { getDashboardServices } from "./dashboard.service";
 import { prisma } from "../../lib/prisma";
 import { serializeUserDashboard } from "./dashboardSerializer";
