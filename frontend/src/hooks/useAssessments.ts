@@ -37,7 +37,7 @@ export const useUpdateAssessment = (courseId: string) => {
       id: string;
       data: {
         score?: number;
-        submitted?: boolean;
+        submissionDate?: Date;
         targetScore?: number;
       };
     }) => updateAssessment(secureFetch, id, data),

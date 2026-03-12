@@ -9,7 +9,7 @@ export default function UrgentAssessments({
   assessments: AssessmentWithUrgency[];
 }) {
   const urgent = assessments
-    .filter(a => !a.submitted)
+    .filter(a => !!!a.submissionDate)
     .sort((a, b) => (b.urgency ?? 0) - (a.urgency ?? 0))
     .slice(0, 6);
 

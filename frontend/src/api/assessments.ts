@@ -24,7 +24,7 @@ export const createAssessment = (
 
 export const updateAssessment = (fetcher: Fetcher, assessmentId: string, data: {
   score?: number,
-  submitted?: boolean,
+  submissionDate?: Date,
   targetScore?: number
 }) => 
   fetcher(`/assessments/${assessmentId}`, {
