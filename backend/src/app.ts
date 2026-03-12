@@ -10,6 +10,7 @@ import passport from './modules/auth/passport';
 import { env } from "./config/env";
 import coursesRoutes from "./modules/courses/course.routes";
 import assessmentRoutes from "./modules/assessments/assessment.routes";
+import dashboardRoutes from "./modules/dashboard/dashboard.routes";
 import { signToken } from "./modules/auth/jwt";
 
 export const app = express();
@@ -38,6 +39,7 @@ app.use("/health", healthRouter);
 app.use('/api/auth', authRoutes);
 app.use('/courses', coursesRoutes);
 app.use("/", assessmentRoutes);
+app.use("/", dashboardRoutes);
 
 app.use((req, res, next) => {
   const allowedOrigin = [

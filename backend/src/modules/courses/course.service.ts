@@ -4,10 +4,10 @@ import { calculateCurrentGrade, calculateMaxPossibleGrade } from "../../domain/g
 import { GradeSummary } from "../../types/backendTypes";
 import { simulateFinalGrade } from "../../domain/grade/simulation";
 import { deriveStatusFromDate } from "../../domain/assessments/deriveStatusFromDate";
-import { AssessmentStatus, TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
+import { AssessmentStatus } from "@internal_package/shared";
 import { calculateUrgencyScore } from "../../domain/assessments/calculateUrgencyScore";
-import { detectDueDateCollisions } from "../../domain/assessments/detectDueDateCollisions";
 import { rankAssessmentsByUrgency } from "../../domain/assessments/rankAssessmentsByUrgency";
+import { buildDashboardMetrics } from "../../domain/dashboard/computeDashboardMetrics";
 
 interface CreateCourseInput {
   userId: string;
@@ -187,7 +187,9 @@ export function getCourseServices(prisma: PrismaClient){
 
       // ---------- Urgency Metrics ----------
 
-      const activeAssessments = assessments.filter(a => !a.submitted);
+      const activeAssessments = assessments.filter(
+        a => deriveStatusFromDate(a.dueDate, a.score, a.submitted, now) !== AssessmentStatus.GRADED
+      );
 
       const ranked = rankAssessmentsByUrgency(activeAssessments, now);
 
@@ -231,14 +233,10 @@ export function getCourseServices(prisma: PrismaClient){
       };
     },
     async getCourseDashboard(userId: string, courseId: string, now?: Date){
+
       const course = await prisma.course.findFirst({
-        where: {
-          courseId,
-          userId
-        },
-        include: {
-          assessments: true
-        }
+        where: { courseId, userId },
+        include: { assessments: true }
       });
 
       if (!course) {
@@ -246,100 +244,25 @@ export function getCourseServices(prisma: PrismaClient){
       }
 
       if(!now) now = new Date();
-      const assessments = course.assessments;
 
-      // Grade Analytics
-
-      const currentGrade = calculateCurrentGrade(assessments);
-      const maxPossibleGrade = calculateMaxPossibleGrade(assessments);
-
-      // Upcoming Assessments
-
-      const upcoming = assessments.filter(a => !a.submitted);
-
-      const urgencyRanked = rankAssessmentsByUrgency(upcoming, now);
-
-      // Workload Stats
-
-      const sevenDays = new Date(now.getTime() + 7 * TWENTYFOUR_HOURS_IN_MS);
-      const fourteenDays = new Date(now.getTime() + 14 * TWENTYFOUR_HOURS_IN_MS);
-
-      let dueNext7Days = 0;
-      let dueNext14Days = 0;
-      let totalUpcomingWeight = new Prisma.Decimal(0);
-
-      let highestWeightUpcoming: typeof upcoming[number] | null = null;
-
-      for (const a of upcoming) {
-
-        if (a.dueDate <= sevenDays) dueNext7Days++;
-        if (a.dueDate <= fourteenDays) dueNext14Days++;
-
-        totalUpcomingWeight = totalUpcomingWeight.add(a.weight);
-
-        if (
-          !highestWeightUpcoming ||
-          a.weight.gt(highestWeightUpcoming.weight)
-        ) {
-          highestWeightUpcoming = a;
-        }
-      }
-
-      // Busiest Week Detection
-
-      const sorted = [...upcoming].sort(
-        (a, b) => a.dueDate.getTime() - b.dueDate.getTime()
-      );
-
-      let busiestWeek = null;
-      let maxCount = 0;
-
-      for (let i = 0; i < sorted.length; i++){
-
-        const start = sorted[i].dueDate;
-        const end = new Date(start.getTime() + 7 * TWENTYFOUR_HOURS_IN_MS);
-
-        const count = sorted.filter(
-          a => a.dueDate >= start && a.dueDate <= end
-        ).length;
-
-        if (count > maxCount) {
-          maxCount = count;
-          busiestWeek = {
-            start,
-            end,
-            assessmentCount: count
-          };
-        }
-      }
-
-      // Collision Clusters
-
-      const collisions = detectDueDateCollisions(upcoming);
+      const metrics = buildDashboardMetrics(course.assessments, now);
 
       return {
         course: {
           ...course,
           gradeSummary: {
-            currentGrade,
-            maxPossibleGrade,
+            currentGrade: calculateCurrentGrade(course.assessments),
+            maxPossibleGrade: calculateMaxPossibleGrade(course.assessments)
           }
         },
 
         workload: {
-          upcomingAssessments: urgencyRanked.slice(0, 10),
-
-          stats: {
-            dueNext7Days,
-            dueNext14Days,
-            totalUpcomingWeight,
-            highestWeightUpcoming,
-            busiestWeek
-          }
+          upcomingAssessments: metrics.upcomingAssessments,
+          stats: metrics.stats
         },
 
-        collisions
+        collisions: metrics.collisions
       };
-    },
+    }
   }
 }

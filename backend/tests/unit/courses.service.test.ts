@@ -316,7 +316,7 @@ describe("Course Services", () => {
     it("returns workload statistics", async () => {
       const assessments = [
         makeAssessment(0, "a1", "2026-03-15", 80, 100, 0.25), //graded
-        makeAssessment(1, "a2", "2026-03-15", null, 100, 0.5), //submitted
+        makeAssessment(1, "a2", "2026-03-15", null, 100, 0.0), //submitted
         makeAssessment(2, "a3", "2026-03-10", null, 100, 0.25), //in24hrs
         makeAssessment(2, "a4", "2026-03-15", null, 100, 0.25), //pending
         makeAssessment(2, "a5", "2026-03-01", null, 100, 0.25), //overdue
@@ -365,7 +365,7 @@ describe("Course Services", () => {
     it("aggregates analytics and urgency ranking", async () => {
       const assessments = [
         makeAssessment(0, "a1", "2026-03-15", 80, 100, 0.25), //graded
-        makeAssessment(1, "a2", "2026-03-15", null, 100, 0.5), //submitted
+        makeAssessment(1, "a2", "2026-03-15", null, 100, 0.0), //submitted
         makeAssessment(2, "a3", "2026-03-10", null, 100, 0.25), //in24hrs
         makeAssessment(2, "a4", "2026-03-25", null, 100, 0.25), //pending
         makeAssessment(2, "a5", "2026-03-01", null, 100, 0.25), //overdue
@@ -384,8 +384,8 @@ describe("Course Services", () => {
       const courseWithAssessmentsAndGradeSummary = {
         ...courseWithAssessments,
         gradeSummary: {
-          currentGrade: new Prisma.Decimal(NaN),
-          maxPossibleGrade: new Prisma.Decimal(NaN),
+          currentGrade: new Prisma.Decimal(0.2),
+          maxPossibleGrade: new Prisma.Decimal(0.95),
         }
       }
 
@@ -398,10 +398,10 @@ describe("Course Services", () => {
       expect(result).toHaveProperty("course");
 
       expect(result.course).toEqual(courseWithAssessmentsAndGradeSummary);
-      expect(result.workload.upcomingAssessments.length).toEqual(3);
+      expect(result.workload.upcomingAssessments.length).toEqual(4);
       expect(result.workload.stats).toMatchObject({
-        dueNext7Days: 2,
-        dueNext14Days: 2,
+        dueNext7Days: 3,
+        dueNext14Days: 3,
         totalUpcomingWeight: new Prisma.Decimal(0.75),
         highestWeightUpcoming: {
           assessmentId: "a3",
@@ -420,9 +420,9 @@ describe("Course Services", () => {
           weight: new Prisma.Decimal(0.25),
         },
         busiestWeek: {
-          assessmentCount: 1,
-          end: new Date("2026-03-08"),
-          start: new Date("2026-03-01"),
+          assessmentCount: 2,
+          end: new Date("2026-03-17"),
+          start: new Date("2026-03-10"),
         },
       })
     })
