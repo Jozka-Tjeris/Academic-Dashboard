@@ -2,10 +2,14 @@
 
 import UrgencyHeatBar from "@/components/dashboard/UrgencyHeatBar";
 import { getStatusColor } from "@/lib/statusColor";
-import { AssessmentWithUrgency } from "@/types/dashboard";
+import { AssessmentShared } from "@internal_package/shared";
+
+type AssessmentRow = AssessmentShared & {
+  urgency?: number;
+}
 
 export default function AssessmentTable({ assessments }: {
-  assessments: AssessmentWithUrgency[]
+  assessments: AssessmentRow[]
 }) {
   if (assessments.length === 0) {
     return (
@@ -14,10 +18,6 @@ export default function AssessmentTable({ assessments }: {
       </div>
     );
   }
-
-  const sorted = [...assessments].sort(
-    (a, b) => (b.urgency ?? 0) - (a.urgency ?? 0)
-  );
 
   return (
     <div className="border rounded-lg overflow-hidden">
@@ -36,17 +36,21 @@ export default function AssessmentTable({ assessments }: {
         </thead>
 
         <tbody>
-
-          {sorted.map(a => (
+          {assessments.map(a => (
             <tr
               key={a.assessmentId}
               className="border-t hover:bg-muted/40"
+              onClick={() => window.location.href=`/assessments/${a.assessmentId}`}
             >
               <td className="p-3">
-                <UrgencyHeatBar
-                  urgency={a.urgency ?? 0}
-                  weight={a.weight ?? 0}
+                {a.urgency ? (
+                  <UrgencyHeatBar
+                  urgency={a.urgency}
+                  weight={a.weight}
                 />
+                ) : (
+                  "-"
+                )}
               </td>
 
               <td className="p-3 font-medium">

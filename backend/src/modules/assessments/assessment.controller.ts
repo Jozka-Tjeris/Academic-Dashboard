@@ -27,8 +27,12 @@ export async function getAssessmentByIdHandler(
     const response = await assessmentService.getAssessmentById(assessmentId, userId);
 
     const serializedResponse = {
-      ...response,
-      assessment: serializeAssessment(response.assessment)
+      course: response.course,
+      assessment: serializeAssessment(response.assessment),
+      derived: {
+        status: response.derived.status,
+        urgencyScore: response.derived.urgencyScore.toNumber(),
+      }
     }
     logger.info(
       { requestId: req.id, assessmentId },

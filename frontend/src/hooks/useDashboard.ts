@@ -7,7 +7,7 @@ export const useCourseDashboard = (courseId: string) => {
   const { secureFetch } = useApi();
 
   return useQuery({
-    queryKey: queryKeys.courses.dashboard(courseId),
+    queryKey: queryKeys.dashboard.course(courseId),
     queryFn: () => getCourseDashboard(secureFetch, courseId),
     enabled: !!courseId,
   });

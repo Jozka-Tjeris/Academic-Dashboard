@@ -7,7 +7,7 @@ export const useCollisions = () => {
   const { secureFetch } = useApi();
 
   return useQuery({
-    queryKey: queryKeys.assessments.collisions,
+    queryKey: queryKeys.collisions,
     queryFn: () => getCollisions(secureFetch),
   });
 }
