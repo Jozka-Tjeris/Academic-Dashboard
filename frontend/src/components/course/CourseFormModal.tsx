@@ -5,6 +5,8 @@ import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useCreateCourse } from "@/hooks/useCourses";
+import { queryClient } from "@/lib/queryClient";
+import { queryKeys } from "@/lib/queryKeys";
 
 interface CourseFormModalProps {
   open: boolean;
@@ -30,6 +32,7 @@ export default function CourseFormModal({ open, onClose }: CourseFormModalProps)
       { name, description },
       {
         onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.global })
           setName("");
           setDescription("");
           onClose();

@@ -1,21 +1,25 @@
 "use client";
 
-import { useCourses } from "@/hooks/useCourses";
 import CourseCard from "@/components/course/CourseCard";
 import { Spinner } from "@/components/ui/Spinner";
 import UpcomingAssessments from "@/components/dashboard/UpcomingAssessments";
 import UrgentAssessments from "@/components/dashboard/UrgentAssessments";
 import CollisionAlerts from "@/components/dashboard/CollisionAlerts";
+import { useUserDashboard } from "@/hooks/useDashboard";
+import CourseFormModal from "@/components/course/CourseFormModal";
+import { useState } from "react";
+import { Button } from "@/components/ui/Button";
 
 export default function DashboardPage() {
-  const { data: courses, isLoading, error } = useCourses();
+  const { data: dashboard, isLoading, error } = useUserDashboard();
+  const [open, setOpen] = useState(false);
 
   if (isLoading) return <Spinner />;
 
-  if (error) {
+  if (error || !dashboard) {
     return (
       <div className="text-red-500">
-        Failed to load courses
+        Failed to load dashboard
       </div>
     );
   }
@@ -25,18 +29,21 @@ export default function DashboardPage() {
 
       {/* Risk widgets */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <UrgentAssessments courses={courses ?? []} />
-        <UpcomingAssessments courses={courses ?? []} />
+        <UrgentAssessments assessments={dashboard.workload.upcomingAssessments ?? []} />
+        <UpcomingAssessments assessments={dashboard.workload.upcomingAssessments ?? []} />
       </div>
 
       {/* Courses */}
       <section>
-        <h2 className="text-xl font-semibold mb-4">
-          Courses
-        </h2>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-semibold mb-4">
+            Courses
+          </h2>
+          <Button onClick={() => setOpen(true)}>+ Add Course</Button>
+        </div>
 
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {courses?.map((course) => (
+          {dashboard.courses.map((course) => (
             <CourseCard key={course.courseId} course={course} />
           ))}
         </div>
@@ -45,6 +52,7 @@ export default function DashboardPage() {
       {/* Collisions */}
       <CollisionAlerts />
 
+      <CourseFormModal open={open} onClose={() => setOpen(false)}/>
     </div>
   );
 }

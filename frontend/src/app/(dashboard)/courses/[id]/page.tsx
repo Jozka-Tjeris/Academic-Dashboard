@@ -1,26 +1,26 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useCourse } from "@/hooks/useCourses";
 import GradeProgress from "@/components/grade/GradeProgress";
 import AddAssessmentForm from "@/components/assessment/AddAssessmentForm";
 import AssessmentTable from "@/components/assessment/AssessmentTable";
 import Link from "next/link";
 import { Spinner } from "@/components/ui/Spinner";
+import { useCourseDashboard } from "@/hooks/useDashboard";
 
 export default function CoursePage() {
   const params = useParams();
   const id = params.id as string;
 
-  const { data: course, isLoading, isError: error } = useCourse(id);
+  const { data: dashboard, isLoading, isError: error } = useCourseDashboard(id);
 
   if (isLoading) return <Spinner />;
 
-  if (error || !course) {
+  if (error || !dashboard) {
     return <div>Failed to load course</div>;
   }
 
-  const { currentGrade, maxPossibleGrade, gradeMessage } = course.gradeSummary;
+  const { currentGrade, maxPossibleGrade, gradeMessage } = dashboard.course.gradeSummary;
 
   // Determine the display text for the grade
   const gradeText =
@@ -33,12 +33,12 @@ export default function CoursePage() {
       {/* Course header */}
       <div className="space-y-2">
         <h1 className="text-2xl font-semibold">
-          {course.name}
+          {dashboard.course.name}
         </h1>
 
-        {course.description && (
+        {dashboard.course.description && (
           <p className="text-muted-foreground">
-            {course.description}
+            {dashboard.course.description}
           </p>
         )}
       </div>
@@ -58,7 +58,7 @@ export default function CoursePage() {
       <AddAssessmentForm courseId={id} />
 
       <AssessmentTable
-        assessments={course.assessments ?? []}
+        assessments={dashboard.workload.upcomingAssessments ?? []}
       />
     </div>
   );

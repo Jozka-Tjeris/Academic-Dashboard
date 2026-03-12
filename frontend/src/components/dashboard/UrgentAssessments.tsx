@@ -1,23 +1,16 @@
 "use client";
 
-import { CourseShared } from "@internal_package/shared";
 import UrgencyHeatBar from "./UrgencyHeatBar";
 import { AssessmentWithUrgency } from "@/types/dashboard";
 
 export default function UrgentAssessments({
-  courses,
+  assessments,
 }: {
-  courses: CourseShared[];
+  assessments: AssessmentWithUrgency[];
 }) {
-  const urgent = courses
-    .flatMap((c) =>
-      (c.assessments ?? []).map((a) => ({
-        ...a,
-        courseName: c.name,
-      }))
-    )
-    .filter((a: any) => !a.submitted)
-    .sort((a: any, b: any) => (b.urgency ?? 0) - (a.urgency ?? 0))
+  const urgent = assessments
+    .filter(a => !a.submitted)
+    .sort((a, b) => (b.urgency ?? 0) - (a.urgency ?? 0))
     .slice(0, 6);
 
   if (urgent.length === 0) {
@@ -52,7 +45,7 @@ export default function UrgentAssessments({
             </div>
 
             <UrgencyHeatBar
-              urgency={(a as any).urgency ?? 0}
+              urgency={a.urgency ?? 0}
               weight={a.weight ?? 0}
             />
           </li>

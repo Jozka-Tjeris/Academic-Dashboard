@@ -1,13 +1,12 @@
-import { AssessmentStatus, CourseShared } from "@internal_package/shared";
+import { AssessmentShared, AssessmentStatus } from "@internal_package/shared";
 
 export default function UpcomingAssessments({
-  courses,
+  assessments,
 }: {
-  courses: CourseShared[];
+  assessments: AssessmentShared[];
 }) {
 
-  const upcoming = courses
-    .flatMap((c) => c.assessments ?? [])
+  const upcoming = assessments
     .filter((a) => a.status === AssessmentStatus.UPCOMING || a.status === AssessmentStatus.DUE_IN_24_HOURS)
     .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
     .slice(0, 5);
