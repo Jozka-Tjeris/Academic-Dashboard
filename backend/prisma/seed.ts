@@ -74,9 +74,8 @@ async function main() {
       score: null,
       targetScore: 90,
       weight: 20,
-      latePenalty: 5,
       maxScore: 100,
-      submitted: false,
+      submissionDate: null,
     },
     {
       assessmentId: 'assessment2',
@@ -89,9 +88,8 @@ async function main() {
       score: null,
       targetScore: 95,
       weight: 30,
-      latePenalty: 10,
       maxScore: 100,
-      submitted: false,
+      submissionDate: null,
     },
   ];
 

@@ -19,7 +19,6 @@ export function serializeCourseAnalytics(analytics: {
   maxPossibleGrade: Prisma.Decimal;
   assessmentCounts: {
     total: number;
-    submitted: number;
     graded: number;
     in24hrs: number;
     pending: number;

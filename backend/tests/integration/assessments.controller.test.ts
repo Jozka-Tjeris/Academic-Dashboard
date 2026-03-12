@@ -58,9 +58,9 @@ describe("Assessments controller", () => {
     await prisma.assessment.createMany({
       data: [
         { courseId, userId, title: ASSESS_FOR_DELETE, dueDate: new Date(), 
-          weight: new Prisma.Decimal(0), submitted: false },
+          weight: new Prisma.Decimal(0), submissionDate: null },
         { courseId, userId, title: ASSESS_FOR_WEIGHT_OVERFLOW, dueDate: new Date(), 
-          weight: new Prisma.Decimal(80), submitted: false },
+          weight: new Prisma.Decimal(0.8), submissionDate: null },
       ]
     })
 
@@ -92,15 +92,15 @@ describe("Assessments controller", () => {
         .send({
           title: "Midterm",
           dueDate: new Date().toISOString(),
-          weight: 10,
+          weight: 0.1,
         });
 
       expect(res.status).toBe(201);
       expect(res.body).toHaveProperty("assessmentId");
-      expect(res.body.weight).toBe(10);
+      expect(res.body.weight).toBe(0.1);
     });
 
-    it("rejects if total weight exceeds 100", async () => {
+    it("rejects if total weight exceeds 1", async () => {
       const res = await request(app)
         .post(`/courses/${courseId}/assessments`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
@@ -108,7 +108,7 @@ describe("Assessments controller", () => {
         .send({
           title: "Another",
           dueDate: new Date().toISOString(),
-          weight: 30,
+          weight: 0.3,
         });
 
       expect(res.status).toBe(400);
@@ -120,7 +120,7 @@ describe("Assessments controller", () => {
         .send({
           title: "Midterm",
           dueDate: new Date().toISOString(),
-          weight: 10,
+          weight: 0.1,
         });
 
       expect(res.status).toBe(401);
@@ -137,8 +137,8 @@ describe("Assessments controller", () => {
           courseId: courseId_overflow,
           title: "Quiz 1",
           dueDate: new Date(),
-          weight: 20,
-          submitted: false,
+          weight: 0.2,
+          submissionDate: null,
           maxScore: 100,
         },
       });
@@ -184,8 +184,8 @@ describe("Assessments controller", () => {
           courseId,
           title: `PATCH_RULE_Test_${testId}`,
           dueDate: new Date(),
-          weight: new Prisma.Decimal(10),
-          submitted: false,
+          weight: new Prisma.Decimal(0.1),
+          submissionDate: null,
           maxScore: new Prisma.Decimal(100),
         },
       });
@@ -198,7 +198,7 @@ describe("Assessments controller", () => {
 
       expect(res.status).toBe(200);
       expect(res.body.score).toBe(70);
-      expect(res.body.submitted).toBe(true);
+      expect(res.body.submissionDate).not.toBe(null);
     });
   });
 
@@ -212,8 +212,8 @@ describe("Assessments controller", () => {
           courseId,
           title: `FETCH_Test_Assess_${testId}`,
           dueDate: new Date(),
-          weight: new Prisma.Decimal(15),
-          submitted: false,
+          weight: new Prisma.Decimal(0.15),
+          submissionDate: null,
           maxScore: new Prisma.Decimal(100),
         },
       });
@@ -232,7 +232,7 @@ describe("Assessments controller", () => {
       const assessment = res.body.assessment;
 
       expect(assessment.assessmentId).toBe(assessmentId);
-      expect(assessment.weight).toBe(15);
+      expect(assessment.weight).toBe(0.15);
       expect(typeof assessment.status).toBe(typeof AssessmentStatus.UPCOMING);
     });
 
@@ -264,7 +264,7 @@ describe("Assessments controller", () => {
             title: `COLLISION_A_${testId}`,
             dueDate: baseDate,
             weight: new Prisma.Decimal(0.5),
-            submitted: false,
+            submissionDate: null,
           },
           {
             userId,
@@ -272,7 +272,7 @@ describe("Assessments controller", () => {
             title: `COLLISION_B_${testId}`,
             dueDate: baseDate,
             weight: new Prisma.Decimal(0.5),
-            submitted: false,
+            submissionDate: null,
           },
         ],
       });

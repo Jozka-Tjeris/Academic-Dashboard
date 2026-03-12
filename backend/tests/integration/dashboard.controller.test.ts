@@ -45,7 +45,7 @@ describe("Dashboard controller", () => {
           title: `DB_A_${testId}`,
           dueDate: new Date(Date.now() + TWENTYFOUR_HOURS_IN_MS),
           weight: 0.3,
-          submitted: false,
+          submissionDate: null,
           maxScore: 100,
         },
         {
@@ -54,7 +54,7 @@ describe("Dashboard controller", () => {
           title: `DB_B_${testId}`,
           dueDate: new Date(Date.now() + 3 * TWENTYFOUR_HOURS_IN_MS),
           weight: 0.7,
-          submitted: false,
+          submissionDate: null,
           maxScore: 100,
         },
       ],

@@ -57,7 +57,7 @@ export async function createAssessmentHandler(req: AuthenticatedRequest, res: Re
     return next(new HttpError(401, "Authentication required"));
   }
 
-  const { title, dueDate, weight, description, maxScore, latePenalty } = req.body;
+  const { title, dueDate, weight, description, maxScore } = req.body;
 
   if(!title || !dueDate || typeof weight !== "number"){
     return next(new HttpError(400, "Title, dueDate, and numeric weight are required"));
@@ -77,7 +77,6 @@ export async function createAssessmentHandler(req: AuthenticatedRequest, res: Re
       weight, 
       description, 
       maxScore, 
-      latePenalty,
     });
 
     logger.info(

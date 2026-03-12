@@ -176,7 +176,7 @@ export function getCourseServices(prisma: PrismaClient){
       let overdue = 0;
 
       for (const a of assessments) {
-        const status = deriveStatusFromDate(a.dueDate, a.score, a.submitted, now);
+        const status = deriveStatusFromDate(a.dueDate, a.score, !!a.submissionDate, now);
 
         if (status === AssessmentStatus.SUBMITTED) submitted++;
         else if (status === AssessmentStatus.GRADED) graded++;
@@ -188,7 +188,7 @@ export function getCourseServices(prisma: PrismaClient){
       // ---------- Urgency Metrics ----------
 
       const activeAssessments = assessments.filter(
-        a => deriveStatusFromDate(a.dueDate, a.score, a.submitted, now) !== AssessmentStatus.GRADED
+        a => deriveStatusFromDate(a.dueDate, a.score, !!a.submissionDate, now) !== AssessmentStatus.GRADED
       );
 
       const ranked = rankAssessmentsByUrgency(activeAssessments, now);

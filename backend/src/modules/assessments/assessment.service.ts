@@ -2,7 +2,7 @@ import { deriveStatusFromDate } from "../../domain/assessments/deriveStatusFromD
 import { HttpError } from "../../utils/httpError";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { calculateUrgencyScore } from "../../domain/assessments/calculateUrgencyScore";
-import { AssessmentShared, DUEDATE_COLLISION_WINDOW_DAYS } from "@internal_package/shared";
+import { AssessmentShared, DUEDATE_COLLISION_WINDOW_DAYS, MAX_ASSESSMENT_WEIGHT } from "@internal_package/shared";
 import { detectDueDateCollisions } from "../../domain/assessments/detectDueDateCollisions";
 
 interface CreateAssessmentInput {
@@ -13,13 +13,13 @@ interface CreateAssessmentInput {
   weight: number;
   description?: string;
   maxScore?: number;
-  latePenalty?: number;
 }
 
 interface UpdateAssessmentInput {
   userId: string;
   assessmentId: string;
   updates: Partial<AssessmentShared>;
+  now?: Date;
 }
 
 const IMMUTABLE_FIELDS = new Set([
@@ -46,7 +46,7 @@ export function getAssessmentServices(prisma: PrismaClient){
       const derivedStatus = deriveStatusFromDate(
         assessment.dueDate,
         assessment.score,
-        assessment.submitted,
+        !!assessment.submissionDate,
         new Date(),
       );
       const urgencyScore = calculateUrgencyScore(assessment);
@@ -72,7 +72,7 @@ export function getAssessmentServices(prisma: PrismaClient){
     },
     async createAssessmentForCourse(input: CreateAssessmentInput){
       const { userId, courseId, title, dueDate,
-         weight, description, maxScore, latePenalty, } = input;
+         weight, description, maxScore, } = input;
 
       const course = await prisma.course.findFirst({
         where: {
@@ -104,7 +104,7 @@ export function getAssessmentServices(prisma: PrismaClient){
 
       const currentTotalWeight = existingWeights._sum.weight?.toNumber() ?? 0;
 
-      if(currentTotalWeight + weight > 100){
+      if(currentTotalWeight + weight > MAX_ASSESSMENT_WEIGHT){
         throw new HttpError(400, "Total assessment weight cannot exceed 100%");
       }
 
@@ -117,8 +117,6 @@ export function getAssessmentServices(prisma: PrismaClient){
           weight, 
           description, 
           maxScore, 
-          latePenalty,
-          submitted: false,
         },
       });
     },
@@ -146,6 +144,10 @@ export function getAssessmentServices(prisma: PrismaClient){
         throw new HttpError(404, "Assessment not found");
       }
 
+      if(assessment.score && updates.score){
+        throw new HttpError(400, "Score is already present and cannot be updated");
+      }
+
       const updateData: Prisma.AssessmentUpdateInput = {
         ...updates,
         maxScore: updates.maxScore ?? assessment.maxScore,
@@ -159,7 +161,7 @@ export function getAssessmentServices(prisma: PrismaClient){
           throw new HttpError(400, "Score cannot exceed maxScore");
         }
         if (updates.score !== null) {
-          updateData.submitted = true;
+          updateData.submissionDate = input.now ?? new Date();
         }
       }
 
@@ -189,7 +191,7 @@ export function getAssessmentServices(prisma: PrismaClient){
       const assessments = await prisma.assessment.findMany({
         where: {
           course: { userId },
-          submitted: false
+          submissionDate: null,
         },
         orderBy: {
           dueDate: "asc"

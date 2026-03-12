@@ -24,7 +24,7 @@ export default function EditableScore({ assessment, courseId }: EditableScorePro
       id: assessment.assessmentId,
       data: {
         score: value === "" ? undefined : Number(value),
-        submitted: assessment.submitted,
+        submissionDate: assessment.submissionDate ?? undefined,
         targetScore: assessment.targetScore ?? undefined,
       },
     });

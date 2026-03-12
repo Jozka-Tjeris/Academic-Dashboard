@@ -33,13 +33,12 @@ export type AssessmentShared = {
   targetScore: number | null,
   maxScore: number | null,
   weight: number,
-  latePenalty: number | null,
-  submitted: boolean,
+  submissionDate: Date | null,
   createdAt: Date,
   updatedAt: Date,
 }
 
-export type GradeComponent = Pick<AssessmentShared, "assessmentId" | "weight" | "score" | "maxScore">;
+export type GradeComponent = Pick<AssessmentShared, "assessmentId" | "weight" | "score" | "maxScore" | "dueDate" | "submissionDate">;
 
 export type Collision = {
   startDate: string,

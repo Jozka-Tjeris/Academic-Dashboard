@@ -11,7 +11,6 @@ export const createAssessment = (
     weight: number;
     maxScore: number;
     description: string;
-    latePenalty: number;
   }
 ) =>
   fetcher(`/courses/${courseId}/assessments`, {
@@ -25,7 +24,7 @@ export const createAssessment = (
 
 export const updateAssessment = (fetcher: Fetcher, assessmentId: string, data: {
   score?: number,
-  submitted?: boolean,
+  submissionDate?: Date,
   targetScore?: number
 }) => 
   fetcher(`/assessments/${assessmentId}`, {

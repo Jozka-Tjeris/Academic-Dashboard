@@ -11,11 +11,11 @@ const baseAssessments = [
     score: new Prisma.Decimal(80),
     targetScore: null,
     weight: new Prisma.Decimal(0.4),
-    latePenalty: null,
     maxScore: null,
-    submitted: true,
+    submissionDate: new Date("2026-03-10"),
     createdAt: new Date("2026-03-10"),
     updatedAt: new Date("2026-03-10"),
+    dueDate: null,
   },
   {
     userId: "user1",
@@ -25,11 +25,11 @@ const baseAssessments = [
     score: null,
     targetScore: null,
     weight: new Prisma.Decimal(0.3),
-    latePenalty: null,
     maxScore: null,
-    submitted: true,
+    submissionDate: new Date("2026-03-10"),
     createdAt: new Date("2026-03-10"),
     updatedAt: new Date("2026-03-10"),
+    dueDate: null,
   },
   {
     userId: "user1",
@@ -39,11 +39,11 @@ const baseAssessments = [
     score: null,
     targetScore: null,
     weight: new Prisma.Decimal(0.3),
-    latePenalty: null,
     maxScore: null,
-    submitted: false,
+    submissionDate: null,
     createdAt: new Date("2026-03-10"),
     updatedAt: new Date("2026-03-10"),
+    dueDate: null,
   }
 ];
 
@@ -224,8 +224,8 @@ describe("Course Services", () => {
   describe("simulateCourseGrade", () => {
     it("returns calculated course grade", async () => {
       const assessments = [
-        makeAssessment(0, "a1", "", 0, 100, 0.5),
-        makeAssessment(1, "a2", "", 90, 100, 0.5),
+        makeAssessment(0, "a1", "2026-03-10", 0, 100, 0.5),
+        makeAssessment(1, "a2", "2026-03-10", 90, 100, 0.5),
       ];
 
       const simulations = [
@@ -243,8 +243,8 @@ describe("Course Services", () => {
 
     it("handles missing scores", async () => {
       const assessments = [
-        makeAssessment(0, "a1", "", null, 100, 0.5),
-        makeAssessment(1, "a2", "", 90, 100, 0.5),
+        makeAssessment(0, "a1", "2026-03-10", null, 100, 0.5),
+        makeAssessment(1, "a2", "2026-03-10", 90, 100, 0.5),
       ];
 
       const simulations = [
@@ -409,10 +409,9 @@ describe("Course Services", () => {
           createdAt: new Date("2026-03-10"),
           description: null,
           dueDate: new Date("2026-03-10"),
-          latePenalty: null,
           maxScore: new Prisma.Decimal(100),
           score: null,
-          submitted: false,
+          submissionDate: null,
           targetScore: null,
           title: "Exam",
           updatedAt: new Date("2026-03-10"),

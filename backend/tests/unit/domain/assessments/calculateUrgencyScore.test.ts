@@ -6,8 +6,8 @@ describe("Urgency", () => {
   const baseAssessment: AssessmentBackend = {
     assessmentId: "a1",              courseId: "c1",        title: "Test",  description: null,
     dueDate: new Date("2026-01-10"), score: null,    targetScore: null,
-    weight: new Prisma.Decimal(0.5), latePenalty: null,     maxScore: null,
-    submitted: true,                 createdAt: new Date(),           updatedAt: new Date(),
+    weight: new Prisma.Decimal(0.5), maxScore: null, submissionDate: new Date("2026-01-09"),
+    createdAt: new Date(),           updatedAt: new Date(),
   };
 
   describe("calculateUrgencyScore", () => {
@@ -29,7 +29,7 @@ describe("Urgency", () => {
     });
 
     test("upcoming assessment has positive urgency", () => {
-      const assessment = { ...baseAssessment, submitted: false };
+      const assessment = { ...baseAssessment, submissionDate: null };
       const urgency = calculateUrgencyScore(
         assessment,
         new Date("2026-01-01")
@@ -48,7 +48,7 @@ describe("Urgency", () => {
       const overdue = {
         ...baseAssessment,
         dueDate: new Date("2026-01-01"),
-        submitted: false,
+        submissionDate: null,
       };
 
       const urgency = calculateUrgencyScore(

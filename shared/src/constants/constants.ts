@@ -2,6 +2,8 @@ export const DEFAULT_MAX_SCORE = 100;
 
 export const MAX_GRADE = 100;
 
+export const MAX_ASSESSMENT_WEIGHT = 1;
+
 export const INVALID_GRADE = NaN;
 
 export const EPSILON = 0.0001;
@@ -10,3 +12,5 @@ export const EPSILON = 0.0001;
 export const TWENTYFOUR_HOURS_IN_MS = 1000 * 60 * 60 * 24;
 
 export const DUEDATE_COLLISION_WINDOW_DAYS = 3;
+
+export const PENALTY_PERCENT_PER_DAY = 0.05;

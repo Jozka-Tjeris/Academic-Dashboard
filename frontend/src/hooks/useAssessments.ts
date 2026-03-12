@@ -16,7 +16,6 @@ export const useCreateAssessment = (courseId: string) => {
       weight: number;
       maxScore: number;
       description: string;
-      latePenalty: number;
     }) => createAssessment(secureFetch, courseId, data),
 
     onSuccess: () => {
@@ -38,7 +37,7 @@ export const useUpdateAssessment = (courseId: string) => {
       id: string;
       data: {
         score?: number;
-        submitted?: boolean;
+        submissionDate?: Date;
         targetScore?: number;
       };
     }) => updateAssessment(secureFetch, id, data),
