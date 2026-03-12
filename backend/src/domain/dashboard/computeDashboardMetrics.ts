@@ -13,7 +13,7 @@ export function buildDashboardMetrics(
   //Only process non-graded assessments
 
   const upcoming = assessments.filter(a => {
-    const status = deriveStatusFromDate(a.dueDate, a.score, a.submitted, now);
+    const status = deriveStatusFromDate(a.dueDate, a.score, !!a.submissionDate, now);
     return status !== AssessmentStatus.GRADED;
   });
 

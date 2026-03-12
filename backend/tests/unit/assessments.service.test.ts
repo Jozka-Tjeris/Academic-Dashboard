@@ -46,7 +46,7 @@ describe("Assessment Service", () => {
         score: null,
         targetScore: null,
         maxScore: new Prisma.Decimal(100),
-        submitted: false
+        submissionDate: null,
       });
 
       const result = await service.createAssessmentForCourse({
@@ -112,7 +112,7 @@ describe("Assessment Service", () => {
         score: null,
         targetScore: null,
         maxScore: new Prisma.Decimal(100),
-        submitted: false
+        submissionDate: null,
       });
 
       await expect(
@@ -159,7 +159,7 @@ describe("Assessment Service", () => {
         score: null,
         targetScore: null,
         weight: new Prisma.Decimal(0),
-        submitted: false
+        submissionDate: null,
       });
 
       prismaMock.assessment.update.mockResolvedValue({
@@ -171,7 +171,7 @@ describe("Assessment Service", () => {
         maxScore: new Prisma.Decimal(100),
         title: "",
         dueDate: new Date(),
-        submitted: false,
+        submissionDate: null,
         createdAt: new Date(),
         updatedAt: new Date(),
         courseId: "",
@@ -201,7 +201,7 @@ describe("Assessment Service", () => {
         score: null,
         targetScore: null,
         weight: new Prisma.Decimal(0),
-        submitted: false,
+        submissionDate: null,
         createdAt: new Date(),
         updatedAt: new Date()
       });
@@ -229,7 +229,35 @@ describe("Assessment Service", () => {
         score: null,
         targetScore: null,
         weight: new Prisma.Decimal(0),
-        submitted: false,
+        submissionDate: null,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+
+      await expect(
+        service.updateAssessment({
+          userId: "user1",
+          assessmentId: "a1",
+          updates: {
+            score: -80,
+          }
+        })
+      ).rejects.toMatchObject({ status: 400 });
+    });
+
+    it("throws if score already exists", async () => {
+      prismaMock.assessment.findFirst.mockResolvedValue({
+        assessmentId: "a1",
+        userId: "user1",
+        maxScore: new Prisma.Decimal(50),
+        courseId: "",
+        title: "",
+        description: null,
+        dueDate: new Date(),
+        score: new Prisma.Decimal(80),
+        targetScore: null,
+        weight: new Prisma.Decimal(0),
+        submissionDate: null,
         createdAt: new Date(),
         updatedAt: new Date()
       });
@@ -270,7 +298,7 @@ describe("Assessment Service", () => {
       score: null,
       targetScore: null,
       weight: new Prisma.Decimal(0),
-      submitted: false,
+      submissionDate: null,
       createdAt: new Date(),
       updatedAt: new Date()
     }
@@ -313,7 +341,7 @@ describe("Assessment Service", () => {
       prismaMock.assessment.update.mockResolvedValue({
         ...existingAssessment,
         score: new Prisma.Decimal(85),
-        submitted: true,
+        submissionDate: new Date(),
       });
 
       const result = await service.updateAssessment({
@@ -324,7 +352,8 @@ describe("Assessment Service", () => {
         }
       });
 
-      expect(result.submitted).toBe(true)
+      expect(result).not.toBe(HttpError);
+      expect(result.submissionDate).not.toBe(null)
     });
 
     it("does not set submitted when score is null", async () => {
@@ -339,7 +368,7 @@ describe("Assessment Service", () => {
         }
       });
 
-      expect(result.submitted).toBe(false)
+      expect(result.submissionDate).toBe(null);
     });
   });
 
@@ -356,7 +385,7 @@ describe("Assessment Service", () => {
         targetScore: null,
         weight: new Prisma.Decimal(0),
         maxScore: new Prisma.Decimal(100),
-        submitted: false,
+        submissionDate: null,
         createdAt: new Date(),
         updatedAt: new Date()
       };
@@ -397,7 +426,7 @@ describe("Assessment Service", () => {
         targetScore: null,
         weight: new Prisma.Decimal(0),
         maxScore: new Prisma.Decimal(100),
-        submitted: true,
+        submissionDate: new Date(),
         createdAt: new Date("2026-03-10"),
         updatedAt: new Date("2026-03-10"),
       }
@@ -459,7 +488,7 @@ describe("Assessment Service", () => {
         targetScore: null,
         weight: new Prisma.Decimal(0),
         maxScore: new Prisma.Decimal(100),
-        submitted: false,
+        submissionDate: null,
         createdAt: new Date(),
         updatedAt: new Date()
       }];
@@ -483,7 +512,7 @@ describe("Assessment Service", () => {
         targetScore: null,
         weight: new Prisma.Decimal(0),
         maxScore: new Prisma.Decimal(100),
-        submitted: false,
+        submissionDate: null,
         createdAt: new Date("2026-03-10"),
         updatedAt: new Date("2026-03-10")
       },
@@ -498,7 +527,7 @@ describe("Assessment Service", () => {
         targetScore: null,
         weight: new Prisma.Decimal(0),
         maxScore: new Prisma.Decimal(100),
-        submitted: false,
+        submissionDate: null,
         createdAt: new Date("2026-03-10"),
         updatedAt: new Date("2026-03-10")
       }];

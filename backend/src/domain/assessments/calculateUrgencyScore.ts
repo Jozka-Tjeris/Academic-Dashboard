@@ -7,7 +7,7 @@ export function calculateUrgencyScore(
   assessment: AssessmentBackend,
   now: Date = new Date()
 ): Prisma.Decimal {
-  const status = deriveStatusFromDate(assessment.dueDate, assessment.score, assessment.submitted, now);
+  const status = deriveStatusFromDate(assessment.dueDate, assessment.score, !!assessment.submissionDate, now);
 
   const weight = assessment.weight;
 

@@ -40,19 +40,19 @@ model Course {
 }
 
 model Assessment {
-  assessmentId  String   @id @default(cuid())
-  courseId      String
-  userId        String
-  title         String   @db.VarChar(40)
-  description   String?  @db.VarChar(250)
-  dueDate       DateTime
-  score         Decimal? @db.Decimal(5, 2) // nullable if not graded
-  targetScore   Decimal? @db.Decimal(5, 2) // optional what-if
-  weight        Decimal  @db.Decimal(5, 2) // % of course grade
-  maxScore      Decimal  @db.Decimal(5, 2) @default(100)
-  submitted     Boolean
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  assessmentId    String    @id @default(cuid())
+  courseId        String
+  userId          String
+  title           String    @db.VarChar(40)
+  description     String?   @db.VarChar(250)
+  dueDate         DateTime
+  score           Decimal?  @db.Decimal(5, 2) // nullable if not graded
+  targetScore     Decimal?  @db.Decimal(5, 2) // optional what-if
+  weight          Decimal   @db.Decimal(5, 2) // % of course grade
+  maxScore        Decimal   @db.Decimal(5, 2) @default(100)
+  submissionDate  DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   course        Course   @relation(fields: [courseId], references: [courseId], onDelete: Cascade)
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)

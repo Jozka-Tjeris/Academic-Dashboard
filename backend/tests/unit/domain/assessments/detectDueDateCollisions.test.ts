@@ -12,7 +12,7 @@ const baseAssessments: Omit<AssessmentBackend, "assessmentId" | "dueDate">[] = [
     targetScore: null,
     weight: new Prisma.Decimal(0.4),
     maxScore: null,
-    submitted: true,
+    submissionDate: new Date(),
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -24,7 +24,7 @@ const baseAssessments: Omit<AssessmentBackend, "assessmentId" | "dueDate">[] = [
     targetScore: null,
     weight: new Prisma.Decimal(0.3),
     maxScore: null,
-    submitted: true,
+    submissionDate: new Date(),
     createdAt: new Date(),
     updatedAt: new Date(),
   }

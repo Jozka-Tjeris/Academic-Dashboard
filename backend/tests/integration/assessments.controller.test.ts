@@ -58,9 +58,9 @@ describe("Assessments controller", () => {
     await prisma.assessment.createMany({
       data: [
         { courseId, userId, title: ASSESS_FOR_DELETE, dueDate: new Date(), 
-          weight: new Prisma.Decimal(0), submitted: false },
+          weight: new Prisma.Decimal(0), submissionDate: null },
         { courseId, userId, title: ASSESS_FOR_WEIGHT_OVERFLOW, dueDate: new Date(), 
-          weight: new Prisma.Decimal(0.8), submitted: false },
+          weight: new Prisma.Decimal(0.8), submissionDate: null },
       ]
     })
 
@@ -138,7 +138,7 @@ describe("Assessments controller", () => {
           title: "Quiz 1",
           dueDate: new Date(),
           weight: 0.2,
-          submitted: false,
+          submissionDate: null,
           maxScore: 100,
         },
       });
@@ -185,7 +185,7 @@ describe("Assessments controller", () => {
           title: `PATCH_RULE_Test_${testId}`,
           dueDate: new Date(),
           weight: new Prisma.Decimal(0.1),
-          submitted: false,
+          submissionDate: null,
           maxScore: new Prisma.Decimal(100),
         },
       });
@@ -198,7 +198,7 @@ describe("Assessments controller", () => {
 
       expect(res.status).toBe(200);
       expect(res.body.score).toBe(70);
-      expect(res.body.submitted).toBe(true);
+      expect(res.body.submissionDate).not.toBe(null);
     });
   });
 
@@ -213,7 +213,7 @@ describe("Assessments controller", () => {
           title: `FETCH_Test_Assess_${testId}`,
           dueDate: new Date(),
           weight: new Prisma.Decimal(0.15),
-          submitted: false,
+          submissionDate: null,
           maxScore: new Prisma.Decimal(100),
         },
       });
@@ -264,7 +264,7 @@ describe("Assessments controller", () => {
             title: `COLLISION_A_${testId}`,
             dueDate: baseDate,
             weight: new Prisma.Decimal(0.5),
-            submitted: false,
+            submissionDate: null,
           },
           {
             userId,
@@ -272,7 +272,7 @@ describe("Assessments controller", () => {
             title: `COLLISION_B_${testId}`,
             dueDate: baseDate,
             weight: new Prisma.Decimal(0.5),
-            submitted: false,
+            submissionDate: null,
           },
         ],
       });

@@ -19,6 +19,7 @@ interface UpdateAssessmentInput {
   userId: string;
   assessmentId: string;
   updates: Partial<AssessmentShared>;
+  now?: Date;
 }
 
 const IMMUTABLE_FIELDS = new Set([
@@ -45,7 +46,7 @@ export function getAssessmentServices(prisma: PrismaClient){
       const derivedStatus = deriveStatusFromDate(
         assessment.dueDate,
         assessment.score,
-        assessment.submitted,
+        !!assessment.submissionDate,
         new Date(),
       );
       const urgencyScore = calculateUrgencyScore(assessment);
@@ -116,7 +117,6 @@ export function getAssessmentServices(prisma: PrismaClient){
           weight, 
           description, 
           maxScore, 
-          submitted: false,
         },
       });
     },
@@ -144,6 +144,10 @@ export function getAssessmentServices(prisma: PrismaClient){
         throw new HttpError(404, "Assessment not found");
       }
 
+      if(assessment.score && updates.score){
+        throw new HttpError(400, "Score is already present and cannot be updated");
+      }
+
       const updateData: Prisma.AssessmentUpdateInput = {
         ...updates,
         maxScore: updates.maxScore ?? assessment.maxScore,
@@ -157,7 +161,7 @@ export function getAssessmentServices(prisma: PrismaClient){
           throw new HttpError(400, "Score cannot exceed maxScore");
         }
         if (updates.score !== null) {
-          updateData.submitted = true;
+          updateData.submissionDate = input.now ?? new Date();
         }
       }
 
@@ -187,7 +191,7 @@ export function getAssessmentServices(prisma: PrismaClient){
       const assessments = await prisma.assessment.findMany({
         where: {
           course: { userId },
-          submitted: false
+          submissionDate: null,
         },
         orderBy: {
           dueDate: "asc"
