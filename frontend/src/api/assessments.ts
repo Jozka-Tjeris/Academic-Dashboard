@@ -1,4 +1,4 @@
-import { AssessmentShared, Collision } from "@internal_package/shared";
+import { AssessmentShared, AssessmentStatus, Collision } from "@internal_package/shared";
 import { Fetcher } from "@/types/fetcher";
 import { handleResponse } from "./handleResponse";
 
@@ -21,6 +21,23 @@ export const createAssessment = (
     body: JSON.stringify(data),
   }).then(res => handleResponse<AssessmentShared>(res)
 );
+
+type GetAssessment = {
+  assessment: AssessmentShared;
+  course: {
+      courseId: string;
+      name: string;
+  };
+  derived: {
+      status: AssessmentStatus;
+      urgencyScore: number;
+  };
+}
+
+export const getAssessment = (fetcher: Fetcher, id: string) =>
+  fetcher(`/assessments/${id}`).then(res =>
+    handleResponse<GetAssessment>(res)
+  );
 
 export const updateAssessment = (fetcher: Fetcher, assessmentId: string, data: {
   score?: number,
