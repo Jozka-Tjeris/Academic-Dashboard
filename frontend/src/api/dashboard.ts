@@ -1,4 +1,4 @@
-import { CourseDashboard } from "@/types/dashboard";
+import { CourseDashboard, UserDashboard } from "@/types/dashboard";
 import { Fetcher } from "@/types/fetcher";
 import { handleResponse } from "./handleResponse";
 
@@ -8,4 +8,11 @@ export const getCourseDashboard = (
 ) =>
   fetcher(`/courses/${courseId}/dashboard`).then((res) =>
     handleResponse<CourseDashboard>(res)
+  );
+
+export const getUserDashboard = (
+  fetcher: Fetcher
+) =>
+  fetcher(`/dashboard`).then((res) =>
+    handleResponse<UserDashboard>(res)
   );

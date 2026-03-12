@@ -3,6 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createAssessment, updateAssessment, deleteAssessment } from "@/api/assessments";
 import { useApi } from "./useApi";
+import { queryKeys } from "@/lib/queryKeys";
 
 export function useCreateAssessment(courseId: string) {
   const queryClient = useQueryClient();
@@ -19,7 +20,7 @@ export function useCreateAssessment(courseId: string) {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["course", courseId],
+        queryKey: queryKeys.courses.detail(courseId),
       });
     },
   });
@@ -44,7 +45,7 @@ export function useUpdateAssessment(courseId: string) {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["course", courseId],
+        queryKey: queryKeys.courses.detail(courseId),
       });
     },
   });
@@ -63,7 +64,7 @@ export function useDeleteAssessment(courseId: string) {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["course", courseId],
+        queryKey: queryKeys.courses.detail(courseId),
       });
     },
   });

@@ -6,21 +6,22 @@ import {
   createCourse,
   deleteCourse,
 } from "@/api/courses";
+import { queryKeys } from "@/lib/queryKeys";
 
 export const useCourses = () => {
   const { secureFetch } = useApi(); // 1. Get the fetcher here
   return useQuery({
-    queryKey: ["courses"],
+    queryKey: queryKeys.courses.all,
     queryFn: () => getCourses(secureFetch), // 2. Pass it in
   });
 };
 
-export const useCourse = (id: string) => {
+export const useCourse = (courseId: string) => {
   const { secureFetch } = useApi();
   return useQuery({
-    queryKey: ["course", id],
-    queryFn: () => getCourseById(secureFetch, id),
-    enabled: !!id,
+    queryKey: queryKeys.courses.detail(courseId),
+    queryFn: () => getCourseById(secureFetch, courseId),
+    enabled: !!courseId,
   });
 };
 
@@ -32,7 +33,7 @@ export const useCreateCourse = () => {
     mutationFn: (data: { name: string; description?: string }) => 
       createCourse(secureFetch, data),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["courses"] });
+      qc.invalidateQueries({ queryKey: queryKeys.courses.all });
     },
   });
 };
@@ -44,7 +45,7 @@ export const useDeleteCourse = () => {
   return useMutation({
     mutationFn: (id: string) => deleteCourse(secureFetch, id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["courses"] });
+      qc.invalidateQueries({ queryKey: queryKeys.courses.all });
     },
   });
 };
