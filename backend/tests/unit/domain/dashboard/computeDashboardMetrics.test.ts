@@ -115,7 +115,7 @@ describe("buildDashboardMetrics", () => {
     expect(result.stats.highestWeightUpcoming?.assessmentId).toBe("a2");
   });
 
-  it("limits upcomingAssessments to 10 results", () => {
+  it("lists all upcomingAssessments results", () => {
 
     const assessments = Array.from({ length: 15 }, (_, i) =>
       createAssessment(`a${i}`)
@@ -127,7 +127,7 @@ describe("buildDashboardMetrics", () => {
 
     const result = buildDashboardMetrics(assessments, NOW);
 
-    expect(result.upcomingAssessments.length).toBe(10);
+    expect(result.upcomingAssessments.length).toBe(15);
   });
 
   it("detects busiest week window", () => {

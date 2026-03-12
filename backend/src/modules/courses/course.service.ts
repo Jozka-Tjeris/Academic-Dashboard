@@ -210,8 +210,6 @@ export function getCourseServices(prisma: PrismaClient){
           ? new Prisma.Decimal(0)
           : totalUrgency.div(urgencyScores.length);
 
-      const topAssessments = ranked.slice(0, 3);
-
       return {
         currentGrade,
         maxPossibleGrade,
@@ -228,7 +226,7 @@ export function getCourseServices(prisma: PrismaClient){
         urgency: {
           totalUrgency,
           averageUrgency,
-          topAssessments
+          topAssessments: ranked
         }
       };
     },
