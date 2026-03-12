@@ -18,4 +18,4 @@ export type AssessmentBackend = Omit<AssessmentShared, 'score' | 'targetScore' |
   weight: Prisma.Decimal,
 }
 
-export type GradeComponent = Pick<AssessmentBackend, "assessmentId" | "weight" | "score" | "maxScore">;
+export type GradeComponent = Pick<AssessmentBackend, "assessmentId" | "weight" | "score" | "maxScore" | "dueDate" | "submissionDate">;

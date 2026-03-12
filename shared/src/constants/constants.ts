@@ -12,3 +12,5 @@ export const EPSILON = 0.0001;
 export const TWENTYFOUR_HOURS_IN_MS = 1000 * 60 * 60 * 24;
 
 export const DUEDATE_COLLISION_WINDOW_DAYS = 3;
+
+export const PENALTY_PERCENT_PER_DAY = 0.05;

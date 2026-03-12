@@ -38,7 +38,7 @@ export type AssessmentShared = {
   updatedAt: Date,
 }
 
-export type GradeComponent = Pick<AssessmentShared, "assessmentId" | "weight" | "score" | "maxScore">;
+export type GradeComponent = Pick<AssessmentShared, "assessmentId" | "weight" | "score" | "maxScore" | "dueDate" | "submissionDate">;
 
 export type Collision = {
   startDate: string,
