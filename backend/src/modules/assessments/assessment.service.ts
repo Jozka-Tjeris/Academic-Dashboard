@@ -2,7 +2,7 @@ import { deriveStatusFromDate } from "../../domain/assessments/deriveStatusFromD
 import { HttpError } from "../../utils/httpError";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { calculateUrgencyScore } from "../../domain/assessments/calculateUrgencyScore";
-import { AssessmentShared, DUEDATE_COLLISION_WINDOW_DAYS } from "@internal_package/shared";
+import { AssessmentShared, DUEDATE_COLLISION_WINDOW_DAYS, MAX_ASSESSMENT_WEIGHT } from "@internal_package/shared";
 import { detectDueDateCollisions } from "../../domain/assessments/detectDueDateCollisions";
 
 interface CreateAssessmentInput {
@@ -13,7 +13,6 @@ interface CreateAssessmentInput {
   weight: number;
   description?: string;
   maxScore?: number;
-  latePenalty?: number;
 }
 
 interface UpdateAssessmentInput {
@@ -72,7 +71,7 @@ export function getAssessmentServices(prisma: PrismaClient){
     },
     async createAssessmentForCourse(input: CreateAssessmentInput){
       const { userId, courseId, title, dueDate,
-         weight, description, maxScore, latePenalty, } = input;
+         weight, description, maxScore, } = input;
 
       const course = await prisma.course.findFirst({
         where: {
@@ -104,7 +103,7 @@ export function getAssessmentServices(prisma: PrismaClient){
 
       const currentTotalWeight = existingWeights._sum.weight?.toNumber() ?? 0;
 
-      if(currentTotalWeight + weight > 100){
+      if(currentTotalWeight + weight > MAX_ASSESSMENT_WEIGHT){
         throw new HttpError(400, "Total assessment weight cannot exceed 100%");
       }
 
@@ -117,7 +116,6 @@ export function getAssessmentServices(prisma: PrismaClient){
           weight, 
           description, 
           maxScore, 
-          latePenalty,
           submitted: false,
         },
       });

@@ -16,7 +16,6 @@ export const useCreateAssessment = (courseId: string) => {
       weight: number;
       maxScore: number;
       description: string;
-      latePenalty: number;
     }) => createAssessment(secureFetch, courseId, data),
 
     onSuccess: () => {

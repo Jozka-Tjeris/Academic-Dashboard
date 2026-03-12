@@ -26,8 +26,8 @@ CHECK ("maxScore" >= 0 AND "maxScore" <= 100);
 
 ALTER TABLE "Assessment"
 ADD CONSTRAINT weight_range_check
-CHECK (weight >= 0 AND weight <= 100);
+CHECK (weight >= 0 AND weight <= 1);
 
 ALTER TABLE "Assessment"
 ADD CONSTRAINT latePenalty_range_check
-CHECK ("latePenalty" IS NULL OR ("latePenalty" >= 0 AND "latePenalty" <= 100));
+CHECK ("latePenalty" IS NULL OR ("latePenalty" >= 0 AND "latePenalty" <= 1));

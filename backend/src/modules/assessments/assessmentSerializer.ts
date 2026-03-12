@@ -9,7 +9,6 @@ export function serializeAssessment(assessment: AssessmentBackend): AssessmentSh
     score: assessment.score?.toNumber() ?? null,
     targetScore: assessment.targetScore?.toNumber() ?? null,
     weight: assessment.weight.toNumber(),
-    latePenalty: assessment.latePenalty?.toNumber() ?? null,
     maxScore: assessment.maxScore?.toNumber() ?? DEFAULT_MAX_SCORE,
     status: deriveStatusFromDate(assessment.dueDate, assessment.score, assessment.submitted),
   };

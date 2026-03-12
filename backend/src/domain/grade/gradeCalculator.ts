@@ -1,4 +1,4 @@
-import { DEFAULT_MAX_SCORE, EPSILON, INVALID_GRADE, MAX_GRADE } from "@internal_package/shared";
+import { DEFAULT_MAX_SCORE, EPSILON, INVALID_GRADE, MAX_ASSESSMENT_WEIGHT, MAX_GRADE } from "@internal_package/shared";
 import { GradeComponent } from "../../types/backendTypes";
 import { Prisma } from "@prisma/client";
 
@@ -10,7 +10,7 @@ import { Prisma } from "@prisma/client";
  */
 export function calculateCurrentGrade(assessments: GradeComponent[]): Prisma.Decimal {
   const totalWeight = assessments.reduce((acc, v) => acc.plus(v.weight), new Prisma.Decimal(0));
-  if (!totalWeight.minus(1).abs().lte(EPSILON)) return new Prisma.Decimal(INVALID_GRADE);
+  if (!totalWeight.minus(MAX_ASSESSMENT_WEIGHT).abs().lte(EPSILON)) return new Prisma.Decimal(INVALID_GRADE);
 
   let finalGrade = new Prisma.Decimal(0);
 
@@ -35,7 +35,7 @@ export function calculateCurrentGrade(assessments: GradeComponent[]): Prisma.Dec
  */
 export function calculateMaxPossibleGrade(assessments: GradeComponent[]): Prisma.Decimal {
   const totalWeight = assessments.reduce((acc, v) => acc.plus(v.weight), new Prisma.Decimal(0));
-  if (!totalWeight.minus(1).abs().lte(EPSILON)) return new Prisma.Decimal(INVALID_GRADE);
+  if (!totalWeight.minus(MAX_ASSESSMENT_WEIGHT).abs().lte(EPSILON)) return new Prisma.Decimal(INVALID_GRADE);
 
   let finalGrade = new Prisma.Decimal(0);
 

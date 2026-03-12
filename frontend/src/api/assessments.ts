@@ -11,7 +11,6 @@ export const createAssessment = (
     weight: number;
     maxScore: number;
     description: string;
-    latePenalty: number;
   }
 ) =>
   fetcher(`/courses/${courseId}/assessments`, {

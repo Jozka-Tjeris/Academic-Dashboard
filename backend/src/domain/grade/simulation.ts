@@ -1,4 +1,4 @@
-import { DEFAULT_MAX_SCORE, INVALID_GRADE, EPSILON, MAX_GRADE } from "@internal_package/shared";
+import { DEFAULT_MAX_SCORE, INVALID_GRADE, EPSILON, MAX_GRADE, MAX_ASSESSMENT_WEIGHT } from "@internal_package/shared";
 import { GradeComponent } from "../../types/backendTypes";
 import { Prisma } from "@prisma/client";
 
@@ -14,7 +14,7 @@ export function simulateFinalGrade(
   simulationInputs: { assessmentId: string; simulatedScore: Prisma.Decimal }[]
 ): Prisma.Decimal {
   const totalWeight = assessments.reduce((acc, v) => acc.plus(v.weight), new Prisma.Decimal(0));
-  if (!totalWeight.minus(1).abs().lte(EPSILON)) return new Prisma.Decimal(INVALID_GRADE);
+  if (!totalWeight.minus(MAX_ASSESSMENT_WEIGHT).abs().lte(EPSILON)) return new Prisma.Decimal(INVALID_GRADE);
 
   const simMap: Map<string, Prisma.Decimal> = new Map(
     simulationInputs.map(sim => [sim.assessmentId, sim.simulatedScore])

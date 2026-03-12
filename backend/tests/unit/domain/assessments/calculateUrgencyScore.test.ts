@@ -6,8 +6,8 @@ describe("Urgency", () => {
   const baseAssessment: AssessmentBackend = {
     assessmentId: "a1",              courseId: "c1",        title: "Test",  description: null,
     dueDate: new Date("2026-01-10"), score: null,    targetScore: null,
-    weight: new Prisma.Decimal(0.5), latePenalty: null,     maxScore: null,
-    submitted: true,                 createdAt: new Date(),           updatedAt: new Date(),
+    weight: new Prisma.Decimal(0.5), maxScore: null, submitted: true,
+    createdAt: new Date(),           updatedAt: new Date(),
   };
 
   describe("calculateUrgencyScore", () => {

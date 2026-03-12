@@ -26,7 +26,7 @@ describe("Assessment Service", () => {
       });
 
       prismaMock.assessment.aggregate.mockResolvedValue({
-        _sum: { weight: new Prisma.Decimal(20) },
+        _sum: { weight: new Prisma.Decimal(0.2) },
         _count: undefined,
         _avg: undefined,
         _min: undefined,
@@ -35,7 +35,7 @@ describe("Assessment Service", () => {
 
       prismaMock.assessment.create.mockResolvedValue({
         assessmentId: "assess1",
-        weight: new Prisma.Decimal(30),
+        weight: new Prisma.Decimal(0.3),
         courseId: "",
         userId: "",
         description: null,
@@ -45,7 +45,6 @@ describe("Assessment Service", () => {
         dueDate: new Date(),
         score: null,
         targetScore: null,
-        latePenalty: null,
         maxScore: new Prisma.Decimal(100),
         submitted: false
       });
@@ -55,13 +54,13 @@ describe("Assessment Service", () => {
         courseId: "course1",
         title: "Midterm",
         dueDate: new Date(),
-        weight: 30,
+        weight: 0.3,
       });
 
       expect(result.assessmentId).toBe("assess1");
     });
 
-    it("throws if total weight exceeds 100", async () => {
+    it("throws if total weight exceeds 1", async () => {
       prismaMock.course.findFirst.mockResolvedValue({
         courseId: "course1",
         userId: "user1",
@@ -72,7 +71,7 @@ describe("Assessment Service", () => {
       });
 
       prismaMock.assessment.aggregate.mockResolvedValue({
-        _sum: { weight: new Prisma.Decimal(90) },
+        _sum: { weight: new Prisma.Decimal(0.9) },
         _count: undefined,
         _avg: undefined,
         _min: undefined,
@@ -85,7 +84,7 @@ describe("Assessment Service", () => {
           courseId: "course1",
           title: "Final",
           dueDate: new Date(),
-          weight: 20,
+          weight: 0.2,
         })
       ).rejects.toMatchObject({ status: 400 });
     });
@@ -102,7 +101,7 @@ describe("Assessment Service", () => {
 
       prismaMock.assessment.findFirst.mockResolvedValue({
         assessmentId: "assess1",
-        weight: new Prisma.Decimal(30),
+        weight: new Prisma.Decimal(0.3),
         courseId: "course-1",
         userId: "user-1",
         description: null,
@@ -112,7 +111,6 @@ describe("Assessment Service", () => {
         dueDate: new Date(),
         score: null,
         targetScore: null,
-        latePenalty: null,
         maxScore: new Prisma.Decimal(100),
         submitted: false
       });
@@ -123,7 +121,7 @@ describe("Assessment Service", () => {
           courseId: "course1",
           title: "Final",
           dueDate: new Date(),
-          weight: 20,
+          weight: 0.2,
         })
       ).rejects.toMatchObject({ status: 409 });
 
@@ -140,7 +138,7 @@ describe("Assessment Service", () => {
           courseId: "course1",
           title: "Final",
           dueDate: new Date(),
-          weight: 20,
+          weight: 0.2,
         })
       ).rejects.toMatchObject({ status: 404 });
     });
@@ -161,7 +159,6 @@ describe("Assessment Service", () => {
         score: null,
         targetScore: null,
         weight: new Prisma.Decimal(0),
-        latePenalty: null,
         submitted: false
       });
 
@@ -171,7 +168,6 @@ describe("Assessment Service", () => {
         description: null,
         weight: new Prisma.Decimal(0),
         targetScore: null,
-        latePenalty: null,
         maxScore: new Prisma.Decimal(100),
         title: "",
         dueDate: new Date(),
@@ -205,7 +201,6 @@ describe("Assessment Service", () => {
         score: null,
         targetScore: null,
         weight: new Prisma.Decimal(0),
-        latePenalty: null,
         submitted: false,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -234,7 +229,6 @@ describe("Assessment Service", () => {
         score: null,
         targetScore: null,
         weight: new Prisma.Decimal(0),
-        latePenalty: null,
         submitted: false,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -276,7 +270,6 @@ describe("Assessment Service", () => {
       score: null,
       targetScore: null,
       weight: new Prisma.Decimal(0),
-      latePenalty: null,
       submitted: false,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -362,7 +355,6 @@ describe("Assessment Service", () => {
         score: null,
         targetScore: null,
         weight: new Prisma.Decimal(0),
-        latePenalty: null,
         maxScore: new Prisma.Decimal(100),
         submitted: false,
         createdAt: new Date(),
@@ -404,7 +396,6 @@ describe("Assessment Service", () => {
         score: new Prisma.Decimal(80),
         targetScore: null,
         weight: new Prisma.Decimal(0),
-        latePenalty: null,
         maxScore: new Prisma.Decimal(100),
         submitted: true,
         createdAt: new Date("2026-03-10"),
@@ -467,7 +458,6 @@ describe("Assessment Service", () => {
         score: null,
         targetScore: null,
         weight: new Prisma.Decimal(0),
-        latePenalty: null,
         maxScore: new Prisma.Decimal(100),
         submitted: false,
         createdAt: new Date(),
@@ -492,7 +482,6 @@ describe("Assessment Service", () => {
         score: null,
         targetScore: null,
         weight: new Prisma.Decimal(0),
-        latePenalty: null,
         maxScore: new Prisma.Decimal(100),
         submitted: false,
         createdAt: new Date("2026-03-10"),
@@ -508,7 +497,6 @@ describe("Assessment Service", () => {
         score: null,
         targetScore: null,
         weight: new Prisma.Decimal(0),
-        latePenalty: null,
         maxScore: new Prisma.Decimal(100),
         submitted: false,
         createdAt: new Date("2026-03-10"),

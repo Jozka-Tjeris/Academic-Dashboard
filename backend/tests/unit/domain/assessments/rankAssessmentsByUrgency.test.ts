@@ -23,7 +23,6 @@ function createAssessment(
     targetScore: null,
     maxScore: new Prisma.Decimal(100),
     weight: new Prisma.Decimal(0.25),
-    latePenalty: null,
     submitted: false,
     createdAt: new Date("2024-12-01"),
     updatedAt: new Date("2024-12-01"),

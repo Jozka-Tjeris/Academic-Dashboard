@@ -2,6 +2,8 @@ export const DEFAULT_MAX_SCORE = 100;
 
 export const MAX_GRADE = 100;
 
+export const MAX_ASSESSMENT_WEIGHT = 1;
+
 export const INVALID_GRADE = NaN;
 
 export const EPSILON = 0.0001;
