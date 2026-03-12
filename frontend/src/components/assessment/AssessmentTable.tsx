@@ -1,11 +1,11 @@
 "use client";
 
-import { AssessmentShared } from "@internal_package/shared";
 import UrgencyHeatBar from "@/components/dashboard/UrgencyHeatBar";
 import { getStatusColor } from "@/lib/statusColor";
+import { AssessmentWithUrgency } from "@/types/dashboard";
 
 export default function AssessmentTable({ assessments }: {
-  assessments: AssessmentShared[]
+  assessments: AssessmentWithUrgency[]
 }) {
   if (assessments.length === 0) {
     return (
@@ -16,7 +16,7 @@ export default function AssessmentTable({ assessments }: {
   }
 
   const sorted = [...assessments].sort(
-    (a: any, b: any) => (b.urgency ?? 0) - (a.urgency ?? 0)
+    (a, b) => (b.urgency ?? 0) - (a.urgency ?? 0)
   );
 
   return (
@@ -44,7 +44,7 @@ export default function AssessmentTable({ assessments }: {
             >
               <td className="p-3">
                 <UrgencyHeatBar
-                  urgency={(a as any).urgency ?? 0}
+                  urgency={a.urgency ?? 0}
                   weight={a.weight ?? 0}
                 />
               </td>

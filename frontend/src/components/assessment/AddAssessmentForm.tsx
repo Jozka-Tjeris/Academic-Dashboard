@@ -31,8 +31,10 @@ export default function AddAssessmentForm({ courseId }: AddAssessmentFormProps) 
       {
         title,
         dueDate: new Date(dueDate),
-        weight: Number(weight),
+        weight: Number(weight) / 100,
         maxScore: Number(maxScore),
+        description: "Nothing here",
+        latePenalty: 0.05
       },
       {
         onSuccess: () => {

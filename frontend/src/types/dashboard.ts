@@ -24,3 +24,12 @@ export type CourseDashboard = {
   };
   collisions: Collision[];
 };
+
+export type UserDashboard = {
+  courses: CourseShared[];
+  workload: {
+    upcomingAssessments: AssessmentWithUrgency[];
+    stats: DashboardStats;
+  };
+  collisions: Collision[];
+};

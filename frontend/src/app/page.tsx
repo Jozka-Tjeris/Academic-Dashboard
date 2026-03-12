@@ -1,15 +1,10 @@
-import { useCheckAuth } from "@/hooks/useAuth";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
-export default function Home() {
-  const { data } = useCheckAuth();
-  try {
-    if (data?.ok) {
-      redirect("/dashboard");
-    }
-  } catch (error) {
-    console.error("Auth check failed", error);
-  }
+export default async function Home() {
+  const token = (await cookies()).get("access_token");
+
+  if (token) redirect("/dashboard");
 
   redirect("/login");
 }

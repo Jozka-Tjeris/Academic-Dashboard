@@ -10,12 +10,15 @@ export const createAssessment = (
     dueDate: Date;
     weight: number;
     maxScore: number;
-    description?: string;
-    latePenalty?: number;
+    description: string;
+    latePenalty: number;
   }
 ) =>
   fetcher(`/courses/${courseId}/assessments`, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(data),
   }).then(res => handleResponse<AssessmentShared>(res)
 );
@@ -27,6 +30,9 @@ export const updateAssessment = (fetcher: Fetcher, assessmentId: string, data: {
 }) => 
   fetcher(`/assessments/${assessmentId}`, {
     method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(data),
   }).then(res => handleResponse<AssessmentShared>(res)
 );

@@ -45,7 +45,7 @@ export function logout(_req: Request, res: Response) {
     secure: true,
   });
 
-  return res.redirect(env.FRONTEND_URL + "/login");
+  return res.status(401).json({ error: "Unauthorized" });
 }
 
 export function getCurrentUser(req: AuthenticatedRequest, res: Response) {

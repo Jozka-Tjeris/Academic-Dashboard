@@ -14,7 +14,7 @@ export default function CourseCard({ course }: { course: CourseShared }) {
 
   return (
     <Link href={`/courses/${course.courseId}`}
-      className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition"
+      className="bg-white rounded-xl shadow-sm border hover:shadow-md transition"
     >
       <Card className="hover:shadow-lg transition">
         <CardHeader>
