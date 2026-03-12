@@ -14,6 +14,7 @@ export const queryKeys = {
   },
 
   auth: {
-    me: ["auth", "me"] as const,
+    me: ["api", "auth", "me"] as const,
+    logout: ["api", "auth", "logout"] as const,
   }
 };

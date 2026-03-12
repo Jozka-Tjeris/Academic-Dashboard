@@ -34,7 +34,7 @@ describe("auth user check test", () => {
       .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
       .set("X-CSRF-Token", csrfToken);
 
-    expect(res.status).toBe(302);
+    expect(res.status).toBe(401);
     // set-cookie headers should exist
     expect(res.headers['set-cookie']).toBeDefined();
 

@@ -12,14 +12,14 @@ export const queryClient = new QueryClient({
 export async function apiFetch(url: string, options: RequestInit = {}){
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
 
-  const res = fetch(baseUrl + url, {
-    ...options,
+  const res = await fetch(baseUrl + url, {
     credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
+    ...options,
   });
+
+  if (res.status === 401) {
+    window.location.href = "/login";
+  }
 
   return res;
 }

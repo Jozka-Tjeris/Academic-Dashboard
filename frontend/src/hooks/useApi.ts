@@ -2,21 +2,23 @@ import { apiFetch } from "@/lib/queryClient";
 
 export function useApi() {
   const getCsrfToken = () => {
-    if (typeof window === "undefined") return null;
-    return document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("csrf_token="))
-      ?.split("=")[1];
+    if (typeof document === "undefined") return null;
+
+    const match = document.cookie.match(/(^|;)\s*csrf_token=([^;]+)/);
+    return match?.[2] ?? null;
   };
 
   const secureFetch = async (url: string, options: RequestInit = {}) => {
     const csrfToken = getCsrfToken();
-    
-    const headers = new Headers(options.headers || {});
 
-    // Only attach CSRF for mutating methods
-    const method = options.method?.toUpperCase() || 'GET';
-    if (csrfToken && ["POST", "PUT", "DELETE", "PATCH"].includes(method)) {
+    const headers = new Headers(options.headers);
+
+    const method = options.method?.toUpperCase() ?? "GET";
+
+    if (
+      csrfToken &&
+      ["POST", "PUT", "PATCH", "DELETE"].includes(method)
+    ) {
       headers.set("X-CSRF-Token", csrfToken);
     }
 
