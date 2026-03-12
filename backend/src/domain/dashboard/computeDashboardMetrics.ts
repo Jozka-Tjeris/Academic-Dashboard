@@ -82,7 +82,7 @@ export function buildDashboardMetrics(
   const collisions = detectDueDateCollisions(upcoming);
 
   return {
-    upcomingAssessments: urgencyRanked.slice(0, 10),
+    upcomingAssessments: urgencyRanked,
 
     stats: {
       dueNext7Days,

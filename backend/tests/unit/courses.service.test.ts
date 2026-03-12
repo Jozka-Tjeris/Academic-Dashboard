@@ -346,7 +346,7 @@ describe("Course Services", () => {
       });
       expect(result.urgency.totalUrgency.toNumber()).toBeGreaterThan(0);
       expect(result.urgency.averageUrgency.toNumber()).toBeGreaterThan(0);
-      expect(result.urgency.topAssessments.length).toBe(3);
+      expect(result.urgency.topAssessments.length).toBe(4);
       expect(result.urgency.topAssessments[0].assessmentId).toEqual("a5");
       expect(result.urgency.topAssessments[1].assessmentId).toEqual("a3");
       expect(result.urgency.topAssessments[2].assessmentId).toEqual("a4");
