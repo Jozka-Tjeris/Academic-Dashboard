@@ -15,5 +15,13 @@ export function rankAssessmentsByUrgency(
       ...a,
       urgency: calculateUrgencyScore(a, now)
     }))
-    .sort((a, b) => b.urgency.comparedTo(a.urgency));
+    .sort((a, b) => {
+      const urgencyCompare = b.urgency.comparedTo(a.urgency);
+      if (urgencyCompare !== 0) return urgencyCompare;
+
+      const dueDateCompare = a.dueDate.getTime() - b.dueDate.getTime();
+      if (dueDateCompare !== 0) return dueDateCompare;
+
+      return a.assessmentId.localeCompare(b.assessmentId);
+    });
 }
