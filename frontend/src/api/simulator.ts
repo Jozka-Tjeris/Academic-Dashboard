@@ -20,6 +20,9 @@ export const simulateCourse = (
 ) => (
   fetcher(`/courses/${courseId}/simulate`, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({ assessments: data }),
   }).then((res) => handleResponse<SimulationResult>(res))
 );

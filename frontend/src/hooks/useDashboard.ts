@@ -3,7 +3,7 @@ import { useApi } from "@/hooks/useApi";
 import { getCourseDashboard, getUserDashboard } from "@/api/dashboard";
 import { queryKeys } from "@/lib/queryKeys";
 
-export function useCourseDashboard(courseId: string) {
+export const useCourseDashboard = (courseId: string) => {
   const { secureFetch } = useApi();
 
   return useQuery({
@@ -13,7 +13,7 @@ export function useCourseDashboard(courseId: string) {
   });
 }
 
-export function useUserDashboard() {
+export const useUserDashboard = () => {
   const { secureFetch } = useApi();
 
   return useQuery({

@@ -1,13 +1,13 @@
+import { logout } from "@/api/auth";
 import { useQuery } from "@tanstack/react-query";
 import { useApi } from "./useApi";
-import { getCollisions } from "@/api/assessments";
 import { queryKeys } from "@/lib/queryKeys";
 
-export const useCollisions = () => {
+export const useLogout = () => {
   const { secureFetch } = useApi();
 
   return useQuery({
-    queryKey: queryKeys.assessments.collisions,
-    queryFn: () => getCollisions(secureFetch),
+    queryKey: queryKeys.auth.me,
+    queryFn: () => logout(secureFetch),
   });
 }

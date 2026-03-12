@@ -4,7 +4,7 @@ import { useApi } from "./useApi";
 import { queryKeys } from "@/lib/queryKeys";
 import { queryClient } from "@/lib/queryClient";
 
-export function useCheckAuth() {
+export const useCheckAuth = () => {
   const { secureFetch } = useApi();
 
   return useQuery({
