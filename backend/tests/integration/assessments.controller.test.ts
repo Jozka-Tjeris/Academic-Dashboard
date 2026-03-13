@@ -4,7 +4,7 @@ import { prisma } from "../../src/lib/prisma";
 import { Prisma } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from 'uuid';
-import { AssessmentStatus } from "@internal_package/shared";
+import { AssessmentStatuses } from "@internal_package/shared";
 
 const testId = uuidv4().split('-')[0];
 const COURSE_NAME = `GET_Test_Course_${testId}`;
@@ -233,7 +233,7 @@ describe("Assessments controller", () => {
 
       expect(assessment.assessmentId).toBe(assessmentId);
       expect(assessment.weight).toBe(0.15);
-      expect(typeof assessment.status).toBe(typeof AssessmentStatus.UPCOMING);
+      expect(typeof assessment.status).toBe(typeof AssessmentStatuses.UPCOMING);
     });
 
     it("returns 404 for invalid id", async () => {

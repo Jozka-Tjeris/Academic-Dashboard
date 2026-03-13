@@ -4,7 +4,7 @@ import { rankAssessmentsByUrgency } from "../../../../src/domain/assessments/ran
 import { detectDueDateCollisions } from "../../../../src/domain/assessments/detectDueDateCollisions";
 import { deriveStatusFromDate } from "../../../../src/domain/assessments/deriveStatusFromDate";
 import { AssessmentBackend } from "../../../../src/types/backendTypes";
-import { AssessmentStatus } from "@internal_package/shared";
+import { AssessmentStatuses } from "@internal_package/shared";
 
 jest.mock("../../../../src/domain/assessments/rankAssessmentsByUrgency");
 jest.mock("../../../../src/domain/assessments/detectDueDateCollisions");
@@ -51,8 +51,8 @@ describe("buildDashboardMetrics", () => {
     const upcoming = createAssessment("a2");
 
     mockStatus
-      .mockReturnValueOnce(AssessmentStatus.GRADED)
-      .mockReturnValueOnce(AssessmentStatus.UPCOMING);
+      .mockReturnValueOnce(AssessmentStatuses.GRADED)
+      .mockReturnValueOnce(AssessmentStatuses.UPCOMING);
 
     buildDashboardMetrics([graded, upcoming], NOW);
 
@@ -73,7 +73,7 @@ describe("buildDashboardMetrics", () => {
       dueDate: new Date("2025-01-20")
     });
 
-    mockStatus.mockReturnValue(AssessmentStatus.UPCOMING);
+    mockStatus.mockReturnValue(AssessmentStatuses.UPCOMING);
 
     const result = buildDashboardMetrics([a1, a2, a3], NOW);
 
@@ -91,7 +91,7 @@ describe("buildDashboardMetrics", () => {
       weight: new Prisma.Decimal(0.2)
     });
 
-    mockStatus.mockReturnValue(AssessmentStatus.UPCOMING);
+    mockStatus.mockReturnValue(AssessmentStatuses.UPCOMING);
 
     const result = buildDashboardMetrics([a1, a2], NOW);
 
@@ -108,7 +108,7 @@ describe("buildDashboardMetrics", () => {
       weight: new Prisma.Decimal(0.4)
     });
 
-    mockStatus.mockReturnValue(AssessmentStatus.UPCOMING);
+    mockStatus.mockReturnValue(AssessmentStatuses.UPCOMING);
 
     const result = buildDashboardMetrics([a1, a2], NOW);
 
@@ -121,7 +121,7 @@ describe("buildDashboardMetrics", () => {
       createAssessment(`a${i}`)
     );
 
-    mockStatus.mockReturnValue(AssessmentStatus.UPCOMING);
+    mockStatus.mockReturnValue(AssessmentStatuses.UPCOMING);
 
     mockRank.mockReturnValue(assessments);
 
@@ -137,7 +137,7 @@ describe("buildDashboardMetrics", () => {
     const a3 = createAssessment("a3", { dueDate: new Date("2025-01-03") });
     const a4 = createAssessment("a4", { dueDate: new Date("2025-02-01") });
 
-    mockStatus.mockReturnValue(AssessmentStatus.UPCOMING);
+    mockStatus.mockReturnValue(AssessmentStatuses.UPCOMING);
 
     const result = buildDashboardMetrics([a1, a2, a3, a4], NOW);
 
@@ -157,7 +157,7 @@ describe("buildDashboardMetrics", () => {
         count: 2,
     }];
 
-    mockStatus.mockReturnValue(AssessmentStatus.UPCOMING);
+    mockStatus.mockReturnValue(AssessmentStatuses.UPCOMING);
     mockCollisions.mockReturnValue(collisions);
 
     const result = buildDashboardMetrics([a1, a2], NOW);

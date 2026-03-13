@@ -1,4 +1,4 @@
-import { AssessmentStatus, TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
+import { AssessmentStatus, AssessmentStatuses, TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
 import { Prisma } from "@prisma/client";
 
 export function deriveStatusFromDate(
@@ -8,11 +8,11 @@ export function deriveStatusFromDate(
   now: Date = new Date()
 ): AssessmentStatus {
   if (hasSubmitted) {
-    return score !== null ? AssessmentStatus.GRADED : AssessmentStatus.SUBMITTED;
+    return score !== null ? AssessmentStatuses.GRADED : AssessmentStatuses.SUBMITTED;
   }
 
-  if (dueDate.getTime() < now.getTime()) return AssessmentStatus.OVERDUE;
-  if (dueDate.getTime() - now.getTime() <= TWENTYFOUR_HOURS_IN_MS) return AssessmentStatus.DUE_IN_24_HOURS;
+  if (dueDate.getTime() < now.getTime()) return AssessmentStatuses.OVERDUE;
+  if (dueDate.getTime() - now.getTime() <= TWENTYFOUR_HOURS_IN_MS) return AssessmentStatuses.DUE_IN_24_HOURS;
 
-  return AssessmentStatus.UPCOMING;
+  return AssessmentStatuses.UPCOMING;
 }

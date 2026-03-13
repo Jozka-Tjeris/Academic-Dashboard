@@ -1,17 +1,17 @@
-import { AssessmentStatus } from "@internal_package/shared";
+import { AssessmentStatus, AssessmentStatuses } from "@internal_package/shared";
 
 export function getStatusColor(status: AssessmentStatus) {
   switch (status) {
-    case AssessmentStatus.GRADED:
+    case AssessmentStatuses.GRADED:
       return "text-green-600";
 
-    case AssessmentStatus.SUBMITTED:
+    case AssessmentStatuses.SUBMITTED:
       return "text-blue-600";
 
-    case AssessmentStatus.DUE_IN_24_HOURS:
+    case AssessmentStatuses.DUE_IN_24_HOURS:
       return "text-orange-600";
 
-    case AssessmentStatus.OVERDUE:
+    case AssessmentStatuses.OVERDUE:
       return "text-red-600";
 
     default:

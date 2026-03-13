@@ -2,7 +2,7 @@
 
 import UrgencyHeatBar from "@/components/dashboard/UrgencyHeatBar";
 import { getStatusColor } from "@/lib/statusColor";
-import { AssessmentShared } from "@internal_package/shared";
+import { AssessmentShared, AssessmentStatusMetadata } from "@internal_package/shared";
 
 type AssessmentRow = AssessmentShared & {
   urgency?: number;
@@ -72,7 +72,7 @@ export default function AssessmentTable({ assessments }: {
               </td>
 
               <td className={`p-3 ${getStatusColor(a.status)}`}>
-                {a.status}
+                {AssessmentStatusMetadata[a.status].label}
               </td>
 
             </tr>
