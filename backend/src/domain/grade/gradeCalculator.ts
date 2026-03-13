@@ -15,6 +15,10 @@ export function calculateCurrentGrade(assessments: GradeComponent[]): Prisma.Dec
   let finalGrade = new Prisma.Decimal(0);
 
   for (const assessment of assessments) {
+    // Ignore any assessment with 0 max score or weight
+    if(assessment.maxScore?.eq(0) || assessment.weight.eq(0)){
+      continue;
+    }
     const rawScore = assessment.score ?? new Prisma.Decimal(0);
     const maxScore = assessment.maxScore ?? new Prisma.Decimal(DEFAULT_MAX_SCORE);
 
@@ -42,6 +46,10 @@ export function calculateMaxPossibleGrade(assessments: GradeComponent[]): Prisma
   let finalGrade = new Prisma.Decimal(0);
 
   for (const assessment of assessments) {
+    // Ignore any assessment with 0 max score or weight
+    if(assessment.maxScore?.eq(0) || assessment.weight.eq(0)){
+      continue;
+    }
     const rawScore = assessment.score ?? assessment.maxScore ?? new Prisma.Decimal(DEFAULT_MAX_SCORE);
     const maxScore = assessment.maxScore ?? new Prisma.Decimal(DEFAULT_MAX_SCORE);
 

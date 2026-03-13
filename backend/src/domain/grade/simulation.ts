@@ -22,6 +22,10 @@ export function simulateFinalGrade(
   let finalGrade = new Prisma.Decimal(0);
 
   for (const assessment of assessments) {
+    // Ignore any assessment with 0 max score or weight
+    if(assessment.maxScore?.eq(0) || assessment.weight.eq(0)){
+      continue;
+    }
     const maxScore = assessment.maxScore ?? new Prisma.Decimal(DEFAULT_MAX_SCORE);
 
     let scoreToUse: Prisma.Decimal;
