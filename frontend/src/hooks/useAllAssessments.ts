@@ -11,20 +11,20 @@ export const useAllAssessments = () => {
     const priorityA = AssessmentStatusMetadata[a.status].order;
     const priorityB = AssessmentStatusMetadata[b.status].order;
     if(priorityA !== priorityB){
-      return priorityA - priorityB;
+      return priorityB - priorityA;
     }
 
-    const dueDateA = a.dueDate.getTime();
-    const dueDateB = b.dueDate.getTime();
+    const dueDateA = new Date(a.dueDate).getTime();
+    const dueDateB = new Date(b.dueDate).getTime();
     if(dueDateA !== dueDateB){
-      return dueDateA - dueDateB;
+      return dueDateB - dueDateA;
     }
 
     if(a.weight !== b.weight){
-      return a.weight - b.weight;
+      return b.weight - a.weight;
     }
 
-    return a.assessmentId.localeCompare(b.assessmentId);
+    return b.assessmentId.localeCompare(a.assessmentId);
   })
 
   return {
