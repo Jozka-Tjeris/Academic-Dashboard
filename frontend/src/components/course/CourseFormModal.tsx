@@ -1,75 +1,103 @@
 "use client";
 
-import { useState } from "react";
 import Modal from "@/components/ui/Modal";
-import Input from "@/components/ui/Input";
+import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useCreateCourse } from "@/hooks/useCourses";
 import { queryClient } from "@/lib/queryClient";
 import { queryKeys } from "@/lib/queryKeys";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import {
+  createCourseSchema,
+  CreateCourseInput,
+} from "@/lib/validation/courseSchema";
+import { useEffect } from "react";
 
 interface CourseFormModalProps {
   open: boolean;
   onClose: () => void;
 }
 
-export default function CourseFormModal({ open, onClose }: CourseFormModalProps) {
+export default function CourseFormModal({
+  open,
+  onClose,
+}: CourseFormModalProps) {
   const { mutate, isPending } = useCreateCourse();
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<CreateCourseInput>({
+    resolver: zodResolver(createCourseSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      color: "#3b82f6",
+    },
+  });
 
-  const handleSubmit = () => {
-    if (!name.trim()) {
-      setError("Course name is required");
-      return;
-    }
+  const onSubmit = (data: CreateCourseInput) => {
+    mutate(data, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.dashboard.global,
+        });
 
-    setError(null);
-
-    mutate(
-      { name, description },
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: queryKeys.dashboard.global })
-          setName("");
-          setDescription("");
-          onClose();
-        },
-        onError: (err: Error) => {
-          setError(err.message);
-        },
-      }
-    );
+        reset();
+        onClose();
+      },
+    });
   };
+
+  useEffect(() => {
+    if (!open) reset();
+  }, [open, reset]);
 
   return (
     <Modal open={open} onClose={onClose}>
       <h2 className="text-lg font-semibold mb-4">Create Course</h2>
 
-      <div className="space-y-4">
-        <Input
-          label="Course Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          error={error || undefined}
-        />
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-4"
+      >
+        {/* Name */}
+        <div>
+          <label htmlFor="name">Course Name</label>
+          <Input id="name" {...register("name")} />
 
-        <Input
-          label="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
+          {errors.name && (
+            <p className="text-sm text-red-500">
+              {errors.name.message}
+            </p>
+          )}
+        </div>
+
+        {/* Description */}
+        <div>
+          <label htmlFor="description">Description</label>
+          <Input id="description" {...register("description")} />
+        </div>
+
+        {/* Color */}
+        <div>
+          <label htmlFor="color">Course Color</label>
+          <Input type="color" id="color" {...register("color")} />
+        </div>
 
         <Button
-          onClick={handleSubmit}
-          variant={isPending ? "ghost" : "default"}
+          type="submit"
+          disabled={isPending}
           className="w-full"
         >
-          Create Course
+          {isPending ? "Creating..." : "Create Course"}
         </Button>
-      </div>
+      </form>
     </Modal>
   );
 }

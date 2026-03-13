@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import GradeProgress from "@/components/grade/GradeProgress";
-import AddAssessmentForm from "@/components/assessment/AddAssessmentForm";
+import AssessmentFormModal from "@/components/assessment/AssessmentFormModal";
 import AssessmentTable from "@/components/assessment/AssessmentTable";
 import Link from "next/link";
 import { Spinner } from "@/components/ui/Spinner";
@@ -55,7 +55,7 @@ export default function CoursePage() {
         Open Grade Simulator
       </Link>
 
-      <AddAssessmentForm courseId={id} />
+      <AssessmentFormModal courseId={id} />
 
       <AssessmentTable
         assessments={dashboard.workload.upcomingAssessments ?? []}

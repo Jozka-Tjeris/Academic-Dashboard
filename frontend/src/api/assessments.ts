@@ -10,7 +10,7 @@ export const createAssessment = (
     dueDate: Date;
     weight: number;
     maxScore: number;
-    description: string;
+    description?: string;
   }
 ) =>
   fetcher(`/courses/${courseId}/assessments`, {
