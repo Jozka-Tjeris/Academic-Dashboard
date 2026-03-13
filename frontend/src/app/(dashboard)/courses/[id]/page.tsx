@@ -7,6 +7,7 @@ import AssessmentTable from "@/components/assessment/AssessmentTable";
 import Link from "next/link";
 import { Spinner } from "@/components/ui/Spinner";
 import { useCourseDashboard } from "@/hooks/useDashboard";
+import { MAX_GRADE } from "@internal_package/shared";
 
 export default function CoursePage() {
   const params = useParams();
@@ -20,12 +21,12 @@ export default function CoursePage() {
     return <div>Failed to load course</div>;
   }
 
-  const { currentGrade, maxPossibleGrade, gradeMessage } = dashboard.course.gradeSummary;
+  const { currentGrade, gradeMessage } = dashboard.course.gradeSummary;
 
   // Determine the display text for the grade
   const gradeText =
-    currentGrade !== null && maxPossibleGrade !== null
-      ? `${currentGrade.toFixed(1)} / ${maxPossibleGrade.toFixed(1)}`
+    currentGrade !== null
+      ? `${(currentGrade * MAX_GRADE).toFixed(2)} / ${(MAX_GRADE).toFixed(2)}`
       : gradeMessage || "N/A"; // fallback if no message
 
   return (
@@ -45,7 +46,7 @@ export default function CoursePage() {
 
       <div className="mb-6">
         <p className="mb-2 font-medium">{gradeText}</p>
-        <GradeProgress value={currentGrade} max={maxPossibleGrade} />
+        <GradeProgress value={currentGrade} max={1} />
       </div>
 
       <Link
