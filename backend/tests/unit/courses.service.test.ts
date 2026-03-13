@@ -78,7 +78,8 @@ describe("Course Services", () => {
         name: "Calculus 101",
         description: "",
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        color: "#ffffff",
       });
 
       const result = await service.createCourse({
@@ -100,7 +101,8 @@ describe("Course Services", () => {
         name: "Calculus 101",
         description: "",
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        color: "#ffffff",
       });
 
       await expect(
@@ -124,6 +126,7 @@ describe("Course Services", () => {
         createdAt: new Date("2025"),
         updatedAt: new Date(),
         assessments: [],
+        color: "#ffffff",
       },
       {
         courseId: "course2",
@@ -133,6 +136,7 @@ describe("Course Services", () => {
         createdAt: new Date("2026"),
         updatedAt: new Date(),
         assessments: [],
+        color: "#ffffff",
       }];
 
       prismaMock.course.findMany.mockResolvedValue(mockCourse);
@@ -164,6 +168,7 @@ describe("Course Services", () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         assessments: [],
+        color: "#ffffff",
       };
 
       prismaMock.course.findFirst.mockResolvedValue(mockCourse);
@@ -191,7 +196,8 @@ describe("Course Services", () => {
         name: "Calculus 101",
         description: "",
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        color: "#ffffff",
       };
       prismaMock.course.findFirst.mockResolvedValue(courseToDelete);
 
@@ -301,7 +307,8 @@ describe("Course Services", () => {
         description: "",
         createdAt: new Date("2026-03-10"),
         updatedAt: new Date("2026-03-10"),
-        assessments
+        assessments,
+        color: "#ffffff",
       };
 
       prismaMock.course.findFirst.mockResolvedValue(courseWithAssessments);
@@ -329,7 +336,8 @@ describe("Course Services", () => {
         description: "",
         createdAt: new Date("2026-03-10"),
         updatedAt: new Date("2026-03-10"),
-        assessments
+        assessments,
+        color: "#ffffff",
       };
 
       prismaMock.course.findFirst.mockResolvedValue(courseWithAssessments);
@@ -379,6 +387,7 @@ describe("Course Services", () => {
         createdAt: new Date("2026-03-10"),
         updatedAt: new Date("2026-03-10"),
         assessments,
+        color: "#ffffff",
       };
 
       const courseWithAssessmentsAndGradeSummary = {
@@ -434,7 +443,8 @@ describe("Course Services", () => {
         description: "",
         createdAt: new Date("2026-03-10"),
         updatedAt: new Date("2026-03-10"),
-        assessments: []
+        assessments: [],
+        color: "#ffffff",
       };
 
       prismaMock.course.findFirst.mockResolvedValue(course);
