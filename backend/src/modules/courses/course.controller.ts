@@ -9,7 +9,7 @@ import { serializeCourseAnalytics } from "./courseAnalyticsSerializer";
 import { serializeCourseDashboard } from "./courseDashboardSerializer";
 
 export async function createCourseHandler(req: AuthenticatedRequest, res: Response, next: NextFunction) {
-  const { name, description } = req.body;
+  const { name, description, color } = req.body;
   const userId = req.jwt?.sub;
 
   if (!userId) {
@@ -22,7 +22,7 @@ export async function createCourseHandler(req: AuthenticatedRequest, res: Respon
 
   try {
     const courseService = getCourseServices(prisma);
-    const course = await courseService.createCourse({ userId, name, description });
+    const course = await courseService.createCourse({ userId, name, description, color });
     logger.info({ requestId: req.id, courseId: course.courseId }, "Course created");
     return res.status(201).json(course);
   } catch (error: unknown) {

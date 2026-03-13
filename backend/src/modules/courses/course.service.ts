@@ -13,12 +13,13 @@ interface CreateCourseInput {
   userId: string;
   name: string;
   description?: string;
+  color?: string;
 }
 
 export function getCourseServices(prisma: PrismaClient){
   return {
     async createCourse(input: CreateCourseInput){
-      const { userId, name, description } = input;
+      const { userId, name, description, color } = input;
 
       const existing = await prisma.course.findFirst({
         where: { userId, name },
@@ -36,6 +37,7 @@ export function getCourseServices(prisma: PrismaClient){
           userId,
           name,
           description,
+          color,
         },
       });
     },
