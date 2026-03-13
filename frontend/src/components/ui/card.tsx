@@ -5,15 +5,23 @@ import { cn } from "@/lib/utils"
 function Card({
   className,
   size = "default",
+  topStripeColor = "",
+  style,
   ...props
-}: React.ComponentProps<"div"> & { size?: "default" | "sm" }) {
+}: React.ComponentProps<"div"> & { size?: "default" | "sm", topStripeColor?: string }) {
   return (
     <div
       data-slot="card"
       data-size={size}
+      style={{
+        ...style,
+        ...(topStripeColor && { "--stripe-color": topStripeColor }),
+      }}
       className={cn(
-        "group/card flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
-        className
+        "group/card relative flex flex-col gap-4 overflow-hidden rounded-xl bg-card py-4 text-sm text-card-foreground ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
+        "before:absolute before:left-0 before:top-0 before:h-3 before:w-full before:bg-[var(--stripe-color)] before:content-[''] pt-6",
+        !topStripeColor && "before:bg-card",
+        className,
       )}
       {...props}
     />

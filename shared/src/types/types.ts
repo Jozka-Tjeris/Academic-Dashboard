@@ -8,6 +8,7 @@ export type CourseShared = {
   courseId: string,
   name: string,
   description: string | null,
+  color: string,
   createdAt: Date,
   updatedAt: Date,
   assessments?: AssessmentShared[];
