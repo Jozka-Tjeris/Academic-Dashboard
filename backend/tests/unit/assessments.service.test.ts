@@ -22,7 +22,8 @@ describe("Assessment Service", () => {
         name: "",
         description: null,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        color: "#ffffff",
       });
 
       prismaMock.assessment.aggregate.mockResolvedValue({
@@ -67,7 +68,8 @@ describe("Assessment Service", () => {
         name: "",
         description: null,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        color: "#ffffff",
       });
 
       prismaMock.assessment.aggregate.mockResolvedValue({
@@ -96,7 +98,8 @@ describe("Assessment Service", () => {
         name: "Calculus 101",
         description: "",
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        color: "#ffffff",
       });
 
       prismaMock.assessment.findFirst.mockResolvedValue({
@@ -439,6 +442,7 @@ describe("Assessment Service", () => {
           description: null,
           createdAt: new Date("2026-03-10"),
           updatedAt: new Date("2026-03-10"),
+          color: "#ffffff",
         },
       }
 

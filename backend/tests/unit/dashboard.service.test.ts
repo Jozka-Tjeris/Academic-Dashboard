@@ -76,7 +76,8 @@ describe("Dashboard Services", () => {
         description: "",
         createdAt: new Date(),
         updatedAt: new Date(),
-        assessments
+        assessments,
+        color: "#ffffff",
       };
 
       prismaMock.course.findMany.mockResolvedValue([
@@ -106,7 +107,8 @@ describe("Dashboard Services", () => {
         description: "",
         createdAt: new Date(),
         updatedAt: new Date(),
-        assessments
+        assessments,
+        color: "#ffffff",
       };
 
       prismaMock.course.findMany.mockResolvedValue([

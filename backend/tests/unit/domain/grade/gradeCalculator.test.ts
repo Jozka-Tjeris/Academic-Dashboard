@@ -5,7 +5,6 @@ import { Prisma } from "@prisma/client";
 
 describe("Grade Calculation Functions with Late Penalties", () => {
   const today = new Date("2026-03-10");
-  const yesterday = new Date(today.getTime() - TWENTYFOUR_HOURS_IN_MS); // 1 day before
   const tomorrow = new Date(today.getTime() + TWENTYFOUR_HOURS_IN_MS); // 1 day after
 
   const assessments: GradeComponent[] = [

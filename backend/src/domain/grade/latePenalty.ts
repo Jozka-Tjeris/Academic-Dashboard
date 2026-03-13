@@ -1,4 +1,4 @@
-import { DEFAULT_MAX_SCORE, PENALTY_PERCENT_PER_DAY, TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
+import { DEFAULT_MAX_SCORE } from "@internal_package/shared";
 import { Prisma } from "@prisma/client";
 
 export function applyLatePenalty(
