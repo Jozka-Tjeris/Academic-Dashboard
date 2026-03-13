@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { prismaMock } from "../mocks/mockPrismaSingleton";
 import { getAssessmentServices } from "../../src/modules/assessments/assessment.service";
-import { AssessmentStatus } from "@internal_package/shared";
+import { AssessmentStatuses } from "@internal_package/shared";
 import { HttpError } from "../../src/utils/httpError";
 
 describe("Assessment Service", () => {
@@ -451,7 +451,7 @@ describe("Assessment Service", () => {
           name: "courseName",
         },
         derived: {
-          status: AssessmentStatus.GRADED,
+          status: AssessmentStatuses.GRADED,
           urgencyScore: new Prisma.Decimal(0),
         },
       }

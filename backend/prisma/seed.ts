@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { TWENTYFOUR_HOURS_IN_MS, AssessmentStatus } from '@internal_package/shared';
+import { TWENTYFOUR_HOURS_IN_MS, AssessmentStatuses } from '@internal_package/shared';
 import { validateTestEnvironment } from './db-guard';
 
 validateTestEnvironment();
@@ -70,7 +70,7 @@ async function main() {
       title: 'AI Midterm',
       description: 'Midterm exam covering AI basics',
       dueDate: new Date(Date.now() + 7 * TWENTYFOUR_HOURS_IN_MS),
-      status: AssessmentStatus.UPCOMING,
+      status: AssessmentStatuses.UPCOMING,
       score: null,
       targetScore: 90,
       weight: 20,
@@ -84,7 +84,7 @@ async function main() {
       title: 'Web Final Project',
       description: 'Final project for web development course',
       dueDate: new Date(Date.now() + 14 * TWENTYFOUR_HOURS_IN_MS),
-      status: AssessmentStatus.UPCOMING,
+      status: AssessmentStatuses.UPCOMING,
       score: null,
       targetScore: 95,
       weight: 30,

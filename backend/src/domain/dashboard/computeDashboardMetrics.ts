@@ -3,7 +3,7 @@ import { AssessmentBackend } from "../../types/backendTypes";
 import { rankAssessmentsByUrgency } from "../assessments/rankAssessmentsByUrgency";
 import { detectDueDateCollisions } from "../assessments/detectDueDateCollisions";
 import { deriveStatusFromDate } from "../assessments/deriveStatusFromDate";
-import { AssessmentStatus, TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
+import { AssessmentStatuses, TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
 
 export function buildDashboardMetrics(
   assessments: AssessmentBackend[],
@@ -14,7 +14,7 @@ export function buildDashboardMetrics(
 
   const upcoming = assessments.filter(a => {
     const status = deriveStatusFromDate(a.dueDate, a.score, !!a.submissionDate, now);
-    return status !== AssessmentStatus.GRADED;
+    return status !== AssessmentStatuses.GRADED;
   });
 
   //Rank assessments by urgency

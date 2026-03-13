@@ -14,13 +14,23 @@ export type CourseShared = {
   gradeSummary: GradeSummary;
 }
 
-export enum AssessmentStatus {
-  "UPCOMING",
-  "SUBMITTED",
-  "DUE_IN_24_HOURS",
-  "OVERDUE",
-  "GRADED",
-}
+export const AssessmentStatuses = {
+  UPCOMING: "UPCOMING",
+  SUBMITTED: "SUBMITTED",
+  DUE_IN_24_HOURS: "DUE_IN_24_HOURS",
+  OVERDUE: "OVERDUE",
+  GRADED: "GRADED",
+} as const;
+
+export const AssessmentStatusMetadata = {
+  UPCOMING: { label: "Upcoming", order: 1 },
+  DUE_IN_24_HOURS: { label: "Due in 24 hours", order: 2 },
+  OVERDUE: { label: "Overdue", order: 3 },
+  SUBMITTED: { label: "Submitted", order: 4 },
+  GRADED: { label: "Graded", order: 5 },
+} as const;
+
+export type AssessmentStatus = keyof typeof AssessmentStatuses;
 
 export type AssessmentShared = {
   assessmentId: string,

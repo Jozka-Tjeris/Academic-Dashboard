@@ -5,6 +5,7 @@ import { Spinner } from "@/components/ui/Spinner";
 import { useAssessment } from "@/hooks/useAssessments";
 import { Badge } from "@/components/ui/badge";
 import { getStatusColor } from "@/lib/statusColor";
+import { AssessmentStatusMetadata } from "@internal_package/shared";
 
 export default function AssessmentPage() {
   const params = useParams();
@@ -28,7 +29,7 @@ export default function AssessmentPage() {
 
         <Badge className={getStatusColor(assessment.status)}
         style={{backgroundColor: "white", borderColor: "black"}}>
-          {assessment.status}
+          {AssessmentStatusMetadata[assessment.status].label}
         </Badge>
       </div>
 

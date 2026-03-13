@@ -4,7 +4,7 @@ import { calculateCurrentGrade, calculateMaxPossibleGrade } from "../../domain/g
 import { GradeSummary } from "../../types/backendTypes";
 import { simulateFinalGrade } from "../../domain/grade/simulation";
 import { deriveStatusFromDate } from "../../domain/assessments/deriveStatusFromDate";
-import { AssessmentStatus } from "@internal_package/shared";
+import { AssessmentStatuses } from "@internal_package/shared";
 import { calculateUrgencyScore } from "../../domain/assessments/calculateUrgencyScore";
 import { rankAssessmentsByUrgency } from "../../domain/assessments/rankAssessmentsByUrgency";
 import { buildDashboardMetrics } from "../../domain/dashboard/computeDashboardMetrics";
@@ -178,17 +178,17 @@ export function getCourseServices(prisma: PrismaClient){
       for (const a of assessments) {
         const status = deriveStatusFromDate(a.dueDate, a.score, !!a.submissionDate, now);
 
-        if (status === AssessmentStatus.SUBMITTED) submitted++;
-        else if (status === AssessmentStatus.GRADED) graded++;
-        else if (status === AssessmentStatus.OVERDUE) overdue++;
-        else if (status === AssessmentStatus.DUE_IN_24_HOURS) in24hrs++;
+        if (status === AssessmentStatuses.SUBMITTED) submitted++;
+        else if (status === AssessmentStatuses.GRADED) graded++;
+        else if (status === AssessmentStatuses.OVERDUE) overdue++;
+        else if (status === AssessmentStatuses.DUE_IN_24_HOURS) in24hrs++;
         else pending++;
       }
 
       // ---------- Urgency Metrics ----------
 
       const activeAssessments = assessments.filter(
-        a => deriveStatusFromDate(a.dueDate, a.score, !!a.submissionDate, now) !== AssessmentStatus.GRADED
+        a => deriveStatusFromDate(a.dueDate, a.score, !!a.submissionDate, now) !== AssessmentStatuses.GRADED
       );
 
       const ranked = rankAssessmentsByUrgency(activeAssessments, now);
