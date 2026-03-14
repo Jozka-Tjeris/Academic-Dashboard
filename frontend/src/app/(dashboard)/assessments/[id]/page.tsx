@@ -6,12 +6,16 @@ import { useAssessment } from "@/hooks/useAssessments";
 import { Badge } from "@/components/ui/badge";
 import { getStatusColor } from "@/lib/statusColor";
 import { AssessmentStatusMetadata } from "@internal_package/shared";
+import AssessmentActions from "@/components/assessment/AssessmentActions";
+import { useRouter } from "next/navigation";
 
 export default function AssessmentPage() {
   const params = useParams();
   const id = params.id as string;
 
   const { data, isLoading, isError } = useAssessment(id);
+
+  const router = useRouter();
 
   if (isLoading) return <Spinner />;
 
@@ -24,13 +28,20 @@ export default function AssessmentPage() {
   return (
     <div className="space-y-6">
 
-      <div>
-        <h1 className="text-2xl font-semibold">{assessment.title}</h1>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold">{assessment.title}</h1>
+          <Badge className={getStatusColor(assessment.status)}
+          style={{backgroundColor: "white", borderColor: "black"}}>
+            {AssessmentStatusMetadata[assessment.status].label}
+          </Badge>
+        </div>
 
-        <Badge className={getStatusColor(assessment.status)}
-        style={{backgroundColor: "white", borderColor: "black"}}>
-          {AssessmentStatusMetadata[assessment.status].label}
-        </Badge>
+        <AssessmentActions
+          assessment={assessment}
+          variant="inline"
+          onDeleted={() => router.push(`/courses/${assessment.courseId}`)}
+        />
       </div>
 
       {assessment.description && (
