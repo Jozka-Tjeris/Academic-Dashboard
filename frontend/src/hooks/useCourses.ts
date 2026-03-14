@@ -5,6 +5,7 @@ import {
   getCourseById,
   createCourse,
   deleteCourse,
+  updateCourse,
 } from "@/api/courses";
 import { queryKeys } from "@/lib/queryKeys";
 import { queryClient } from "@/lib/queryClient";
@@ -38,13 +39,52 @@ export const useCreateCourse = () => {
   });
 };
 
+export const useUpdateCourse = () => {
+  const { secureFetch } = useApi();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: {
+        name?: string;
+        description?: string;
+      };
+    }) => updateCourse(secureFetch, id, data),
+
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.courses.detail(variables.id),
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.courses.all,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.dashboard.global,
+      });
+    },
+  });
+};
+
 export const useDeleteCourse = () => {
   const { secureFetch } = useApi();
 
   return useMutation({
-    mutationFn: (id: string) => deleteCourse(secureFetch, id),
+    mutationFn: ({ id }: { id: string }) =>
+      deleteCourse(secureFetch, id),
+
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.courses.all });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.courses.all,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.dashboard.global,
+      });
     },
   });
 };

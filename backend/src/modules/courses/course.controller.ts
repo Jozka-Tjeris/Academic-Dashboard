@@ -85,6 +85,41 @@ export async function getCourseByIdHandler(req: AuthenticatedRequest, res: Respo
   }
 }
 
+export async function updateCourseByIdHandler(req: AuthenticatedRequest, res: Response, next: NextFunction){
+  const userId = req.jwt?.sub;
+  const courseId = req.params.id;
+
+  if (!userId) {
+    return next(new HttpError(401, "Authentication required"));
+  }
+
+  if (!courseId) {
+    return next(new HttpError(400, "Course ID is required"));
+  }
+
+  if(Array.isArray(courseId)){
+    return next(new HttpError(400, "Only one Course ID can be requested"))
+  }
+
+  try {
+    const courseService = getCourseServices(prisma);
+    const result = await courseService.updateCourse(userId, courseId, req.body);
+
+    logger.info(
+      { requestId: req.id, userId, courseId },
+      "Course updated"
+    );
+
+    return res.status(200).json(result);
+  } catch (error) {
+    logger.error(
+      { requestId: req.id, err: error },
+      "Failed to update course"
+    );
+    return next(error);
+  }
+}
+
 export async function deleteCourseHandler(req: AuthenticatedRequest, res: Response, next: NextFunction){
   const userId = req.jwt?.sub;
   const courseId = req.params.id;

@@ -1,13 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import UrgencyHeatBar from "@/components/dashboard/UrgencyHeatBar";
 import { getStatusColor } from "@/lib/statusColor";
 import { AssessmentShared, AssessmentStatusMetadata } from "@internal_package/shared";
-import EditAssessmentForm from "@/components/modal/EditAssessmentForm";
-import DeleteConfirmationModal from "@/components/modal/DeleteConfirmationModal";
-import { useDeleteAssessment } from "@/hooks/useAssessments";
 import { useRouter } from "next/navigation";
+import AssessmentActions from "./AssessmentActions";
 
 export type AssessmentRow = AssessmentShared & {
   courseId: string;  // Added courseId for multi-course context
@@ -20,12 +17,7 @@ interface AssessmentTableProps {
 }
 
 export default function AssessmentTable({ assessments }: AssessmentTableProps) {
-  const [editAssessment, setEditAssessment] = useState<AssessmentRow | null>(null);
-  const [deleteAssessment, setDeleteAssessment] = useState<AssessmentRow | null>(null);
-
   const router = useRouter();
-
-  const deleteMutation = useDeleteAssessment();
 
   if (assessments.length === 0) {
     return <div className="text-muted-foreground">No assessments yet</div>;
@@ -63,56 +55,17 @@ export default function AssessmentTable({ assessments }: AssessmentTableProps) {
                 <td className="p-3">{new Date(row.dueDate).toLocaleDateString()}</td>
                 <td className={`p-3 ${getStatusColor(row.status)}`}>{AssessmentStatusMetadata[row.status].label}</td>
                 <td className="p-3 text-center space-x-2">
-                  <button
-                    className="text-blue-600 hover:underline cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setEditAssessment(row);
-                    }}
+                  <div
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    Edit
-                  </button>
-                  <button
-                    className="text-red-600 hover:underline cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setDeleteAssessment(row);
-                    }}
-                  >
-                    Delete
-                  </button>
+                    <AssessmentActions assessment={row} />
+                  </div>
                 </td>
               </tr>
             );
           })}
         </tbody>
       </table>
-
-      {/* Edit Modal */}
-      {editAssessment && (
-        <EditAssessmentForm
-          assessment={editAssessment}
-          courseId={editAssessment.courseId}
-          open={!!editAssessment}
-          onClose={() => setEditAssessment(null)}
-        />
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {deleteAssessment && (
-        <DeleteConfirmationModal
-          open={!!deleteAssessment}
-          itemName={deleteAssessment.title}
-          onClose={() => setDeleteAssessment(null)}
-          onConfirm={() => {
-            deleteMutation.mutate({ 
-              id: deleteAssessment.assessmentId,
-              courseId: deleteAssessment.courseId,
-             });
-            setDeleteAssessment(null);
-          }}
-        />
-      )}
     </div>
   );
 }

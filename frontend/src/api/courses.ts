@@ -17,7 +17,26 @@ export const createCourse = (fetcher: Fetcher, data: { name: string; description
     body: JSON.stringify(data),
   }).then(res => handleResponse<CourseShared>(res));
 
-export const deleteCourse = (fetcher: Fetcher, id: string) =>
-  fetcher(`/courses/${id}`, {
+export const updateCourse = (
+  fetcher: Fetcher,
+  courseId: string,
+  data: {
+    name?: string;
+    description?: string;
+  }
+) =>
+  fetcher(`/courses/${courseId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  }).then(res => handleResponse<CourseShared>(res));
+
+export const deleteCourse = (
+  fetcher: Fetcher,
+  courseId: string
+) =>
+  fetcher(`/courses/${courseId}`, {
     method: "DELETE",
   }).then(res => handleResponse<void>(res));

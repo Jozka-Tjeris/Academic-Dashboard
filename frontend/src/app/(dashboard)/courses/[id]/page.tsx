@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import GradeProgress from "@/components/grade/GradeProgress";
 import CreateAssessmentForm from "@/components/modal/CreateAssessmentForm";
 import AssessmentTable from "@/components/assessment/AssessmentTable";
@@ -8,9 +8,11 @@ import Link from "next/link";
 import { Spinner } from "@/components/ui/Spinner";
 import { useCourseDashboard } from "@/hooks/useDashboard";
 import { MAX_GRADE } from "@internal_package/shared";
+import CourseActions from "@/components/course/CourseActions";
 
 export default function CoursePage() {
   const params = useParams();
+  const router = useRouter();
   const id = params.id as string;
 
   const { data: dashboard, isLoading, isError: error } = useCourseDashboard(id);
@@ -23,25 +25,33 @@ export default function CoursePage() {
 
   const { currentGrade, gradeMessage } = dashboard.course.gradeSummary;
 
-  // Determine the display text for the grade
   const gradeText =
     currentGrade !== null
-      ? `${(currentGrade * MAX_GRADE).toFixed(2)} / ${(MAX_GRADE).toFixed(2)}`
-      : gradeMessage || "N/A"; // fallback if no message
+      ? `${(currentGrade * MAX_GRADE).toFixed(2)} / ${MAX_GRADE.toFixed(2)}`
+      : gradeMessage || "N/A";
 
   return (
     <div className="space-y-8">
       {/* Course header */}
-      <div className="space-y-2">
-        <h1 className="text-2xl font-semibold">
-          {dashboard.course.name}
-        </h1>
+      <div className="flex items-start justify-between">
 
-        {dashboard.course.description && (
-          <p className="text-muted-foreground">
-            {dashboard.course.description}
-          </p>
-        )}
+        <div className="space-y-2">
+          <h1 className="text-2xl font-semibold">
+            {dashboard.course.name}
+          </h1>
+
+          {dashboard.course.description && (
+            <p className="text-muted-foreground">
+              {dashboard.course.description}
+            </p>
+          )}
+        </div>
+
+        <CourseActions
+          course={dashboard.course}
+          variant="inline"
+          onDeleted={() => router.push("/dashboard")}
+        />
       </div>
 
       <div className="mb-6">

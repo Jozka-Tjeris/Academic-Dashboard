@@ -4,7 +4,7 @@ import { calculateCurrentGrade, calculateMaxPossibleGrade } from "../../domain/g
 import { GradeSummary } from "../../types/backendTypes";
 import { simulateFinalGrade } from "../../domain/grade/simulation";
 import { deriveStatusFromDate } from "../../domain/assessments/deriveStatusFromDate";
-import { AssessmentStatuses } from "@internal_package/shared";
+import { AssessmentStatuses, CourseShared } from "@internal_package/shared";
 import { calculateUrgencyScore } from "../../domain/assessments/calculateUrgencyScore";
 import { rankAssessmentsByUrgency } from "../../domain/assessments/rankAssessmentsByUrgency";
 import { buildDashboardMetrics } from "../../domain/dashboard/computeDashboardMetrics";
@@ -15,6 +15,14 @@ interface CreateCourseInput {
   description?: string;
   color?: string;
 }
+
+const IMMUTABLE_FIELDS = new Set([
+  "assessments",
+  "courseId",
+  "userId",
+  "createdAt",
+  "updatedAt",
+]);
 
 export function getCourseServices(prisma: PrismaClient){
   return {
@@ -88,6 +96,32 @@ export function getCourseServices(prisma: PrismaClient){
         ...course,
         gradeSummary,
       };
+    },
+    async updateCourse(userId: string, courseId: string, updates: Partial<CourseShared>){
+      const course = await prisma.course.findFirst({
+        where: { courseId, userId },
+      });
+
+      for (const key of Object.keys(updates)) {
+        if (IMMUTABLE_FIELDS.has(key)) {
+          throw new HttpError(400, `Field '${key}' cannot be updated`);
+        }
+      }
+
+      if (!course) {
+        throw new HttpError(404, "Course not found");
+      }
+
+      const updateData: Prisma.CourseUpdateWithoutAssessmentsInput = {
+        ...updates,
+      };
+
+      return prisma.course.update({
+        where: {
+          courseId, userId,
+        },
+        data: updateData,
+      });
     },
     async deleteCourse(userId: string, courseId: string){
       const course = await prisma.course.findFirst({

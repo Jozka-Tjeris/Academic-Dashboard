@@ -108,15 +108,6 @@ export default function EditAssessmentForm({
           <Input {...register("description")} />
         </div>
 
-        {/* Optional maxScore */}
-        <div>
-          <label htmlFor="maxScore">Max Score</label>
-          <Input
-            type="number"
-            {...register("maxScore", { valueAsNumber: true })}
-          />
-        </div>
-
         <Button type="submit" className="w-full cursor-pointer">
           Save Changes
         </Button>

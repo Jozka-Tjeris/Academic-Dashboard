@@ -16,13 +16,7 @@ export default function GradeProgress({ value, max }: GradeProgressProps) {
   const percentage =
     value != null && max != null && max !== 0
       ? Math.min(100, Math.max(0, (value / max) * 100))
-      : null;
-
-  const activeBand =
-    percentage == null
-      ? null
-      : GRADE_BANDS.find(b => percentage >= b.min && percentage < b.max) ??
-        GRADE_BANDS[GRADE_BANDS.length - 1];
+      : 0;
 
   const gradient = `linear-gradient(to right, ${GRADE_BANDS
     .map(b => `${b.band} ${b.min}%, ${b.band} ${b.max}%`)

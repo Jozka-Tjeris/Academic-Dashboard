@@ -56,6 +56,9 @@ export const useUpdateAssessment = (courseId: string) => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.courses.detail(courseId),
       });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.courses.all,
+      });
     },
   });
 }
