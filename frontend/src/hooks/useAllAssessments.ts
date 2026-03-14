@@ -1,11 +1,16 @@
 import { useCourses } from "./useCourses";
-import { AssessmentShared, AssessmentStatusMetadata } from "@internal_package/shared";
+import { AssessmentStatusMetadata } from "@internal_package/shared";
 
 export const useAllAssessments = () => {
   const { data: courses, ...rest } = useCourses();
 
-  const assessments: AssessmentShared[] =
-    courses?.flatMap(c => c.assessments ?? []) ?? [];
+  const assessments =
+    courses?.flatMap(c =>
+      c.assessments?.map(a => ({
+        ...a,
+        courseName: c.name
+      })) ?? []
+    ) ?? [];
 
   const sorted = assessments.sort((a, b) => {
     const priorityA = AssessmentStatusMetadata[a.status].order;
@@ -17,7 +22,7 @@ export const useAllAssessments = () => {
     const dueDateA = new Date(a.dueDate).getTime();
     const dueDateB = new Date(b.dueDate).getTime();
     if(dueDateA !== dueDateB){
-      return dueDateB - dueDateA;
+      return dueDateA - dueDateB;
     }
 
     if(a.weight !== b.weight){

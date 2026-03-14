@@ -19,3 +19,9 @@ export type AssessmentBackend = Omit<AssessmentShared, 'score' | 'targetScore' |
 }
 
 export type GradeComponent = Pick<AssessmentBackend, "assessmentId" | "weight" | "score" | "maxScore" | "dueDate" | "submissionDate">;
+
+export type AssessmentWithCourseName = AssessmentBackend & {
+  course: {
+    name: string;
+  }
+};

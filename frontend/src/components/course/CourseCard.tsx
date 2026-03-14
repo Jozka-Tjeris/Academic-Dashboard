@@ -1,15 +1,15 @@
-import { CourseShared } from "@internal_package/shared";
+import { CourseShared, MAX_GRADE } from "@internal_package/shared";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import GradeProgress from "../grade/GradeProgress";
 import Link from "next/link";
 
 export default function CourseCard({ course }: { course: CourseShared }) {
-  const { currentGrade, maxPossibleGrade, gradeMessage } = course.gradeSummary;
+  const { currentGrade, gradeMessage } = course.gradeSummary;
 
   // Determine the display text for the grade
   const gradeText =
-    currentGrade !== null && maxPossibleGrade !== null
-      ? `${currentGrade.toFixed(2)} / ${maxPossibleGrade.toFixed(2)}`
+    currentGrade !== null
+      ? `${(currentGrade * MAX_GRADE).toFixed(2)} / ${(MAX_GRADE).toFixed(2)}`
       : gradeMessage || "N/A"; // fallback if no message
 
   return (
@@ -22,7 +22,7 @@ export default function CourseCard({ course }: { course: CourseShared }) {
         </CardHeader>
 
         <CardContent className="space-y-3">
-          <GradeProgress value={currentGrade} max={maxPossibleGrade} />
+          <GradeProgress value={currentGrade} max={1} />
 
           <p className="text-sm text-muted-foreground">
             {gradeText}

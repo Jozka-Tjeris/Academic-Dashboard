@@ -93,7 +93,7 @@ export default function CourseFormModal({
         <Button
           type="submit"
           disabled={isPending}
-          className="w-full"
+          className="w-full cursor-pointer"
         >
           {isPending ? "Creating..." : "Create Course"}
         </Button>

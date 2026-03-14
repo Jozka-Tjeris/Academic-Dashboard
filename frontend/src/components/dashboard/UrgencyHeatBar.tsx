@@ -21,7 +21,7 @@ export default function UrgencyHeatBar({ urgency, weight }: Props) {
   const color = getColor(urgency, weight);
 
   return (
-    <div className="w-24 h-2 bg-muted rounded overflow-hidden">
+    <div className="w-24 h-2 bg-gray-200 rounded overflow-hidden">
       <div
         className={`h-full ${color} transition-all`}
         style={{ width: `${width}%` }}

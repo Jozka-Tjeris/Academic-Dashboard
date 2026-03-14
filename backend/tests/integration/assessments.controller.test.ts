@@ -290,7 +290,7 @@ describe("Assessments controller", () => {
 
       const cluster = res.body.clusters[0];
 
-      expect(cluster).toHaveProperty("assessmentIds");
+      expect(cluster).toHaveProperty("assessmentIdAndLabels");
       expect(cluster).toHaveProperty("count");
       expect(cluster.count).toBeGreaterThanOrEqual(2);
     });

@@ -80,6 +80,13 @@ describe("Dashboard Services", () => {
         color: "#ffffff",
       };
 
+      const assessmentsWithCourseName = assessments.map(a => ({
+        ...a,
+        course: {
+          name: "Math"
+        }
+      }))
+
       prismaMock.course.findMany.mockResolvedValue([
         courseWithAssessments
       ]);
@@ -92,8 +99,7 @@ describe("Dashboard Services", () => {
 
       await service.getUserDashboard("user1", NOW);
 
-      expect(mockMetrics).toHaveBeenCalledWith(assessments, NOW);
-
+      expect(mockMetrics).toHaveBeenCalledWith(assessmentsWithCourseName, NOW);
     });
 
     it("calculates grade summaries for each course", async () => {

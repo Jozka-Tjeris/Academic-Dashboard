@@ -54,6 +54,6 @@ export type GradeComponent = Pick<AssessmentShared, "assessmentId" | "weight" | 
 export type Collision = {
   startDate: string,
   endDate: string,
-  assessmentIds: string[],
+  assessmentIdAndLabels: { assessmentId: string, title: string, courseName: string }[],
   count: number,
 }

@@ -16,9 +16,18 @@ export function getDashboardServices(prisma: PrismaClient){
         }
       });
 
-      const allAssessments = courses.flatMap(c => c.assessments);
+      const allAssessmentsWithCourse = courses.flatMap(c => {
+        return c.assessments.map(a => {
+          return {
+            ...a,
+            course: {
+              name: c.name
+            }
+          }
+        });
+      });
 
-      const metrics = buildDashboardMetrics(allAssessments, now);
+      const metrics = buildDashboardMetrics(allAssessmentsWithCourse, now);
 
       return {
         courses: courses.map(course => ({

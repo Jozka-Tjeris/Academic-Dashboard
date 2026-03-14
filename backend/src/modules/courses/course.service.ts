@@ -245,7 +245,16 @@ export function getCourseServices(prisma: PrismaClient){
 
       if(!now) now = new Date();
 
-      const metrics = buildDashboardMetrics(course.assessments, now);
+      const assessmentWithCourse = course.assessments.map(a => {
+        return {
+          ...a,
+          course: {
+            name: course.name
+          }
+        }
+      });
+
+      const metrics = buildDashboardMetrics(assessmentWithCourse, now);
 
       return {
         course: {
