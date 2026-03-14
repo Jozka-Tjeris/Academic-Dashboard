@@ -48,6 +48,7 @@ export const useUpdateAssessment = (courseId: string) => {
         score?: number;
         submissionDate?: Date;
         targetScore?: number;
+        dueDate?: Date;
       };
     }) => updateAssessment(secureFetch, id, data),
 
@@ -59,19 +60,21 @@ export const useUpdateAssessment = (courseId: string) => {
   });
 }
 
-export const useDeleteAssessment = (courseId: string) => {
+export const useDeleteAssessment = () => {
   const { secureFetch } = useApi();
 
   return useMutation({
     mutationFn: ({
       id,
+      courseId,
     }: {
       id: string;
+      courseId: string;
     }) => deleteAssessment(secureFetch, id),
 
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.courses.detail(courseId),
+        queryKey: queryKeys.courses.detail(variables.courseId),
       });
     },
   });

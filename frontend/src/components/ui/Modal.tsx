@@ -16,7 +16,7 @@ export default function Modal({ open, onClose, children }: ModalProps) {
       <div className="bg-white rounded-xl p-6 w-full max-w-md relative">
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-500"
+          className="absolute top-3 right-3 text-gray-500 cursor-pointer"
         >
           ✕
         </button>

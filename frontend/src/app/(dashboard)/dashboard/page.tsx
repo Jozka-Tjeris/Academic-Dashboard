@@ -6,7 +6,7 @@ import UpcomingAssessments from "@/components/dashboard/UpcomingAssessments";
 import UrgentAssessments from "@/components/dashboard/UrgentAssessments";
 import CollisionAlerts from "@/components/dashboard/CollisionAlerts";
 import { useUserDashboard } from "@/hooks/useDashboard";
-import CourseFormModal from "@/components/course/CourseFormModal";
+import CreateCourseForm from "@/components/modal/CreateCourseForm";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 
@@ -39,7 +39,7 @@ export default function DashboardPage() {
           <h2 className="text-xl font-semibold mb-4">
             Courses
           </h2>
-          <Button onClick={() => setOpen(true)}>+ Add Course</Button>
+          <Button onClick={() => setOpen(true)} className="cursor-pointer">+ Add Course</Button>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -52,7 +52,7 @@ export default function DashboardPage() {
       {/* Collisions */}
       <CollisionAlerts />
 
-      <CourseFormModal open={open} onClose={() => setOpen(false)}/>
+      <CreateCourseForm open={open} onClose={() => setOpen(false)}/>
     </div>
   );
 }
