@@ -60,6 +60,10 @@ export const useUpdateCourse = () => {
       });
 
       queryClient.invalidateQueries({
+        queryKey: queryKeys.courses.all,
+      });
+
+      queryClient.invalidateQueries({
         queryKey: queryKeys.dashboard.global,
       });
     },

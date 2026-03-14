@@ -82,7 +82,7 @@ export default function EditCourseForm({
           <Input {...register("description")} />
         </div>
 
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full cursor-pointer">
           Save Changes
         </Button>
       </form>
