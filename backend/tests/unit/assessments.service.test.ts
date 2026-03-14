@@ -518,7 +518,10 @@ describe("Assessment Service", () => {
         maxScore: new Prisma.Decimal(100),
         submissionDate: null,
         createdAt: new Date("2026-03-10"),
-        updatedAt: new Date("2026-03-10")
+        updatedAt: new Date("2026-03-10"),
+        course: {
+          name: ""
+        }
       },
       {
         assessmentId: "a2",
@@ -533,13 +536,25 @@ describe("Assessment Service", () => {
         maxScore: new Prisma.Decimal(100),
         submissionDate: null,
         createdAt: new Date("2026-03-10"),
-        updatedAt: new Date("2026-03-10")
+        updatedAt: new Date("2026-03-10"),
+        course: {
+          name: ""
+        }
       }];
 
       const collisions = {
         "clusters": [
           {
-            "assessmentIds": ["a1", "a2"], 
+            "assessmentIdAndLabels": [{
+              "assessmentId": "a1",
+              "title": "",
+              "courseName": ""
+            }, 
+            {
+              "assessmentId": "a2",
+              "title": "",
+              "courseName": ""
+            }],
             "count": 2, 
             "endDate": "2026-03-10T00:00:00.000Z", 
             "startDate": "2026-03-10T00:00:00.000Z"
