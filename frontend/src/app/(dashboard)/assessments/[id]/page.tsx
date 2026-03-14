@@ -43,7 +43,7 @@ export default function AssessmentPage() {
 
         <div>
           <p className="text-sm text-muted-foreground">Weight</p>
-          <p>{assessment.weight}%</p>
+          <p>{assessment.weight * 100}%</p>
         </div>
 
         <div>

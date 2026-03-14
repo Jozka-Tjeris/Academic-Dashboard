@@ -21,8 +21,15 @@ export default function CollisionAlerts() {
         {clusters.map((c, i) => (
           <li key={i}>
             {c.count} assessments between{" "}
-            {new Date(c.startDate).toLocaleDateString()} –{" "}
+            {new Date(c.startDate).toLocaleDateString()} -{" "}
             {new Date(c.endDate).toLocaleDateString()}
+            <br/>
+            [
+              {c.assessmentIdAndLabels.map((a, i) => {
+              return a.courseName + ": " + a.title + (i < c.assessmentIdAndLabels.length - 1 ? 
+                 ", " : "");
+              })}
+            ]
           </li>
         ))}
       </ul>

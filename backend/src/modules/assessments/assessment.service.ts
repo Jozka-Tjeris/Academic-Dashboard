@@ -193,6 +193,9 @@ export function getAssessmentServices(prisma: PrismaClient){
           course: { userId },
           submissionDate: null,
         },
+        include: {
+          course: true
+        },
         orderBy: {
           dueDate: "asc"
         }

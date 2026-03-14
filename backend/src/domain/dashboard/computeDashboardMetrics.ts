@@ -1,12 +1,12 @@
 import { Prisma } from "@prisma/client";
-import { AssessmentBackend } from "../../types/backendTypes";
+import { AssessmentBackend, AssessmentWithCourseName } from "../../types/backendTypes";
 import { rankAssessmentsByUrgency } from "../assessments/rankAssessmentsByUrgency";
 import { detectDueDateCollisions } from "../assessments/detectDueDateCollisions";
 import { deriveStatusFromDate } from "../assessments/deriveStatusFromDate";
 import { AssessmentStatuses, TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
 
 export function buildDashboardMetrics(
-  assessments: AssessmentBackend[],
+  assessments: AssessmentWithCourseName[],
   now: Date = new Date()
 ){
 

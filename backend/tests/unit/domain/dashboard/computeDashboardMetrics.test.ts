@@ -3,7 +3,7 @@ import { buildDashboardMetrics } from "../../../../src/domain/dashboard/computeD
 import { rankAssessmentsByUrgency } from "../../../../src/domain/assessments/rankAssessmentsByUrgency";
 import { detectDueDateCollisions } from "../../../../src/domain/assessments/detectDueDateCollisions";
 import { deriveStatusFromDate } from "../../../../src/domain/assessments/deriveStatusFromDate";
-import { AssessmentBackend } from "../../../../src/types/backendTypes";
+import { AssessmentBackend, AssessmentWithCourseName } from "../../../../src/types/backendTypes";
 import { AssessmentStatuses } from "@internal_package/shared";
 
 jest.mock("../../../../src/domain/assessments/rankAssessmentsByUrgency");
@@ -19,7 +19,7 @@ const NOW = new Date("2025-01-01T00:00:00Z");
 function createAssessment(
   id: string,
   overrides: Partial<AssessmentBackend> = {}
-): AssessmentBackend {
+): AssessmentWithCourseName {
   return {
     assessmentId: id,
     courseId: "course-1",
@@ -33,6 +33,9 @@ function createAssessment(
     submissionDate: null,
     createdAt: new Date("2024-12-01"),
     updatedAt: new Date("2024-12-01"),
+    course: {
+      name: "courseName"
+    },
     ...overrides,
   };
 }
