@@ -188,6 +188,72 @@ describe("Course Services", () => {
     });
   });
 
+  describe("updateCourse", () => {
+    it("updates a course when it exists", async () => {
+      const existingCourse = {
+        courseId: "course1",
+        userId: "user1",
+        name: "Old Name",
+        description: "",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        color: "#ffffff",
+      };
+
+      prismaMock.course.findFirst.mockResolvedValue(existingCourse);
+
+      prismaMock.course.update.mockResolvedValue({
+        ...existingCourse,
+        name: "New Name",
+      });
+
+      const result = await service.updateCourse("user1", "course1", {
+        name: "New Name",
+      });
+
+      expect(prismaMock.course.findFirst).toHaveBeenCalledWith({
+        where: { courseId: "course1", userId: "user1" },
+      });
+
+      expect(prismaMock.course.update).toHaveBeenCalledWith({
+        where: { courseId: "course1", userId: "user1" },
+        data: { name: "New Name" },
+      });
+
+      expect(result.name).toBe("New Name");
+    });
+
+    it("throws 404 if course not found", async () => {
+      prismaMock.course.findFirst.mockResolvedValue(null);
+
+      await expect(
+        service.updateCourse("user1", "bad-course", { name: "New Name" })
+      ).rejects.toMatchObject({ status: 404 });
+
+      expect(prismaMock.course.update).not.toHaveBeenCalled();
+    });
+
+    it("throws 400 if immutable field is updated", async () => {
+      prismaMock.course.findFirst.mockResolvedValue({
+        courseId: "course1",
+        userId: "user1",
+        name: "Old Name",
+        description: "",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        color: "#ffffff",
+      });
+
+      await expect(
+        service.updateCourse("user1", "course1", {
+          courseId: "new-id",
+        })
+      ).rejects.toMatchObject({ status: 400 });
+
+      expect(prismaMock.course.update).not.toHaveBeenCalled();
+    });
+  });
+
   describe("deleteCourse", () => {
     it("deletes course if it exists and belongs to user", async () => {
       const courseToDelete = {

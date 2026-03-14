@@ -143,6 +143,88 @@ describe("Courses controller test", () => {
     });
   });
 
+  describe("PATCH /courses/:id", () => {
+    let courseId: string;
+
+    beforeAll(async () => {
+      const course = await prisma.course.create({
+        data: {
+          userId,
+          name: `UPDATE_Test_Course_${testId}`,
+          description: "before update",
+        },
+      });
+
+      courseId = course.courseId;
+    });
+
+    it("updates a course", async () => {
+      const res = await request(app)
+        .patch(`/courses/${courseId}`)
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken)
+        .send({
+          name: "Updated Course Name",
+          description: "updated description",
+        });
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty("courseId", courseId);
+      expect(res.body.name).toBe("Updated Course Name");
+      expect(res.body.description).toBe("updated description");
+    });
+
+    it("updates the course in the database", async () => {
+      const course = await prisma.course.create({
+        data: {
+          userId,
+          name: `UPDATE_DB_Test_${testId}`,
+          description: "before",
+        },
+      });
+
+      const res = await request(app)
+        .patch(`/courses/${course.courseId}`)
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken)
+        .send({
+          name: "Updated DB Name",
+          description: "after",
+        });
+
+      expect(res.status).toBe(200);
+
+      const updated = await prisma.course.findFirst({
+        where: { courseId: course.courseId },
+      });
+
+      expect(updated?.name).toBe("Updated DB Name");
+      expect(updated?.description).toBe("after");
+    });
+
+    it("returns 404 if course does not exist", async () => {
+      const res = await request(app)
+        .patch("/courses/nonexistent-id")
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken)
+        .send({
+          name: "Updated Course Name",
+        });
+
+      expect(res.status).toBe(404);
+    });
+
+    it("returns 401 if unauthenticated", async () => {
+      const res = await request(app)
+        .patch(`/courses/${courseId}`)
+        .send({
+          name: "Updated Course Name",
+        });
+
+      expect(res.status).toBe(401);
+    });
+  });
+
   describe("POST /courses/:id/simulate", () => {
     let courseId: string;
 
