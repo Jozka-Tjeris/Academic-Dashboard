@@ -8,6 +8,7 @@ import {
   getCoreRowModel,
   getSortedRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
   flexRender,
   useReactTable,
   SortingState,
@@ -36,6 +37,10 @@ export default function AssessmentTable({ assessments }: AssessmentTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState<AssessmentStatus | null>(null);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
 
   const columns = useMemo<ColumnDef<AssessmentRow>[]>(() => {
 
@@ -150,13 +155,16 @@ export default function AssessmentTable({ assessments }: AssessmentTableProps) {
     state: {
       sorting,
       globalFilter,
+      pagination,
     },
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
+    onPaginationChange: setPagination,
 
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
   if (assessments.length === 0) {
@@ -257,6 +265,36 @@ export default function AssessmentTable({ assessments }: AssessmentTableProps) {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="flex items-center justify-between mt-4">
+        <div className="w-[25%]" />
+
+        {table.getCanPreviousPage() ? (<button
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+          className="w-[10%] text-center cursor-pointer hover:bg-gray-200 rounded-lg"
+        >
+          &lt;
+        </button>) : (
+          <div className="w-[10%]"/>
+        )}
+
+        <span className="w-[30%] text-center">
+          Page {table.getState().pagination.pageIndex + 1} of{" "}
+          {table.getPageCount()}
+        </span>
+
+        {table.getCanNextPage() ? (<button
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+          className="w-[10%] text-center cursor-pointer hover:bg-gray-200 rounded-lg"
+        >
+          &gt;
+        </button>) : (
+          <div  className="w-[10%]"/>
+        )}
+
+        <div className="w-[25%]" />
       </div>
     </div>
   );
