@@ -1,12 +1,11 @@
 import { useCheckAuth, useLogout } from "@/hooks/useAuth";
-import { UserAvatar } from "../user/UserAvatar";
+import AccountMenu from "./AccountMenu";
 
 interface TopbarProps {
   title: string;
 }
 
 export default function Topbar({ title }: TopbarProps) {
-  const logout  = useLogout();
   const { data } = useCheckAuth();
 
   const user = { 
@@ -17,13 +16,7 @@ export default function Topbar({ title }: TopbarProps) {
     <header className="h-16 bg-white border-b flex items-center justify-between px-6">
       <h1 className="text-xl font-semibold">{title}</h1>
 
-      <div onClick={() => logout.mutate()}>
-        <UserAvatar
-          name={user.name}
-          imageUrl={user.imageUrl}
-          size={36}
-        />
-      </div>
+      <AccountMenu name={user.name} imageUrl={user.imageUrl} />
     </header>
   );
 }
