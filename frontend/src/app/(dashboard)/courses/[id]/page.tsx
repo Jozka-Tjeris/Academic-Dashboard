@@ -66,6 +66,13 @@ export default function CoursePage() {
         Open Grade Simulator
       </Link>
 
+      <Link
+        href={`/courses/${id}/analytics`}
+        className="text-blue-600 hover:underline"
+      >
+        Open Course Analytics
+      </Link>
+
       <CreateAssessmentForm courseId={id} />
 
       <AssessmentTable

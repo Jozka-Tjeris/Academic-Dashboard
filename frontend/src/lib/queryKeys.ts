@@ -16,6 +16,10 @@ export const queryKeys = {
 
   collisions: ["collisions"] as const,
 
+  analytics: {
+    course: (id: string) => ["analytics", "course", id]
+  },
+
   auth: {
     me: ["api", "auth", "me"] as const,
     logout: ["api", "auth", "logout"] as const,
