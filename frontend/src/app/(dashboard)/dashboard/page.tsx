@@ -50,7 +50,7 @@ export default function DashboardPage() {
       </section>
 
       {/* Collisions */}
-      <CollisionAlerts />
+      <CollisionAlerts clusters={dashboard.collisions}/>
 
       <CreateCourseForm open={open} onClose={() => setOpen(false)}/>
     </div>

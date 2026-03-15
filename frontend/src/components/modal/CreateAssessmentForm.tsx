@@ -44,7 +44,7 @@ export default function AddAssessmentForm({ courseId }: { courseId: string }) {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)}>
+      <Button onClick={() => setOpen(true)} className="cursor-pointer">
         Add Assessment
       </Button>
 
