@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import AssessmentActions from "../assessment/AssessmentActions";
 import UrgencyHeatBar from "./UrgencyHeatBar";
 import { AssessmentWithUrgency } from "@/types/dashboard";
@@ -9,6 +10,8 @@ export default function UrgentAssessments({
 }: {
   assessments: AssessmentWithUrgency[];
 }) {
+  const router = useRouter();
+
   const urgent = assessments
     .filter(a => !!!a.submissionDate)
     .sort((a, b) => (b.urgency ?? 0) - (a.urgency ?? 0))
@@ -35,7 +38,8 @@ export default function UrgentAssessments({
         {urgent.map((a) => (
           <li
             key={a.assessmentId}
-            className="flex items-center justify-between gap-4"
+            className="rounded hover:bg-muted/60 cursor-pointer flex items-center justify-between gap-4"
+            onClick={() => router.push(`/assessments/${a.assessmentId}`)}
           >
             <div className="flex flex-col">
               <span className="font-medium">{a.title}</span>

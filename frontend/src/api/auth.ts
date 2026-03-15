@@ -2,7 +2,12 @@ import { Fetcher } from "@/types/fetcher";
 import { handleResponse } from "./handleResponse";
 
 export const getAuth = (fetcher: Fetcher) => 
-  fetcher("/api/auth/me").then(res => handleResponse<Response>(res));
+  fetcher("/api/auth/me").then(res => handleResponse<{
+    id: string,
+    email: string,
+    name: string | null,
+    image: string | null,
+  }>(res));
 
 export const logout = (fetcher: Fetcher) =>
   fetcher("/api/auth/logout", {

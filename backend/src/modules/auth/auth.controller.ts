@@ -6,12 +6,13 @@ import { AuthenticatedRequest } from '../../types/express';
 import crypto from "crypto";
 
 export function googleCallback(req: Request, res: Response) {
-  const user = req.user as { sub: string; email: string; name?: string };
+  const user = req.user as { sub: string; email: string; name?: string, image?: string };
 
   const token = signToken({
     sub: user.sub,
     email: user.email,
     name: user.name,
+    image: user.image,
   });
 
   const csrfToken = crypto.randomBytes(32).toString("hex");
@@ -55,5 +56,6 @@ export function getCurrentUser(req: AuthenticatedRequest, res: Response) {
     id: user.sub,
     email: user.email,
     name: user.name ?? null,
+    image: user.image ?? null,
   });
 }
