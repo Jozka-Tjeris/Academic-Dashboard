@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { CourseShared, MAX_GRADE } from "@internal_package/shared";
+import { CourseShared } from "@internal_package/shared";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import GradeProgress from "../grade/GradeProgress";
 import CourseActions from "./CourseActions";
@@ -12,7 +12,7 @@ export default function CourseCard({ course }: { course: CourseShared }) {
 
   const gradeText =
     currentGrade !== null
-      ? `${(currentGrade * MAX_GRADE).toFixed(2)} / ${MAX_GRADE.toFixed(2)}`
+      ? `${(currentGrade * 100).toFixed(2)} / ${100}`
       : gradeMessage || "N/A";
 
   // Navigation handler for the whole card

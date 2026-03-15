@@ -6,6 +6,7 @@ import {
   createCourse,
   deleteCourse,
   updateCourse,
+  calculateCourseGoal,
 } from "@/api/courses";
 import { queryKeys } from "@/lib/queryKeys";
 import { queryClient } from "@/lib/queryClient";
@@ -84,6 +85,21 @@ export const useDeleteCourse = () => {
 
       queryClient.invalidateQueries({
         queryKey: queryKeys.dashboard.global,
+      });
+    },
+  });
+};
+
+export const useCalculateCourseGradeGoal = (courseId: string) => {
+  const { secureFetch } = useApi();
+
+  return useMutation({
+    mutationFn: (targetGrade: number) => 
+      calculateCourseGoal(secureFetch, courseId, targetGrade),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.courses.goal(courseId),
       });
     },
   });

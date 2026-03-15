@@ -57,3 +57,17 @@ export type Collision = {
   assessmentIdAndLabels: { assessmentId: string, title: string, courseName: string }[],
   count: number,
 }
+
+export type GoalInput = {
+  targetGrade: number; // 0.0 - 1.0
+  assessments: AssessmentShared[];
+}
+
+export type GoalOutput = {
+  possible: boolean;
+  averageRequiredPercent?: number;
+  nextAssessmentRequiredScore?: number;
+  requiredScores?: { assessmentId: string; requiredScore: number }[];
+  message?: string;
+}
+

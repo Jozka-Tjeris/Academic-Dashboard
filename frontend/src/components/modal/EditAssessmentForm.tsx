@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/Input";
 import Modal from "@/components/ui/Modal";
 import { useEffect } from "react";
 import { z } from "zod";
-import { AssessmentShared } from "@internal_package/shared";
+import { AssessmentShared, AssessmentStatuses } from "@internal_package/shared";
 
 type FormData = z.infer<typeof createAssessmentSchema>;
 
@@ -99,6 +99,7 @@ export default function EditAssessmentForm({
           <Input
             type="number"
             {...register("maxScore", { valueAsNumber: true })}
+            disabled={assessment.status === AssessmentStatuses.GRADED}
           />
         </div>
 

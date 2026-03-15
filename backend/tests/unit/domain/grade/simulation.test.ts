@@ -1,6 +1,6 @@
 import { GradeComponent } from "../../../../src/types/backendTypes";
 import { simulateFinalGrade } from "../../../../src/domain/grade/simulation";
-import { INVALID_GRADE, TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
+import { DEFAULT_MAX_SCORE, INVALID_GRADE, TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
 import { Prisma } from "@prisma/client";
 
 describe("Grade Simulation Functions with Late Penalties", () => {
@@ -12,7 +12,7 @@ describe("Grade Simulation Functions with Late Penalties", () => {
       assessmentId: "a1",
       score: new Prisma.Decimal(80),
       weight: new Prisma.Decimal(0.4),
-      maxScore: null,
+      maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE),
       submissionDate: today,
       dueDate: today, // on time, no penalty
     },
@@ -20,7 +20,7 @@ describe("Grade Simulation Functions with Late Penalties", () => {
       assessmentId: "a2",
       score: null,
       weight: new Prisma.Decimal(0.6),
-      maxScore: null,
+      maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE),
       submissionDate: null,
       dueDate: today, // unsubmitted, will only use maxScore if needed
     }
@@ -63,8 +63,8 @@ describe("Grade Simulation - Edge Cases with Penalties", () => {
   describe("simulateFinalGrade", () => {
     test("simulate all assessments with custom scores", () => {
       const assessments: GradeComponent[] = [
-        { assessmentId: "a1", score: null, weight: new Prisma.Decimal(0.5), maxScore: null, submissionDate: null, dueDate: today },
-        { assessmentId: "a2", score: null, weight: new Prisma.Decimal(0.5), maxScore: null, submissionDate: null, dueDate: today }
+        { assessmentId: "a1", score: null, weight: new Prisma.Decimal(0.5), maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE), submissionDate: null, dueDate: today },
+        { assessmentId: "a2", score: null, weight: new Prisma.Decimal(0.5), maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE), submissionDate: null, dueDate: today }
       ];
       const simulated = [
         { assessmentId: "a1", simulatedScore: new Prisma.Decimal(80) },
@@ -77,8 +77,8 @@ describe("Grade Simulation - Edge Cases with Penalties", () => {
 
     test("simulate with some scores missing, actual submissions get penalties", () => {
       const assessments: GradeComponent[] = [
-        { assessmentId: "a1", score: new Prisma.Decimal(80), weight: new Prisma.Decimal(0.5), maxScore: null, submissionDate: today, dueDate: today },
-        { assessmentId: "a2", score: null, weight: new Prisma.Decimal(0.5), maxScore: null, submissionDate: null, dueDate: today }
+        { assessmentId: "a1", score: new Prisma.Decimal(80), weight: new Prisma.Decimal(0.5), maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE), submissionDate: today, dueDate: today },
+        { assessmentId: "a2", score: null, weight: new Prisma.Decimal(0.5), maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE), submissionDate: null, dueDate: today }
       ];
       const simulated = [
         { assessmentId: "a2", simulatedScore: new Prisma.Decimal(70) }
@@ -90,8 +90,8 @@ describe("Grade Simulation - Edge Cases with Penalties", () => {
 
     test("applies late penalty to non-simulated actual submission only", () => {
       const assessments: GradeComponent[] = [
-        { assessmentId: "a1", score: new Prisma.Decimal(80), weight: new Prisma.Decimal(0.5), maxScore: null, submissionDate: new Date(today.getTime() + TWENTYFOUR_HOURS_IN_MS), dueDate: today },
-        { assessmentId: "a2", score: null, weight: new Prisma.Decimal(0.5), maxScore: null, submissionDate: null, dueDate: today }
+        { assessmentId: "a1", score: new Prisma.Decimal(80), weight: new Prisma.Decimal(0.5), maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE), submissionDate: new Date(today.getTime() + TWENTYFOUR_HOURS_IN_MS), dueDate: today },
+        { assessmentId: "a2", score: null, weight: new Prisma.Decimal(0.5), maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE), submissionDate: null, dueDate: today }
       ];
       const simulated = [
         { assessmentId: "a2", simulatedScore: new Prisma.Decimal(70) }

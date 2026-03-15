@@ -22,6 +22,10 @@ export const useCreateAssessment = (courseId: string) => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.courses.detail(courseId),
       });
+
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.dashboard.course(courseId),
+      });
     },
   });
 }

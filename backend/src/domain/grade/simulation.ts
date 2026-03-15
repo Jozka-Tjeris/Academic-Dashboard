@@ -1,4 +1,4 @@
-import { DEFAULT_MAX_SCORE, INVALID_GRADE, EPSILON, MAX_GRADE, MAX_ASSESSMENT_WEIGHT } from "@internal_package/shared";
+import { DEFAULT_MAX_SCORE, INVALID_GRADE, EPSILON, MAX_ASSESSMENT_WEIGHT } from "@internal_package/shared";
 import { GradeComponent } from "../../types/backendTypes";
 import { Prisma } from "@prisma/client";
 import { applyLatePenalty } from "./latePenalty";
@@ -46,5 +46,5 @@ export function simulateFinalGrade(
     finalGrade = finalGrade.plus(scoreToUse.div(maxScore).mul(assessment.weight));
   }
 
-  return Prisma.Decimal.min(Prisma.Decimal.max(finalGrade, 0), MAX_GRADE);
+  return Prisma.Decimal.min(Prisma.Decimal.max(finalGrade, 0), 1);
 }

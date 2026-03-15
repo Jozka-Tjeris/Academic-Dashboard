@@ -1,6 +1,7 @@
 import { AssessmentWithCourseName } from "../../../../src/types/backendTypes";
 import { detectDueDateCollisions } from "../../../../src/domain/assessments/detectDueDateCollisions";
 import { Prisma } from "@prisma/client";
+import { DEFAULT_MAX_SCORE } from "@internal_package/shared";
 
 // Reusable base assessments
 const baseAssessments: AssessmentWithCourseName[] = [
@@ -12,7 +13,7 @@ const baseAssessments: AssessmentWithCourseName[] = [
     score: new Prisma.Decimal(80),
     targetScore: null,
     weight: new Prisma.Decimal(0.4),
-    maxScore: null,
+    maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE),
     submissionDate: new Date(),
     dueDate: new Date(),
     createdAt: new Date(),
@@ -29,7 +30,7 @@ const baseAssessments: AssessmentWithCourseName[] = [
     score: null,
     targetScore: null,
     weight: new Prisma.Decimal(0.3),
-    maxScore: null,
+    maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE),
     submissionDate: new Date(),
     dueDate: new Date(),
     createdAt: new Date(),

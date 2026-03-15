@@ -14,7 +14,7 @@ export type CourseBackend = Omit<CourseShared, 'assessments' | 'gradeSummary'> &
 export type AssessmentBackend = Omit<AssessmentShared, 'score' | 'targetScore' | 'maxScore' | 'weight' | 'status' > & {
   score: Prisma.Decimal | null
   targetScore: Prisma.Decimal | null
-  maxScore: Prisma.Decimal | null
+  maxScore: Prisma.Decimal
   weight: Prisma.Decimal,
 }
 
@@ -25,3 +25,8 @@ export type AssessmentWithCourseName = AssessmentBackend & {
     name: string;
   }
 };
+
+export type GoalInputBackend = {
+  targetGrade: Prisma.Decimal;
+  assessments: GradeComponent[];
+}

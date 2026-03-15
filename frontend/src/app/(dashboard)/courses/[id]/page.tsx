@@ -7,7 +7,7 @@ import AssessmentTable from "@/components/assessment/AssessmentTable";
 import Link from "next/link";
 import { Spinner } from "@/components/ui/Spinner";
 import { useCourseDashboard } from "@/hooks/useDashboard";
-import { AssessmentStatusMetadata, MAX_GRADE } from "@internal_package/shared";
+import { AssessmentStatusMetadata } from "@internal_package/shared";
 import CourseActions from "@/components/course/CourseActions";
 import CollisionAlerts from "@/components/dashboard/CollisionAlerts";
 
@@ -29,7 +29,7 @@ export default function CoursePage() {
 
   const gradeText =
     currentGrade !== null
-      ? `${(currentGrade * MAX_GRADE).toFixed(2)} / ${MAX_GRADE.toFixed(2)}`
+      ? `${(currentGrade * 100).toFixed(2)} / ${100}`
       : gradeMessage || "N/A";
 
   return (
@@ -65,16 +65,23 @@ export default function CoursePage() {
       <div className="flex gap-4">
         <Link
           href={`/courses/${id}/simulator`}
-          className="bg-blue-600 text-white hover:underline font-medium py-1 px-2 rounded-md"
+          className="bg-blue-600 text-white font-medium py-1 px-2 rounded-md"
         >
           Grade Simulator
         </Link>
 
         <Link
           href={`/courses/${id}/analytics`}
-          className="bg-green-600 text-white hover:underline font-medium py-1 px-2 rounded-md"
+          className="bg-green-600 text-white font-medium py-1 px-2 rounded-md"
         >
           Course Analytics
+        </Link>
+
+        <Link
+          href={`/courses/${id}/goal`}
+          className="bg-yellow-500 text-white font-medium py-1 px-2 rounded-md"
+        >
+          Goal Calculator
         </Link>
 
         {/* Create Assessment */}

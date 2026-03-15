@@ -70,7 +70,7 @@ export default function AddAssessmentForm({ courseId }: { courseId: string }) {
           </div>
 
 
-          <label htmlFor="date">Date</label>
+          <label htmlFor="date">Due Date</label>
           <Input
             type="date"
             {...register("dueDate")}

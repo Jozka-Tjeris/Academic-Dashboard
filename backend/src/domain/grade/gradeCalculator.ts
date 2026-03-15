@@ -1,4 +1,4 @@
-import { DEFAULT_MAX_SCORE, EPSILON, INVALID_GRADE, MAX_ASSESSMENT_WEIGHT, MAX_GRADE } from "@internal_package/shared";
+import { EPSILON, INVALID_GRADE, MAX_ASSESSMENT_WEIGHT } from "@internal_package/shared";
 import { GradeComponent } from "../../types/backendTypes";
 import { Prisma } from "@prisma/client";
 import { applyLatePenalty } from "./latePenalty";
@@ -16,11 +16,11 @@ export function calculateCurrentGrade(assessments: GradeComponent[]): Prisma.Dec
 
   for (const assessment of assessments) {
     // Ignore any assessment with 0 max score or weight
-    if(assessment.maxScore?.eq(0) || assessment.weight.eq(0)){
+    if(!assessment.maxScore || assessment.maxScore.lte(0) || assessment.weight.lte(0)){
       continue;
     }
     const rawScore = assessment.score ?? new Prisma.Decimal(0);
-    const maxScore = assessment.maxScore ?? new Prisma.Decimal(DEFAULT_MAX_SCORE);
+    const maxScore = assessment.maxScore;
 
     // Only apply penalty if submission exists
     const penaltyFraction = assessment.submissionDate && assessment.dueDate 
@@ -28,11 +28,13 @@ export function calculateCurrentGrade(assessments: GradeComponent[]): Prisma.Dec
       : new Prisma.Decimal(0);
     const scoreWithPenalty = applyLatePenalty(rawScore, maxScore, penaltyFraction);
 
-    finalGrade = finalGrade.plus(scoreWithPenalty.div(maxScore).mul(assessment.weight));
+    const normalized = Prisma.Decimal.min(Prisma.Decimal.max(scoreWithPenalty.div(maxScore), 0), 1);
+
+    finalGrade = finalGrade.plus(normalized.mul(assessment.weight));
   }
 
   // Clamp final grade between 0 and MAX_GRADE
-  return Prisma.Decimal.min(Prisma.Decimal.max(finalGrade, 0), MAX_GRADE);
+  return Prisma.Decimal.min(Prisma.Decimal.max(finalGrade, 0), 1);
 }
 
 /**
@@ -47,23 +49,25 @@ export function calculateMaxPossibleGrade(assessments: GradeComponent[]): Prisma
 
   for (const assessment of assessments) {
     // Ignore any assessment with 0 max score or weight
-    if(assessment.maxScore?.eq(0) || assessment.weight.eq(0)){
+     if(!assessment.maxScore || assessment.maxScore.lte(0) || assessment.weight.lte(0)){
       continue;
     }
-    const rawScore = assessment.score ?? assessment.maxScore ?? new Prisma.Decimal(DEFAULT_MAX_SCORE);
-    const maxScore = assessment.maxScore ?? new Prisma.Decimal(DEFAULT_MAX_SCORE);
+    const rawScore = assessment.score ?? assessment.maxScore;
+    const maxScore = assessment.maxScore;
 
     let scoreToUse: Prisma.Decimal;
     if (assessment.score != null && assessment.submissionDate && assessment.dueDate) {
       const penaltyFraction = computeLateFraction(assessment.submissionDate, assessment.dueDate);
       scoreToUse = applyLatePenalty(rawScore, maxScore, penaltyFraction);
+
+      scoreToUse = Prisma.Decimal.min(Prisma.Decimal.max(scoreToUse.div(maxScore), 0), 1);
     } else {
-      scoreToUse = rawScore; // unsubmitted assignments: assume full score
+      scoreToUse = rawScore.div(maxScore); // unsubmitted assignments: assume full score
     }
 
-    finalGrade = finalGrade.plus(scoreToUse.div(maxScore).mul(assessment.weight));
+    finalGrade = finalGrade.plus(scoreToUse.mul(assessment.weight));
   }
 
   // Clamp final grade between 0 and MAX_GRADE
-  return Prisma.Decimal.min(Prisma.Decimal.max(finalGrade, 0), MAX_GRADE);
+  return Prisma.Decimal.min(Prisma.Decimal.max(finalGrade, 0), 1);
 }
