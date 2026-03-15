@@ -30,6 +30,7 @@ export default function AddAssessmentForm({ courseId }: { courseId: string }) {
   const onSubmit = (data: FormData) => {
     mutation.mutate({
       ...data,
+      weight: data.weight / 100,
       dueDate: new Date(data.dueDate),
     });
 
@@ -43,7 +44,7 @@ export default function AddAssessmentForm({ courseId }: { courseId: string }) {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)}>
+      <Button onClick={() => setOpen(true)} className="cursor-pointer">
         Add Assessment
       </Button>
 
@@ -79,7 +80,6 @@ export default function AddAssessmentForm({ courseId }: { courseId: string }) {
           <Input
             type="number"
             placeholder="Weight"
-            step="0.01"
             {...register("weight", { valueAsNumber: true })}
           />
 

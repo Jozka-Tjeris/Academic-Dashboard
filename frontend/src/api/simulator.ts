@@ -4,13 +4,13 @@ import { handleResponse } from "./handleResponse";
 export type SimulationInput = {
   assessmentId: string;
   simulatedScore: number;
-  targetScore?: number;
+  targetScore: number | null;
 };
 
 export type SimulationResult = {
   currentGrade: number;
-  simulatedGrade: number;
   maxPossibleGrade: number;
+  simulatedFinalGrade: number;
 };
 
 export const simulateCourse = (
@@ -23,6 +23,6 @@ export const simulateCourse = (
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ assessments: data }),
+    body: JSON.stringify({ simulations: data }),
   }).then((res) => handleResponse<SimulationResult>(res))
 );
