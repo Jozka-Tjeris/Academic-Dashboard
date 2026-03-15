@@ -1,48 +1,36 @@
 "use client";
 
 import { useParams } from "next/navigation";
+import { Spinner } from "@/components/ui/Spinner";
 import { useCourse } from "@/hooks/useCourses";
 import SimulatorTable from "@/components/simulator/SimulatorTable";
-import { useCourseSimulation } from "@/hooks/useSimulator";
-import { useState } from "react";
-import { SimulationInput, SimulationResult } from "@/api/simulator";
 
 export default function SimulatorPage() {
+
   const params = useParams();
-  const id = params.id as string;
+  const courseId = params.id as string;
 
-  const { data, isLoading } = useCourse(id);
-  const simulate = useCourseSimulation(id);
+  const { data: course, isLoading, isError } = useCourse(courseId);
 
-  const [result, setResult] = useState<SimulationResult | null>(null);
+  if (isLoading) return <Spinner />;
 
-  if (isLoading || !data) return <p>Loading...</p>;
-
-  const runSimulation = (payload: SimulationInput[]) => {
-    simulate.mutate(payload, {
-      onSuccess: (res) => setResult(res),
-    });
-  };
+  if (isError || !course) {
+    return <div>Failed to load course</div>;
+  }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 h-full">
+
+      <h1 className="text-2xl font-semibold h-8">
+        {course.name} - Grade Simulator
+      </h1>
+
       <SimulatorTable
-        assessments={data.assessments ?? []}
-        onRunSimulation={runSimulation}
+        courseId={courseId}
+        assessments={course.assessments ?? []}
+        currentGrade={course.gradeSummary.currentGrade}
       />
 
-      {result && (
-        <div className="mt-6 bg-green-50 border border-green-200 rounded-lg p-4">
-          <h3 className="font-semibold mb-1">
-            Projected Grade
-          </h3>
-
-          <p className="text-lg font-bold">
-            {result.simulatedGrade.toFixed(2)} /{" "}
-            {result.maxPossibleGrade.toFixed(2)}
-          </p>
-        </div>
-      )}
     </div>
   );
 }

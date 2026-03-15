@@ -42,7 +42,7 @@ export type AssessmentShared = {
   status: AssessmentStatus,
   score: number | null,
   targetScore: number | null,
-  maxScore: number | null,
+  maxScore: number,
   weight: number,
   submissionDate: Date | null,
   createdAt: Date,
