@@ -101,7 +101,7 @@ export default function AssessmentTable({ assessments }: AssessmentTableProps) {
           const row = info.row.original;
           return row.score !== null && row.maxScore
             ? `${row.score}/${row.maxScore}`
-            : "—";
+            : `—/${row.maxScore}`;
         },
       },
       {

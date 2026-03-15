@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AssessmentShared } from "@internal_package/shared";
+import { AssessmentShared, AssessmentStatuses } from "@internal_package/shared";
 import { useDeleteAssessment } from "@/hooks/useAssessments";
 
 import EditAssessmentForm from "@/components/modal/EditAssessmentForm";
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { MoreVertical } from "lucide-react";
+import SubmitAssessmentForm from "../modal/SubmitAssessmentForm";
 
 interface Props {
   assessment: AssessmentShared & { courseId: string };
@@ -29,6 +30,7 @@ export default function AssessmentActions({
 }: Props) {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [submitOpen, setSubmitOpen] = useState(false);
 
   const deleteMutation = useDeleteAssessment();
 
@@ -50,6 +52,15 @@ export default function AssessmentActions({
     <>
       <button
         className="text-blue-600 hover:underline cursor-pointer"
+        onClick={(e) => {
+          e.stopPropagation();
+          setSubmitOpen(true);
+        }}
+      >
+        Submit
+      </button>
+      <button
+        className="hover:underline cursor-pointer"
         onClick={(e) => {
           e.stopPropagation();
           setEditOpen(true);
@@ -85,6 +96,20 @@ export default function AssessmentActions({
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={(e) => {
               e.stopPropagation();
+              setSubmitOpen(true);
+            }}
+              className="text-blue-600 cursor-pointer">
+              {(assessment.status !== AssessmentStatuses.SUBMITTED &&
+                assessment.status !== AssessmentStatuses.GRADED) 
+                ? "Submit" 
+                : assessment.status === AssessmentStatuses.SUBMITTED 
+                  ? "Submit With Score"
+                  : "Check Score"
+              }
+            </DropdownMenuItem>
+
+            <DropdownMenuItem onClick={(e) => {
+              e.stopPropagation();
               setEditOpen(true);
             }}
               className="cursor-pointer">
@@ -103,6 +128,16 @@ export default function AssessmentActions({
           </DropdownMenuContent>
         </DropdownMenu>
       )}
+
+      <SubmitAssessmentForm
+        open={submitOpen}
+        onClose={() => setSubmitOpen(false)}
+        assessmentId={assessment.assessmentId}
+        status={assessment.status}
+        courseId={assessment.courseId}
+        currentScore={assessment.score}
+        maxScore={assessment.maxScore}
+      />
 
       <EditAssessmentForm
         open={editOpen}

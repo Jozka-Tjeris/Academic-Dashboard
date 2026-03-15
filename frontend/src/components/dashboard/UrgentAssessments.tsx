@@ -1,5 +1,6 @@
 "use client";
 
+import AssessmentActions from "../assessment/AssessmentActions";
 import UrgencyHeatBar from "./UrgencyHeatBar";
 import { AssessmentWithUrgency } from "@/types/dashboard";
 
@@ -48,6 +49,7 @@ export default function UrgentAssessments({
               urgency={a.urgency ?? 0}
               weight={a.weight ?? 0}
             />
+            <AssessmentActions assessment={a}/>
           </li>
         ))}
       </ul>

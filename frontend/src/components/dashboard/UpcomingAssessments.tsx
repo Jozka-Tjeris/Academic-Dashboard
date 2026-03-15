@@ -1,4 +1,5 @@
 import { AssessmentShared, AssessmentStatuses } from "@internal_package/shared";
+import AssessmentActions from "../assessment/AssessmentActions";
 
 export default function UpcomingAssessments({
   assessments,
@@ -22,6 +23,7 @@ export default function UpcomingAssessments({
             <span className="text-muted-foreground text-sm">
               {new Date(a.dueDate).toLocaleDateString()}
             </span>
+            <AssessmentActions assessment={a}/>
           </li>
         ))}
       </ul>

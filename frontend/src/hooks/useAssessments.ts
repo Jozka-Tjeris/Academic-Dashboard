@@ -45,7 +45,11 @@ export const useUpdateAssessment = (courseId: string) => {
     }: {
       id: string;
       data: {
-        score?: number;
+        title?: string;
+        weight?: number;
+        maxScore?: number;
+        description?: string;
+        score?: number | null;
         submissionDate?: Date;
         targetScore?: number;
         dueDate?: Date;

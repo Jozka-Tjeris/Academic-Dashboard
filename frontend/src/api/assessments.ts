@@ -40,7 +40,12 @@ export const getAssessment = (fetcher: Fetcher, id: string) =>
   );
 
 export const updateAssessment = (fetcher: Fetcher, assessmentId: string, data: {
-  score?: number,
+  title?: string,
+  dueDate?: Date,
+  weight?: number,
+  maxScore?: number,
+  description?: string,
+  score?: number | null,
   submissionDate?: Date,
   targetScore?: number
 }) => 

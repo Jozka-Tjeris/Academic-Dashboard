@@ -44,9 +44,9 @@ export default function AddAssessmentForm({ courseId }: { courseId: string }) {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} className="cursor-pointer">
+      <button onClick={() => setOpen(true)} className="cursor-pointer px-2 py-1 bg-black rounded-md text-white">
         Add Assessment
-      </Button>
+      </button>
 
       <Modal open={open} onClose={() => setOpen(false)}>
 
