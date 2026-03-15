@@ -76,6 +76,10 @@ export default function CoursePage() {
         >
           Course Analytics
         </Link>
+
+        {/* Create Assessment */}
+
+        <CreateAssessmentForm courseId={id} />
       </div>
 
       {/* Workload Stats */}
@@ -123,14 +127,10 @@ export default function CoursePage() {
 
       <CollisionAlerts clusters={dashboard.collisions} />
 
-      {/* Create Assessment */}
-
-      <CreateAssessmentForm courseId={id} />
-
       {/* Upcoming Assessments */}
 
       <AssessmentTable
-        assessments={dashboard.workload.upcomingAssessments ?? []}
+        assessments={dashboard.course.assessments ?? []}
       />
     </div>
   );
