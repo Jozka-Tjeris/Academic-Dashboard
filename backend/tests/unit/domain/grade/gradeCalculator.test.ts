@@ -1,6 +1,6 @@
 import { calculateCurrentGrade, calculateMaxPossibleGrade } from "../../../../src/domain/grade/gradeCalculator";
 import { GradeComponent } from "../../../../src/types/backendTypes";
-import { INVALID_GRADE, TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
+import { DEFAULT_MAX_SCORE, INVALID_GRADE, TWENTYFOUR_HOURS_IN_MS } from "@internal_package/shared";
 import { Prisma } from "@prisma/client";
 
 describe("Grade Calculation Functions with Late Penalties", () => {
@@ -12,7 +12,7 @@ describe("Grade Calculation Functions with Late Penalties", () => {
       assessmentId: "a1",
       score: new Prisma.Decimal(80),
       weight: new Prisma.Decimal(0.4),
-      maxScore: null,
+      maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE),
       submissionDate: today,
       dueDate: today, // on time, no penalty
     },
@@ -20,7 +20,7 @@ describe("Grade Calculation Functions with Late Penalties", () => {
       assessmentId: "a2",
       score: null,
       weight: new Prisma.Decimal(0.6),
-      maxScore: null,
+      maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE),
       submissionDate: null,
       dueDate: today, // unsubmitted, assume maxScore for max grade
     }
@@ -39,7 +39,7 @@ describe("Grade Calculation Functions with Late Penalties", () => {
           assessmentId: "a1",
           score: new Prisma.Decimal(80),
           weight: new Prisma.Decimal(1),
-          maxScore: null,
+          maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE),
           submissionDate: tomorrow, // 1 day late
           dueDate: today,
         }
@@ -69,7 +69,7 @@ describe("Grade Calculation Functions with Late Penalties", () => {
           assessmentId: "a1",
           score: new Prisma.Decimal(80),
           weight: new Prisma.Decimal(0.4),
-          maxScore: null,
+          maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE),
           submissionDate: tomorrow, // late
           dueDate: today,
         },
@@ -77,7 +77,7 @@ describe("Grade Calculation Functions with Late Penalties", () => {
           assessmentId: "a2",
           score: null,
           weight: new Prisma.Decimal(0.6),
-          maxScore: null,
+          maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE),
           submissionDate: null,
           dueDate: today,
         }
@@ -101,8 +101,8 @@ describe("Grade Calculation Functions - Edge Cases with Penalties", () => {
   describe("calculateCurrentGrade", () => {
     test("all scores null should return 0", () => {
       const assessments: GradeComponent[] = [
-        { assessmentId: "a1", score: null, weight: new Prisma.Decimal(0.5), maxScore: null, submissionDate: null, dueDate: today },
-        { assessmentId: "a2", score: null, weight: new Prisma.Decimal(0.5), maxScore: null, submissionDate: null, dueDate: today }
+        { assessmentId: "a1", score: null, weight: new Prisma.Decimal(0.5), maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE), submissionDate: null, dueDate: today },
+        { assessmentId: "a2", score: null, weight: new Prisma.Decimal(0.5), maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE), submissionDate: null, dueDate: today }
       ];
       const grade = calculateCurrentGrade(assessments);
       expect(grade.toNumber()).toBe(0);
@@ -110,8 +110,8 @@ describe("Grade Calculation Functions - Edge Cases with Penalties", () => {
 
     test("weights sum slightly off due to floating point", () => {
       const assessments: GradeComponent[] = [
-        { assessmentId: "a1", score: new Prisma.Decimal(80), weight: new Prisma.Decimal(0.3333333), maxScore: null, submissionDate: today, dueDate: today },
-        { assessmentId: "a2", score: new Prisma.Decimal(90), weight: new Prisma.Decimal(0.6666667), maxScore: null, submissionDate: today, dueDate: today }
+        { assessmentId: "a1", score: new Prisma.Decimal(80), weight: new Prisma.Decimal(0.3333333), maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE), submissionDate: today, dueDate: today },
+        { assessmentId: "a2", score: new Prisma.Decimal(90), weight: new Prisma.Decimal(0.6666667), maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE), submissionDate: today, dueDate: today }
       ];
       const grade = calculateCurrentGrade(assessments);
       expect(grade.toNumber()).toBeCloseTo(0.8*0.3333333 + 0.9*0.6666667);
@@ -119,8 +119,8 @@ describe("Grade Calculation Functions - Edge Cases with Penalties", () => {
 
     test("weight sum far off should return INVALID_GRADE", () => {
       const assessments: GradeComponent[] = [
-        { assessmentId: "a1", score: new Prisma.Decimal(80), weight: new Prisma.Decimal(0.3), maxScore: null, submissionDate: today, dueDate: today },
-        { assessmentId: "a2", score: new Prisma.Decimal(90), weight: new Prisma.Decimal(0.4), maxScore: null, submissionDate: today, dueDate: today }
+        { assessmentId: "a1", score: new Prisma.Decimal(80), weight: new Prisma.Decimal(0.3), maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE), submissionDate: today, dueDate: today },
+        { assessmentId: "a2", score: new Prisma.Decimal(90), weight: new Prisma.Decimal(0.4), maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE), submissionDate: today, dueDate: today }
       ];
       const grade = calculateCurrentGrade(assessments);
       expect(grade.toNumber()).toBe(INVALID_GRADE);
@@ -128,8 +128,8 @@ describe("Grade Calculation Functions - Edge Cases with Penalties", () => {
 
     test("zero weight assessments should not affect grade", () => {
       const assessments: GradeComponent[] = [
-        { assessmentId: "a1", score: new Prisma.Decimal(80), weight: new Prisma.Decimal(0), maxScore: null, submissionDate: today, dueDate: today },
-        { assessmentId: "a2", score: new Prisma.Decimal(100), weight: new Prisma.Decimal(1), maxScore: null, submissionDate: today, dueDate: today }
+        { assessmentId: "a1", score: new Prisma.Decimal(80), weight: new Prisma.Decimal(0), maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE), submissionDate: today, dueDate: today },
+        { assessmentId: "a2", score: new Prisma.Decimal(100), weight: new Prisma.Decimal(1), maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE), submissionDate: today, dueDate: today }
       ];
       const grade = calculateCurrentGrade(assessments);
       expect(grade.toNumber()).toBeCloseTo(1);
@@ -139,8 +139,8 @@ describe("Grade Calculation Functions - Edge Cases with Penalties", () => {
   describe("calculateMaxPossibleGrade", () => {
     test("all scores null should return 1 (max possible)", () => {
       const assessments: GradeComponent[] = [
-        { assessmentId: "a1", score: null, weight: new Prisma.Decimal(0.5), maxScore: null, submissionDate: null, dueDate: today },
-        { assessmentId: "a2", score: null, weight: new Prisma.Decimal(0.5), maxScore: null, submissionDate: null, dueDate: today }
+        { assessmentId: "a1", score: null, weight: new Prisma.Decimal(0.5), maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE), submissionDate: null, dueDate: today },
+        { assessmentId: "a2", score: null, weight: new Prisma.Decimal(0.5), maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE), submissionDate: null, dueDate: today }
       ];
       const grade = calculateMaxPossibleGrade(assessments);
       expect(grade.toNumber()).toBe(1);

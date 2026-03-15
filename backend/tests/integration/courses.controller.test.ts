@@ -438,4 +438,80 @@ describe("Courses controller test", () => {
       expect(res.status).toBe(404);
     });
   });
+
+  describe("POST /courses/:id/goal", () => {
+    let courseId: string;
+
+    beforeAll(async () => {
+      const course = await prisma.course.create({
+        data:  {
+          userId,
+          name: `GOAL_Test_Course_${testId}`,
+          description: "",
+          createdAt: new Date("2026-03-10"),
+          updatedAt: new Date("2026-03-10"),
+          color: "#ffffff",
+        }
+      });
+
+      courseId = course.courseId;
+
+      await prisma.assessment.create({
+        data: {
+          courseId,
+          userId,
+          title: "Midterm",
+          description: null,
+          dueDate: new Date("2026-03-15"),
+          createdAt: new Date("2026-03-10"),
+          updatedAt: new Date("2026-03-10"),
+          weight: 0.4,
+          maxScore: 100,
+          score: 80,
+          submissionDate: null,
+          targetScore: null,
+        },
+      });
+    });
+
+    it("calculates the grade goal successfully", async () => {
+      const res = await request(app)
+        .post(`/courses/${courseId}/goal`)
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken)
+        .send({ targetGrade: 0.85 });
+
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty("possible");
+    });
+
+    it("returns 404 if course not found", async () => {
+      const res = await request(app)
+        .post("/courses/course-invalid-id/goal")
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken)
+        .send({ targetGrade: 0.9 });
+
+      expect(res.status).toBe(404);
+    });
+
+    it("returns 400 if targetGrade is missing", async () => {
+      const res = await request(app)
+        .post(`/courses/${courseId}/goal`)
+        .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
+        .set("X-CSRF-Token", csrfToken)
+        .send({});
+
+      expect(res.status).toBe(400);
+      expect(res.body).toHaveProperty("message", "Invalid targetGrade");
+    });
+
+    it("returns 401 if not authenticated", async () => {
+      const res = await request(app)
+        .post(`/courses/${courseId}/goal`)
+        .send({ targetGrade: 0.85 });
+
+      expect(res.status).toBe(401);
+    });
+  });
 });

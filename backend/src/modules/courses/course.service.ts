@@ -8,6 +8,7 @@ import { AssessmentStatuses, CourseShared } from "@internal_package/shared";
 import { calculateUrgencyScore } from "../../domain/assessments/calculateUrgencyScore";
 import { rankAssessmentsByUrgency } from "../../domain/assessments/rankAssessmentsByUrgency";
 import { buildDashboardMetrics } from "../../domain/dashboard/computeDashboardMetrics";
+import { calculateRequiredScores } from "../../domain/grade/calculateRequiredScores";
 
 interface CreateCourseInput {
   userId: string;
@@ -306,6 +307,25 @@ export function getCourseServices(prisma: PrismaClient){
 
         collisions: metrics.collisions
       };
+    },
+    async calculateGradeGoal(userId: string, courseId: string, targetGrade: number){
+      const course = await prisma.course.findFirst({
+        where: {
+          courseId,
+          userId
+        },
+        include: {
+          assessments: true,
+        },
+      })
+
+      if(!course){
+        throw new HttpError(404, "Course not found");
+      }
+      
+      return calculateRequiredScores(
+        { targetGrade: new Prisma.Decimal(targetGrade), assessments: course.assessments }
+      );
     }
   }
 }

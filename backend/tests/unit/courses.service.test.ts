@@ -1,6 +1,7 @@
 import { prismaMock } from "../mocks/mockPrismaSingleton";
 import { getCourseServices } from "../../src/modules/courses/course.service";
 import { Prisma } from "@prisma/client";
+import { calculateRequiredScores } from "../../src/domain/grade/calculateRequiredScores";
 
 const baseAssessments = [
   {
@@ -356,7 +357,7 @@ describe("Course Services", () => {
       .rejects
       .toMatchObject({ status: 400 });
     });
-  })
+  });
 
   describe("getCourseAnalytics", () => {
     it("returns grade statistics", async () => {
@@ -432,8 +433,8 @@ describe("Course Services", () => {
       await expect(service.getCourseAnalytics("course1", "user1"))
       .rejects
       .toMatchObject({ status: 404 });
-    })
-  })
+    });
+  });
 
   describe("getCourseDashboard", () => {
     it("aggregates analytics and urgency ranking", async () => {
@@ -498,8 +499,8 @@ describe("Course Services", () => {
           end: new Date("2026-03-17"),
           start: new Date("2026-03-10"),
         },
-      })
-    })
+      });
+    });
 
     it("handles courses with no assessments", async () => {
       const course: CourseWithAssessments = {
@@ -522,7 +523,7 @@ describe("Course Services", () => {
         "currentGrade": new Prisma.Decimal(NaN), 
         "maxPossibleGrade": new Prisma.Decimal(NaN)
       });
-    })
+    });
 
     it("throws 404 for missing course", async () => {
       prismaMock.course.findFirst.mockResolvedValue(null);
@@ -530,6 +531,107 @@ describe("Course Services", () => {
       await expect(service.getCourseDashboard("course1", "user1"))
       .rejects
       .toMatchObject({ status: 404 });
-    })
-  })
+    });
+  });
+
+  describe("calculateGradeGoal", () => {
+    it("returns required scores for target grade", async () => {
+      const assessments = [
+        {
+          assessmentId: "a1",
+          courseId: "course1",
+          userId: "user1",
+          title: "Midterm",
+          description: null,
+          dueDate: new Date("2026-03-15"),
+          createdAt: new Date("2026-03-10"),
+          updatedAt: new Date("2026-03-10"),
+          weight: new Prisma.Decimal(0.4),
+          maxScore: new Prisma.Decimal(100),
+          score: new Prisma.Decimal(80),
+          submissionDate: null,
+          targetScore: null,
+        },
+        {
+          assessmentId: "a2",
+          courseId: "course1",
+          userId: "user1",
+          title: "Final",
+          description: null,
+          dueDate: new Date("2026-04-10"),
+          createdAt: new Date("2026-03-10"),
+          updatedAt: new Date("2026-03-10"),
+          weight: new Prisma.Decimal(0.6),
+          maxScore: new Prisma.Decimal(100),
+          score: null,
+          submissionDate: null,
+          targetScore: null,
+        },
+      ];
+
+      const course = {
+        courseId: "course1",
+        userId: "user1",
+        name: "Calculus 101",
+        description: "",
+        createdAt: new Date("2026-03-10"),
+        updatedAt: new Date("2026-03-10"),
+        color: "#ffffff",
+        assessments,
+      };
+
+      prismaMock.course.findFirst.mockResolvedValue(course);
+
+      const result = await service.calculateGradeGoal(
+        "user1",
+        "course1",
+        0.85
+      );
+
+      expect(prismaMock.course.findFirst).toHaveBeenCalledWith({
+        where: {
+          courseId: "course1",
+          userId: "user1",
+        },
+        include: {
+          assessments: true,
+        },
+      });
+
+      expect(result.possible).toBe(true);
+    });
+
+    it("handles courses with no assessments", async () => {
+      const course = {
+        courseId: "course1",
+        userId: "user1",
+        name: "Calculus 101",
+        description: "",
+        createdAt: new Date("2026-03-10"),
+        updatedAt: new Date("2026-03-10"),
+        color: "#ffffff",
+        assessments: [],
+      };
+
+      prismaMock.course.findFirst.mockResolvedValue(course);
+
+      const result = await service.calculateGradeGoal(
+        "user1",
+        "course1",
+        0.9
+      );
+
+      expect(result.possible).toBe(false);
+    });
+
+    it("throws 404 if course not found", async () => {
+      prismaMock.course.findFirst.mockResolvedValue(null);
+
+      await expect(
+        service.calculateGradeGoal("user1", "course1", 0.9)
+      ).rejects.toMatchObject({
+        status: 404,
+      });
+    });
+  });
 });

@@ -7,6 +7,7 @@ import { AuthenticatedRequest } from "../../types/express";
 import { serializeCourse, serializeCourses } from "./courseSerializer";
 import { serializeCourseAnalytics } from "./courseAnalyticsSerializer";
 import { serializeCourseDashboard } from "./courseDashboardSerializer";
+import { calculateRequiredScores } from "../../domain/grade/calculateRequiredScores";
 
 export async function createCourseHandler(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const { name, description, color } = req.body;
@@ -255,6 +256,42 @@ export async function getCourseDashboard(req: AuthenticatedRequest, res: Respons
     logger.error(
       { requestId: req.id, error },
       "Failed to get course dashboard"
+    );
+    return next(error);
+  }
+};
+
+export default async function calculateCourseGoalHandler(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  const userId = req.jwt?.sub;
+  const courseId = req.params.id;
+
+  if (!userId) {
+    return next(new HttpError(401, "Authentication required"));
+  }
+
+  if (Array.isArray(courseId)) {
+    return next(new HttpError(400, "Only one Course ID can be requested"));
+  }
+
+  const { targetGrade } = req.body;
+
+  if (!targetGrade || typeof targetGrade !== "number") {
+    return res.status(400).json({ message: "Invalid targetGrade" });
+  }
+
+  try {
+    const courseService = getCourseServices(prisma);
+    const result = await courseService.calculateGradeGoal(userId, courseId, targetGrade);
+    logger.info(
+      { requestId: req.id, courseId },
+      "Coure goal retrieved"
+    );
+
+    return res.status(200).json(result);
+  } catch (error) {
+    logger.error(
+      { requestId: req.id, error },
+      "Failed to get course goals"
     );
     return next(error);
   }

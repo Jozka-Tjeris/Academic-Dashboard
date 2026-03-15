@@ -1,5 +1,5 @@
 import { Fetcher } from "@/types/fetcher";
-import { CourseShared } from "@internal_package/shared";
+import { CourseShared, GoalOutput } from "@internal_package/shared";
 import { handleResponse } from "./handleResponse";
 
 export const getCourses = (fetcher: Fetcher) => 
@@ -40,3 +40,14 @@ export const deleteCourse = (
   fetcher(`/courses/${courseId}`, {
     method: "DELETE",
   }).then(res => handleResponse<void>(res));
+
+export const calculateCourseGoal = (
+  fetcher: Fetcher,
+  courseId: string,
+  targetGrade: number,
+) =>
+  fetcher(`/courses/${courseId}/goal`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ targetGrade }),
+  }).then(res => handleResponse<GoalOutput>(res));

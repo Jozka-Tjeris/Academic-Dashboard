@@ -1,12 +1,13 @@
 import { Prisma } from "@prisma/client";
 import { calculateUrgencyScore } from "../../../../src/domain/assessments/calculateUrgencyScore";
 import { AssessmentBackend } from "../../../../src/types/backendTypes";
+import { DEFAULT_MAX_SCORE } from "@internal_package/shared";
 
 describe("Urgency", () => {
   const baseAssessment: AssessmentBackend = {
     assessmentId: "a1",              courseId: "c1",        title: "Test",  description: null,
     dueDate: new Date("2026-01-10"), score: null,    targetScore: null,
-    weight: new Prisma.Decimal(0.5), maxScore: null, submissionDate: new Date("2026-01-09"),
+    weight: new Prisma.Decimal(0.5), maxScore: new Prisma.Decimal(DEFAULT_MAX_SCORE), submissionDate: new Date("2026-01-09"),
     createdAt: new Date(),           updatedAt: new Date(),
   };
 

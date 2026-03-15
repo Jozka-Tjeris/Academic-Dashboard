@@ -2,6 +2,7 @@ export const queryKeys = {
   courses: {
     all: ["courses"] as const,
     detail: (id: string) => ["courses", id] as const,
+    goal: (id: string) => ["courses", id, "goal"] as const,
   },
 
   dashboard: {
