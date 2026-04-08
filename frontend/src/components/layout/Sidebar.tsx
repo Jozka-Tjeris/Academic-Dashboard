@@ -15,7 +15,7 @@ export default function Sidebar() {
 
   return (
     <aside className="w-64 bg-white border-r hidden md:flex flex-col">
-      <div className="p-6 text-xl font-bold">Academic</div>
+      <div className="p-6 text-xl font-bold">Grade Proxy</div>
 
       <nav className="flex flex-col gap-1 px-4">
         {navItems.map((item) => {
