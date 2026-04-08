@@ -51,6 +51,9 @@ export default function CourseFormModal({
         reset();
         onClose();
       },
+      onError: (err) => {
+        alert(err.message);
+      }
     });
   };
 

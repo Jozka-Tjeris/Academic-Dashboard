@@ -28,7 +28,7 @@ export async function createCourseHandler(req: AuthenticatedRequest, res: Respon
     return res.status(201).json(course);
   } catch (error: unknown) {
     logger.error({ requestId: req.id, err: error }, "Failed to create course");
-    return next(new HttpError(400, error instanceof Error ? error.message : "Bad Request"));
+    return next(error);
   }
 }
 

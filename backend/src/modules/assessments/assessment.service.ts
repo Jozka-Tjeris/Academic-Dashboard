@@ -2,7 +2,7 @@ import { deriveStatusFromDate } from "../../domain/assessments/deriveStatusFromD
 import { HttpError } from "../../utils/httpError";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { calculateUrgencyScore } from "../../domain/assessments/calculateUrgencyScore";
-import { AssessmentShared, DUEDATE_COLLISION_WINDOW_DAYS, MAX_ASSESSMENT_WEIGHT } from "@internal_package/shared";
+import { AssessmentShared, DUEDATE_COLLISION_WINDOW_DAYS, MAX_ASSESSMENT_WEIGHT, MAX_ASSESSMENTS_PER_COURSE } from "@internal_package/shared";
 import { detectDueDateCollisions } from "../../domain/assessments/detectDueDateCollisions";
 
 interface CreateAssessmentInput {
@@ -97,27 +97,34 @@ export function getAssessmentServices(prisma: PrismaClient){
         );
       }
 
-      const existingWeights = await prisma.assessment.aggregate({
-        where: { courseId, userId },
-        _sum: { weight: true },
-      });
+      return prisma.$transaction(async (tx) => {
+        const existingWeights = await tx.assessment.aggregate({
+          where: { courseId, userId },
+          _sum: { weight: true },
+          _count: { assessmentId: true }
+        });
 
-      const currentTotalWeight = existingWeights._sum.weight?.toNumber() ?? 0;
+        const currentTotalWeight = existingWeights._sum.weight?.toNumber() ?? 0;
 
-      if(currentTotalWeight + weight > MAX_ASSESSMENT_WEIGHT){
-        throw new HttpError(400, "Total assessment weight cannot exceed 100%");
-      }
+        if(currentTotalWeight + weight > MAX_ASSESSMENT_WEIGHT){
+          throw new HttpError(400, "Total assessment weight cannot exceed 100%");
+        }
 
-      return prisma.assessment.create({
-        data: {
-          userId, 
-          courseId, 
-          title, 
-          dueDate,
-          weight, 
-          description, 
-          maxScore, 
-        },
+        if(existingWeights._count.assessmentId >= MAX_ASSESSMENTS_PER_COURSE){
+          throw new HttpError(403, "Assessment limit reached");
+        }
+
+        return tx.assessment.create({
+          data: {
+            userId, 
+            courseId, 
+            title, 
+            dueDate,
+            weight, 
+            description, 
+            maxScore, 
+          },
+        });
       });
     },
     async updateAssessment(input: UpdateAssessmentInput){

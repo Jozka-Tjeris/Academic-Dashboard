@@ -4,7 +4,7 @@ import { calculateCurrentGrade, calculateMaxPossibleGrade } from "../../domain/g
 import { GradeSummary } from "../../types/backendTypes";
 import { simulateFinalGrade } from "../../domain/grade/simulation";
 import { deriveStatusFromDate } from "../../domain/assessments/deriveStatusFromDate";
-import { AssessmentStatuses, CourseShared } from "@internal_package/shared";
+import { AssessmentStatuses, CourseShared, MAX_COURSES_PER_USER } from "@internal_package/shared";
 import { calculateUrgencyScore } from "../../domain/assessments/calculateUrgencyScore";
 import { rankAssessmentsByUrgency } from "../../domain/assessments/rankAssessmentsByUrgency";
 import { buildDashboardMetrics } from "../../domain/dashboard/computeDashboardMetrics";
@@ -41,13 +41,23 @@ export function getCourseServices(prisma: PrismaClient){
         );
       }
 
-      return prisma.course.create({
-        data: {
-          userId,
-          name,
-          description,
-          color,
-        },
+      return prisma.$transaction(async (tx) => {
+        const courseCount = await tx.course.aggregate({
+          _count: { courseId: true }
+        })
+
+        if(courseCount._count.courseId >= MAX_COURSES_PER_USER){
+          throw new HttpError(403, "Course limit reached");
+        }
+
+        return tx.course.create({
+          data: {
+            userId,
+            name,
+            description,
+            color,
+          },
+        });
       });
     },
     async getCoursesForUser(userId: string){

@@ -12,3 +12,7 @@ export const TWENTYFOUR_HOURS_IN_MS = 1000 * 60 * 60 * 24;
 export const DUEDATE_COLLISION_WINDOW_DAYS = 3;
 
 export const PENALTY_PERCENT_PER_DAY = 0.05;
+// approx 9mb per user
+export const MAX_COURSES_PER_USER = 50;
+// approx 1.8kb per assessment
+export const MAX_ASSESSMENTS_PER_COURSE = 100;

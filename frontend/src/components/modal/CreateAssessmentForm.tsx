@@ -16,7 +16,7 @@ export default function AddAssessmentForm({ courseId }: { courseId: string }) {
 
   const [open, setOpen] = useState(false);
 
-  const mutation = useCreateAssessment(courseId);
+  const {mutate, isPending} = useCreateAssessment(courseId);
 
   const {
     register,
@@ -28,10 +28,14 @@ export default function AddAssessmentForm({ courseId }: { courseId: string }) {
   });
 
   const onSubmit = (data: FormData) => {
-    mutation.mutate({
+    mutate({
       ...data,
       weight: data.weight / 100,
       dueDate: new Date(data.dueDate),
+    }, {
+      onError: (err) => {
+        alert(err.message);
+      }
     });
 
     setOpen(false);
@@ -90,7 +94,10 @@ export default function AddAssessmentForm({ courseId }: { courseId: string }) {
             {...register("maxScore", { valueAsNumber: true })}
           />
 
-          <Button type="submit">
+          <Button type="submit"
+            disabled={isPending}
+            className="w-full cursor-pointer"
+          >
             Create Assessment
           </Button>
 
