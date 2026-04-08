@@ -7,7 +7,6 @@ import { AuthenticatedRequest } from "../../types/express";
 import { serializeCourse, serializeCourses } from "./courseSerializer";
 import { serializeCourseAnalytics } from "./courseAnalyticsSerializer";
 import { serializeCourseDashboard } from "./courseDashboardSerializer";
-import { calculateRequiredScores } from "../../domain/grade/calculateRequiredScores";
 
 export async function createCourseHandler(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const { name, description, color } = req.body;

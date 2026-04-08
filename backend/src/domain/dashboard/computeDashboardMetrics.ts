@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { AssessmentBackend, AssessmentWithCourseName } from "../../types/backendTypes";
+import { AssessmentWithCourseName } from "../../types/backendTypes";
 import { rankAssessmentsByUrgency } from "../assessments/rankAssessmentsByUrgency";
 import { detectDueDateCollisions } from "../assessments/detectDueDateCollisions";
 import { deriveStatusFromDate } from "../assessments/deriveStatusFromDate";
