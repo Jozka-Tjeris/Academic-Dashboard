@@ -1,12 +1,15 @@
-// server.ts - TEMPORARY TEST
-import http from 'http';
-const port = process.env.PORT || 10000;
+import { app } from "./app";
+import { env } from "./config/env";
+import { logger } from "./lib/logger";
 
-const server = http.createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('Infrastructure Test: OK');
+export const server = app.listen(env.PORT, '0.0.0.0', () => {
+  logger.info(`Server running on port ${env.PORT}`);
 });
 
-server.listen(port, () => {
-  console.log(`Test server running on ${port}`);
+process.on("SIGTERM", () => {
+  logger.info("SIGTERM received. Shutting down gracefully...");
+  server.close(() => {
+    logger.info("Server closed.");
+    process.exit(0);
+  });
 });
