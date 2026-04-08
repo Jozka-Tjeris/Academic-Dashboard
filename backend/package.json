@@ -13,7 +13,7 @@
     "test:coverage": "dotenv -e .env.test -- jest --coverage --forceExit --detectOpenHandles --coverageReporters='json-summary'",
     "posttest:ci": "jest-coverage-badges",
     "test:badges": "npm run test:coverage && jest-coverage-badges --output ./badges",
-    "test:ci": "jest --runInBand --forceExit --detectOpenHandles",
+    "test:ci": "jest --runInBand --forceExit --detectOpenHandles --coverageReporters='json-summary'",
     "build": "npm run build -w @internal_package/shared && tsc",
     "start": "node dist/backend/src/server.js",
     "seed:test": "dotenv -e .env.test -- ts-node prisma/seed.ts"
