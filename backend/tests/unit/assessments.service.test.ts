@@ -28,7 +28,7 @@ describe("Assessment Service", () => {
 
       prismaMock.assessment.aggregate.mockResolvedValue({
         _sum: { weight: new Prisma.Decimal(0.2) },
-        _count: undefined,
+        _count: { assessmentId: 1 },
         _avg: undefined,
         _min: undefined,
         _max: undefined
@@ -49,6 +49,9 @@ describe("Assessment Service", () => {
         maxScore: new Prisma.Decimal(100),
         submissionDate: null,
       });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      prismaMock.$transaction.mockImplementation(async (cb: any) => cb(prismaMock));
 
       const result = await service.createAssessmentForCourse({
         userId: "user1",
@@ -74,11 +77,14 @@ describe("Assessment Service", () => {
 
       prismaMock.assessment.aggregate.mockResolvedValue({
         _sum: { weight: new Prisma.Decimal(0.9) },
-        _count: undefined,
+        _count: { assessmentId: 1 },
         _avg: undefined,
         _min: undefined,
         _max: undefined
       });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      prismaMock.$transaction.mockImplementation(async (cb: any) => cb(prismaMock));
 
       await expect(
         service.createAssessmentForCourse({

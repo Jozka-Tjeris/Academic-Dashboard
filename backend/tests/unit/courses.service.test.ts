@@ -1,7 +1,6 @@
 import { prismaMock } from "../mocks/mockPrismaSingleton";
 import { getCourseServices } from "../../src/modules/courses/course.service";
 import { Prisma } from "@prisma/client";
-import { calculateRequiredScores } from "../../src/domain/grade/calculateRequiredScores";
 
 const baseAssessments = [
   {
@@ -82,6 +81,11 @@ describe("Course Services", () => {
         updatedAt: new Date(),
         color: "#ffffff",
       });
+
+      prismaMock.course.aggregate.mockResolvedValue({_min: {}, _max: {}, _count: {courseId: 1}})
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      prismaMock.$transaction.mockImplementation(async (cb: any) => cb(prismaMock));
 
       const result = await service.createCourse({
         userId: "user-1",
