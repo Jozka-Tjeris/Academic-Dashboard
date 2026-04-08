@@ -2,7 +2,7 @@ import { app } from "./app";
 import { env } from "./config/env";
 import { logger } from "./lib/logger";
 
-export const server = app.listen(env.PORT, () => {
+export const server = app.listen(env.PORT, '0.0.0.0', () => {
   logger.info(`Server running on port ${env.PORT}`);
 });
 

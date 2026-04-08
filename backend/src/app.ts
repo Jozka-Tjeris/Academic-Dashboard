@@ -14,6 +14,10 @@ import dashboardRoutes from "./modules/dashboard/dashboard.routes";
 import { signToken } from "./modules/auth/jwt";
 
 export const app = express();
+app.set('trust proxy', 1);
+
+// Public routes here
+app.use("/health", healthRouter);
 
 app.use(
   cors({
@@ -31,9 +35,6 @@ app.use(passport.initialize());
 
 app.use(requestIdMiddleware);
 app.use(requestLogger);
-
-// Public routes here
-app.use("/health", healthRouter);
 
 // Feature routes here
 app.use('/api/auth', authRoutes);
