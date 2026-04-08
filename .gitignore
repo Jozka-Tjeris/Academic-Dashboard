@@ -43,6 +43,8 @@ backend/build/
 # --- Testing ---
 **/coverage/
 
+!backend/badges/*.svg
+
 # --- Notes & Misc ---
 **/notes.txt
 .vscode/

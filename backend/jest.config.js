@@ -17,4 +17,6 @@ module.exports = {
     "node_modules/(?!(uuid)/)"
   ],
   setupFilesAfterEnv: ["./tests/teardown.ts", './tests/mocks/mockPrismaSingleton.ts', "./tests/check_db.ts"],
+  
+  coverageReporters: ["json", "lcov", "text", "clover", "json-summary"],
 };

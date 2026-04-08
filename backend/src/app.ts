@@ -33,8 +33,8 @@ app.use(cookieParser());
 // No passport.session(), meant to be stateless
 app.use(passport.initialize());
 
-// app.use(requestIdMiddleware);
-// app.use(requestLogger);
+app.use(requestIdMiddleware);
+app.use(requestLogger);
 
 // Feature routes here
 app.use('/api/auth', authRoutes);
@@ -42,19 +42,19 @@ app.use('/courses', coursesRoutes);
 app.use("/", assessmentRoutes);
 app.use("/", dashboardRoutes);
 
-// app.use((req, res, next) => {
-//   const allowedOrigin = [
-//       "https://academic-dashboard-frontend.vercel.app",
-//       "http://localhost:3000"
-//   ];
-//   const origin = req.headers.origin;
+app.use((req, res, next) => {
+  const allowedOrigin = [
+      "https://academic-dashboard-frontend.vercel.app",
+      "http://localhost:3000"
+  ];
+  const origin = req.headers.origin;
 
-//   if (req.method !== "GET" && !allowedOrigin.includes(origin ?? "")) {
-//     return res.status(403).json({ message: "Invalid origin" });
-//   }
+  if (req.method !== "GET" && !allowedOrigin.includes(origin ?? "")) {
+    return res.status(403).json({ message: "Invalid origin" });
+  }
 
-//   next();
-// });
+  next();
+});
 
 // only enabled in development
 if (env.NODE_ENV === 'development') {

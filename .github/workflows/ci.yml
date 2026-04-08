@@ -71,3 +71,12 @@ jobs:
           BACKEND_URL: ${{ secrets.BACKEND_URL }}
           TEST_DATABASE: ${{ secrets.TEST_DATABASE }}
           # Add other secrets here (e.g., JWT_SECRET)
+
+      - name: Commit badges
+        continue-on-error: true
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add ./badges/*.svg
+          git commit -m "docs: update coverage badges [skip ci]"
+          git push
