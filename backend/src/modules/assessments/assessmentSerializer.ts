@@ -7,7 +7,6 @@ export function serializeAssessment(assessment: AssessmentBackend): AssessmentSh
   return {
     ...assessment,
     score: assessment.score?.toNumber() ?? null,
-    targetScore: assessment.targetScore?.toNumber() ?? null,
     weight: assessment.weight.toNumber(),
     maxScore: assessment.maxScore?.toNumber() ?? DEFAULT_MAX_SCORE,
     status: deriveStatusFromDate(assessment.dueDate, assessment.score, !!assessment.submissionDate),

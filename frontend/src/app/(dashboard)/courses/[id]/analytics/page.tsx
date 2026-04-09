@@ -66,7 +66,7 @@ export default function CourseAnalyticsPage() {
           <StatCard label="Pending" value={data.assessmentCounts.pending} />
 
           <StatCard
-            label="Due in 24 Hours"
+            label="Due in 48 Hours"
             value={data.assessmentCounts.in24hrs}
           />
 

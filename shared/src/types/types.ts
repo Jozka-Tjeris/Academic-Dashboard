@@ -41,7 +41,6 @@ export type AssessmentShared = {
   dueDate: Date,
   status: AssessmentStatus,
   score: number | null,
-  targetScore: number | null,
   maxScore: number,
   weight: number,
   submissionDate: Date | null,

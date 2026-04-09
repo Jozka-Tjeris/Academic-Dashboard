@@ -22,7 +22,6 @@ function createAssessment(id: string) {
     description: null,
     dueDate: new Date("2026-03-15"),
     score: null,
-    targetScore: null,
     weight: new Prisma.Decimal(0.25),
     maxScore: new Prisma.Decimal(100),
     submissionDate: null,

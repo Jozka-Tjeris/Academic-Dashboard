@@ -4,7 +4,6 @@ import { handleResponse } from "./handleResponse";
 export type SimulationInput = {
   assessmentId: string;
   simulatedScore: number;
-  targetScore: number | null;
 };
 
 export type SimulationResult = {
