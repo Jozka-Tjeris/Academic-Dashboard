@@ -29,7 +29,7 @@ export default function SubmitAssessmentForm({
   onSuccess,
 }: SubmitAssessmentFormProps) {
   const [score, setScore] = useState<number | null>(currentScore);
-  const { submit, isLoading } = useSubmitAssessment(courseId);
+  const { submit, isLoading } = useSubmitAssessment(courseId, assessmentId);
   const [errMsg, setErrMsg] = useState<string | null>(null);
 
   const handleSubmit = async () => {

@@ -2,8 +2,8 @@
 
 import { useUpdateAssessment } from "./useAssessments";
 
-export const useSubmitAssessment = (courseId: string) => {
-  const mutation = useUpdateAssessment(courseId);
+export const useSubmitAssessment = (courseId: string, assessmentId: string) => {
+  const mutation = useUpdateAssessment(courseId, assessmentId);
 
   const submit = (assessmentId: string, score: number | null = null) => {
     const now = new Date();

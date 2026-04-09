@@ -10,7 +10,7 @@ interface EditableScoreProps {
 }
 
 export default function EditableScore({ assessment, courseId }: EditableScoreProps) {
-  const { mutate } = useUpdateAssessment(courseId);
+  const { mutate } = useUpdateAssessment(courseId, assessment.assessmentId);
 
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState(
