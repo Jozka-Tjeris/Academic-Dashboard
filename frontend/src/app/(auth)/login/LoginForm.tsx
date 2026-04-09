@@ -17,7 +17,7 @@ export default function LoginForm() {
       <div className="flex items-center justify-center pt-28">
         <WebsiteIcon height={50} />
         <h1 className="pl-4 text-center text-3xl font-semibold">
-          Welcome to App
+          Welcome to Grade Proxy
         </h1>
       </div>
 

@@ -8,7 +8,7 @@ export function getStatusColor(status: AssessmentStatus) {
     case AssessmentStatuses.SUBMITTED:
       return "text-blue-600";
 
-    case AssessmentStatuses.DUE_IN_24_HOURS:
+    case AssessmentStatuses.DUE_IN_48_HOURS:
       return "text-orange-600";
 
     case AssessmentStatuses.OVERDUE:
