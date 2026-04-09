@@ -47,7 +47,6 @@ export const updateAssessment = (fetcher: Fetcher, assessmentId: string, data: {
   description?: string,
   score?: number | null,
   submissionDate?: Date,
-  targetScore?: number
 }) => 
   fetcher(`/assessments/${assessmentId}`, {
     method: "PATCH",

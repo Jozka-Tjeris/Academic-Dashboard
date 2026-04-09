@@ -9,7 +9,6 @@ const baseAssessments = [
     title: "Quiz",
     description: null,
     score: new Prisma.Decimal(80),
-    targetScore: null,
     weight: new Prisma.Decimal(0.4),
     maxScore: null,
     submissionDate: new Date("2026-03-10"),
@@ -23,7 +22,6 @@ const baseAssessments = [
     title: "Exam",
     description: null,
     score: null,
-    targetScore: null,
     weight: new Prisma.Decimal(0.3),
     maxScore: null,
     submissionDate: new Date("2026-03-10"),
@@ -37,7 +35,6 @@ const baseAssessments = [
     title: "Exam",
     description: null,
     score: null,
-    targetScore: null,
     weight: new Prisma.Decimal(0.3),
     maxScore: null,
     submissionDate: null,
@@ -492,7 +489,6 @@ describe("Course Services", () => {
           maxScore: new Prisma.Decimal(100),
           score: null,
           submissionDate: null,
-          targetScore: null,
           title: "Exam",
           updatedAt: new Date("2026-03-10"),
           userId: "user1",
@@ -554,7 +550,6 @@ describe("Course Services", () => {
           maxScore: new Prisma.Decimal(100),
           score: new Prisma.Decimal(80),
           submissionDate: null,
-          targetScore: null,
         },
         {
           assessmentId: "a2",
@@ -569,7 +564,6 @@ describe("Course Services", () => {
           maxScore: new Prisma.Decimal(100),
           score: null,
           submissionDate: null,
-          targetScore: null,
         },
       ];
 

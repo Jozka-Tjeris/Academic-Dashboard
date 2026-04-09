@@ -13,7 +13,6 @@ interface SimulatorTableProps {
 
 type SimulatorRow = AssessmentShared & {
     simulatedScore?: number;
-    targetScore: number | null;
 };
 
 export default function SimulatorTable({
@@ -33,8 +32,7 @@ export default function SimulatorTable({
     setTargets(initial);
   }, [assessments]);
 
-  const updateTarget = (assessmentId: string, field: "simulatedScore" | "targetScore", value: string) => {
-    field === "simulatedScore" ? 
+  const updateTarget = (assessmentId: string, value: string) => {
     setTargets(prev => 
       (prev.map(
         p => ({
@@ -45,17 +43,6 @@ export default function SimulatorTable({
          })
       )) 
     )
-    : 
-    setTargets(prev => 
-      (prev.map(
-        p => ({
-          ...p,
-          targetScore: p.assessmentId === assessmentId ? 
-            (value !== "" ? Number(value) : null)
-            : p.targetScore
-         })
-      ))
-    )
   };
 
   const runSimulation = () => {
@@ -63,7 +50,6 @@ export default function SimulatorTable({
       targets.filter(t => t.simulatedScore !== undefined).map(t => ({
         assessmentId: t.assessmentId,
         simulatedScore: t.simulatedScore ?? 0,
-        targetScore: t.targetScore,
       }))
     )
   };
@@ -125,28 +111,12 @@ export default function SimulatorTable({
                       onChange={(e) =>
                         updateTarget(
                           t.assessmentId,
-                          "simulatedScore",
                           e.target.value
                         )
                       }
                       className="border rounded px-2 py-1 w-24"
                     />
                   </td>
-
-                  {/* <td className="p-3">
-                    <input
-                      type="number"
-                      value={t.targetScore ?? "N/A"}
-                      onChange={(e) =>
-                        updateTarget(
-                          t.assessmentId,
-                          "targetScore",
-                          e.target.value
-                        )
-                      }
-                      className="border rounded px-2 py-1 w-24"
-                    />
-                  </td> */}
                 </tr>
               ))}
             </tbody>

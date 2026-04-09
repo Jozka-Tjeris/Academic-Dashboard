@@ -483,7 +483,6 @@ describe("Courses controller test", () => {
           maxScore: 100,
           score: 80,
           submissionDate: null,
-          targetScore: null,
         },
       });
     });

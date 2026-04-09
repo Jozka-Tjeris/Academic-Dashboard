@@ -34,7 +34,7 @@ describe("Status", () => {
       expect(status).toBe(AssessmentStatuses.OVERDUE);
     });
 
-    test("returns due in 24 hours if dates are same and no score and not submitted", () => {
+    test("returns due in 48 hours if dates are same and no score and not submitted", () => {
       const status = deriveStatusFromDate(
         new Date("2026-01-01"),
         null,
@@ -83,7 +83,7 @@ describe("Status - Hours, Minutes and Seconds", () => {
     expect(statusSec).toBe(AssessmentStatuses.OVERDUE);
   });
 
-  test("returns due in 24 hours if time period is within 24 hours and no score and not submitted", () => {
+  test("returns due in 48 hours if time period is within 24 hours and no score and not submitted", () => {
     const status = deriveStatusFromDate(
       new Date("2026-01-02T12:00:00"),
       null,
@@ -105,7 +105,7 @@ describe("Status - Edge cases (grade exists, not submitted); ignore the score an
     expect(status).toBe(AssessmentStatuses.UPCOMING);
   });
 
-  test("dates are close, should return due in 24 hours", () => {
+  test("dates are close, should return due in 48 hours", () => {
     const status = deriveStatusFromDate(
       new Date("2026-01-01"),
       new Prisma.Decimal(80),

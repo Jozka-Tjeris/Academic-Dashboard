@@ -10,7 +10,7 @@
 
 */
 -- CreateEnum
-CREATE TYPE "AssessmentStatus" AS ENUM ('upcoming', 'submitted', 'due in 24 hours', 'overdue', 'graded');
+CREATE TYPE "AssessmentStatus" AS ENUM ('upcoming', 'submitted', 'due in 48 hours', 'overdue', 'graded');
 
 -- AlterTable
 ALTER TABLE "Assessment" ALTER COLUMN "latePenalty" SET DATA TYPE DECIMAL(5,2),

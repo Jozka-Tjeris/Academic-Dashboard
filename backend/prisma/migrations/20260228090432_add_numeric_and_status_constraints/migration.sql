@@ -10,7 +10,7 @@ ALTER COLUMN "maxScore" SET DEFAULT 100;
 
 ALTER TABLE "Assessment"
 ADD CONSTRAINT status_enum_check
-CHECK (status IN ('upcoming', 'submitted', 'due in 24 hours', 'overdue', 'graded'));
+CHECK (status IN ('upcoming', 'submitted', 'due in 48 hours', 'overdue', 'graded'));
 
 ALTER TABLE "Assessment"
 ADD CONSTRAINT score_range_check

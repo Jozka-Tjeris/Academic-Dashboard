@@ -48,7 +48,6 @@ model Assessment {
   description     String?   @db.VarChar(250)
   dueDate         DateTime
   score           Decimal?  @db.Decimal(5, 2) // nullable if not graded
-  targetScore     Decimal?  @db.Decimal(5, 2) // optional what-if
   weight          Decimal   @db.Decimal(5, 2) // % of course grade
   maxScore        Decimal   @db.Decimal(5, 2) @default(100)
   submissionDate  DateTime?
