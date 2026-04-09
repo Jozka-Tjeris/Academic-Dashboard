@@ -95,6 +95,7 @@ describe("Dashboard controller", () => {
 
       const res = await request(app)
         .get("/dashboard")
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`]);
 
       expect(res.status).toBe(200);
@@ -109,6 +110,7 @@ describe("Dashboard controller", () => {
 
       const res = await request(app)
         .get("/dashboard")
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`]);
 
       expect(res.status).toBe(200);
@@ -127,6 +129,7 @@ describe("Dashboard controller", () => {
 
       const res = await request(app)
         .get("/dashboard")
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`]);
 
       expect(res.status).toBe(200);
@@ -140,6 +143,7 @@ describe("Dashboard controller", () => {
 
       const res = await request(app)
         .get(`/dashboard?date=${new Date().toISOString()}`)
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`]);
 
       expect(res.status).toBe(200);
@@ -169,6 +173,7 @@ describe("Dashboard controller", () => {
 
       const res = await request(app)
         .get("/dashboard")
+        .set('Authorization', `Bearer ${emptyToken}`)
         .set("Cookie", [`access_token=${emptyToken}`]);
 
       expect(res.status).toBe(200);

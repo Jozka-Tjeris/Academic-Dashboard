@@ -87,6 +87,7 @@ describe("Assessments controller", () => {
     it("creates an assessment", async () => {
       const res = await request(app)
         .post(`/courses/${courseId}/assessments`)
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken)
         .send({
@@ -103,6 +104,7 @@ describe("Assessments controller", () => {
     it("rejects if total weight exceeds 1", async () => {
       const res = await request(app)
         .post(`/courses/${courseId}/assessments`)
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken)
         .send({
@@ -149,6 +151,7 @@ describe("Assessments controller", () => {
     it("updates score successfully", async () => {
       const res = await request(app)
         .patch(`/assessments/${assessId_for_put}`)
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken)
         .send({ score: 85 });
@@ -160,6 +163,7 @@ describe("Assessments controller", () => {
     it("rejects score above maxScore", async () => {
       const res = await request(app)
         .patch(`/assessments/${assessId_for_put}`)
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken)
         .send({ score: 150 });
@@ -170,6 +174,7 @@ describe("Assessments controller", () => {
     it("returns 404 for invalid id", async () => {
       const res = await request(app)
         .patch("/assessments/nonexistent-id")
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken)
         .send({ score: 50 });
@@ -192,6 +197,7 @@ describe("Assessments controller", () => {
 
       const res = await request(app)
         .patch(`/assessments/${assessment.assessmentId}`)
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken)
         .send({ score: 70 });
@@ -224,6 +230,7 @@ describe("Assessments controller", () => {
     it("fetches an assessment successfully", async () => {
       const res = await request(app)
         .get(`/assessments/${assessmentId}`)
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`]);
 
       expect(res.status).toBe(200);
@@ -239,6 +246,7 @@ describe("Assessments controller", () => {
     it("returns 404 for invalid id", async () => {
       const res = await request(app)
         .get("/assessments/nonexistent-id")
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`]);
 
       expect(res.status).toBe(404);
@@ -281,6 +289,7 @@ describe("Assessments controller", () => {
     it("returns collisions when assessments fall in same window", async () => {
       const res = await request(app)
         .get("/assessments/collisions")
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`]);
 
       expect(res.status).toBe(200);
@@ -298,6 +307,7 @@ describe("Assessments controller", () => {
     it("respects days query filter", async () => {
       const res = await request(app)
         .get("/assessments/collisions?days=1")
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`]);
 
       expect(res.status).toBe(200);
@@ -319,6 +329,7 @@ describe("Assessments controller", () => {
 
       const res = await request(app)
         .delete(`/assessments/${assessment?.assessmentId}`)
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken);
 
@@ -329,6 +340,7 @@ describe("Assessments controller", () => {
     it("returns 404 for invalid id", async () => {
       const res = await request(app)
         .delete("/assessments/nonexistent-id")
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken);
 

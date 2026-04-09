@@ -1,10 +1,20 @@
-import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
+"use client";
 
-export default async function Home() {
-  const token = (await cookies()).get("access_token");
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-  if (token) redirect("/dashboard");
+export default function Home() {
+  const router = useRouter();
 
-  redirect("/login");
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+
+    if (token) {
+      router.replace("/dashboard");
+    } else {
+      router.replace("/login");
+    }
+  }, [router]);
+
+  return null;
 }

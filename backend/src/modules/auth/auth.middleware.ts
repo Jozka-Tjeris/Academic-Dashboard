@@ -9,17 +9,24 @@ export function requireAuth(
   _res: Response,
   next: NextFunction
 ) {
-  // Read JWT from cookie
-  const token = req.cookies?.access_token;
+  // // Read JWT from cookie
+  // const token = req.cookies?.access_token;
 
-  // Verify (throw if invalid)
-  if (!token) {
-    logger.warn(
-      { requestId: req.id },
-      'Missing authentication token'
-    );
-    return next(new HttpError(401, 'Authentication required'));
+  // // Verify (throw if invalid)
+  // if (!token) {
+  //   logger.warn(
+  //     { requestId: req.id },
+  //     'Missing authentication token'
+  //   );
+  //   return next(new HttpError(401, 'Authentication required'));
+  // }
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader?.startsWith("Bearer ")) {
+    return next(new HttpError(401, "Unauthorized" ));
   }
+
+  const token = authHeader.split(" ")[1];
 
   try {
     // Verify token and attach to user

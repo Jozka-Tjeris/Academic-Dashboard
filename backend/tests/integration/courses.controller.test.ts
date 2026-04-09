@@ -65,6 +65,7 @@ describe("Courses controller test", () => {
     it("creates a new course", async () => {
       const res = await request(app)
         .post("/courses")
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken)
         .send({ name: "Calculus 101", description: "Intro course" });
@@ -77,6 +78,7 @@ describe("Courses controller test", () => {
     it("fails if name is missing", async () => {
       const res = await request(app)
         .post("/courses")
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken)
         .send({});
@@ -95,6 +97,7 @@ describe("Courses controller test", () => {
     it("returns courses with grade summary", async () => {
       const res = await request(app)
         .get("/courses")
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`]);
 
       const myCourse = res.body.find((c: CourseBackend) => c.name === COURSE_FOR_GET);
@@ -126,6 +129,7 @@ describe("Courses controller test", () => {
     it("returns course with assessments and grade summary", async () => {
       const res = await request(app)
         .get(`/courses/${courseId}`)
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`]);
 
       expect(res.status).toBe(200);
@@ -137,6 +141,7 @@ describe("Courses controller test", () => {
     it("returns 404 for invalid id", async () => {
       const res = await request(app)
         .get("/courses/nonexistent-id")
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`]);
 
       expect(res.status).toBe(404);
@@ -161,6 +166,7 @@ describe("Courses controller test", () => {
     it("updates a course", async () => {
       const res = await request(app)
         .patch(`/courses/${courseId}`)
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken)
         .send({
@@ -185,6 +191,7 @@ describe("Courses controller test", () => {
 
       const res = await request(app)
         .patch(`/courses/${course.courseId}`)
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken)
         .send({
@@ -205,6 +212,7 @@ describe("Courses controller test", () => {
     it("returns 404 if course does not exist", async () => {
       const res = await request(app)
         .patch("/courses/nonexistent-id")
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken)
         .send({
@@ -268,6 +276,7 @@ describe("Courses controller test", () => {
     it("calculates course grade simulation", async () => {
       const res = await request(app)
         .post(`/courses/${courseId}/simulate`)
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken)
         .send({
@@ -288,6 +297,7 @@ describe("Courses controller test", () => {
     it("rejects invalid simulations payload", async () => {
       const res = await request(app)
         .post(`/courses/${courseId}/simulate`)
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken)
         .send({
@@ -346,6 +356,7 @@ describe("Courses controller test", () => {
     it("returns course analytics", async () => {
       const res = await request(app)
         .get(`/courses/${courseId}/analytics?date=${new Date().toISOString()}`)
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`]);
 
       expect(res.status).toBe(200);
@@ -401,6 +412,7 @@ describe("Courses controller test", () => {
     it("returns course dashboard data", async () => {
       const res = await request(app)
         .get(`/courses/${courseId}/dashboard?date=${new Date().toISOString()}`)
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`]);
 
       expect(res.status).toBe(200);
@@ -422,6 +434,7 @@ describe("Courses controller test", () => {
 
       const res = await request(app)
         .delete(`/courses/${course?.courseId}`)
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken);
 
@@ -432,6 +445,7 @@ describe("Courses controller test", () => {
     it("returns 404 for invalid id", async () => {
       const res = await request(app)
         .delete("/courses/nonexistent-id")
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken);
 
@@ -477,6 +491,7 @@ describe("Courses controller test", () => {
     it("calculates the grade goal successfully", async () => {
       const res = await request(app)
         .post(`/courses/${courseId}/goal`)
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken)
         .send({ targetGrade: 0.85 });
@@ -488,6 +503,7 @@ describe("Courses controller test", () => {
     it("returns 404 if course not found", async () => {
       const res = await request(app)
         .post("/courses/course-invalid-id/goal")
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken)
         .send({ targetGrade: 0.9 });
@@ -498,6 +514,7 @@ describe("Courses controller test", () => {
     it("returns 400 if targetGrade is missing", async () => {
       const res = await request(app)
         .post(`/courses/${courseId}/goal`)
+        .set('Authorization', `Bearer ${token}`)
         .set("Cookie", [`access_token=${token}`, `csrf_token=${csrfToken}`])
         .set("X-CSRF-Token", csrfToken)
         .send({});

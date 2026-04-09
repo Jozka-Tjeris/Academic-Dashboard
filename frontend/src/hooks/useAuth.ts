@@ -20,6 +20,8 @@ export const useLogout = () => {
     mutationFn: () => logout(secureFetch),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.me });
+      localStorage.removeItem("access_token");
+      window.location.href = "/login";
     }
   });
 };

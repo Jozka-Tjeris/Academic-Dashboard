@@ -15,36 +15,40 @@ export function googleCallback(req: Request, res: Response) {
     image: user.image,
   });
 
-  const csrfToken = crypto.randomBytes(32).toString("hex");
+  // const csrfToken = crypto.randomBytes(32).toString("hex");
 
-  res.cookie("access_token", token, {
-    httpOnly: true,
-    sameSite: isProd ? "none" : "lax",
-    secure: isProd,
-    maxAge: 7 * TWENTYFOUR_HOURS_IN_MS,
-  });
+  // res.cookie("access_token", token, {
+  //   httpOnly: true,
+  //   sameSite: isProd ? "none" : "lax",
+  //   secure: isProd,
+  //   maxAge: 7 * TWENTYFOUR_HOURS_IN_MS,
+  // });
 
-  // NOT httpOnly (frontend must read it)
-  res.cookie("csrf_token", csrfToken, {
-    httpOnly: false,
-    sameSite: isProd ? "none" : "lax",
-    secure: isProd,
-  });
+  // // NOT httpOnly (frontend must read it)
+  // res.cookie("csrf_token", csrfToken, {
+  //   httpOnly: false,
+  //   sameSite: isProd ? "none" : "lax",
+  //   secure: isProd,
+  // });
 
-  return res.redirect(env.FRONTEND_URL + "/dashboard");
+  // return res.redirect(env.FRONTEND_URL + "/dashboard");
+
+  return res.redirect(
+    `${env.FRONTEND_URL}/auth/success?token=${token}`
+  );
 }
 
 export function logout(_req: Request, res: Response) {
-  res.clearCookie("access_token", {
-    httpOnly: true,
-    sameSite: "none",
-    secure: true,
-  });
+  // res.clearCookie("access_token", {
+  //   httpOnly: true,
+  //   sameSite: "none",
+  //   secure: true,
+  // });
 
-  res.clearCookie("csrf_token", {
-    sameSite: "none",
-    secure: true,
-  });
+  // res.clearCookie("csrf_token", {
+  //   sameSite: "none",
+  //   secure: true,
+  // });
 
   return res.status(401).json({ error: "Unauthorized" });
 }
