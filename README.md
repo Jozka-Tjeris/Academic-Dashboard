@@ -7,6 +7,8 @@
 ![Coverage Lines](./backend/badges/badge-lines.svg)
 ![Coverage Statements](./backend/badges/badge-statements.svg)
 
+<img width="1886" height="1464" alt="Screenshot 2026-04-10 at 12 24 56 AM" src="https://github.com/user-attachments/assets/96c36ca9-855d-4f27-a231-132e79930767" />
+
 A high-integrity Academic Risk Management system designed to model grade trajectories, track deadline collisions, and simulate performance outcomes using a custom rule engine.
 
 ## What This Project Demonstrates
@@ -14,9 +16,12 @@ A high-integrity Academic Risk Management system designed to model grade traject
 - **Predictive Simulation:** A "Grade Simulator" engine allowing users to project final outcomes using optimistic placeholders and target scores.
 - **Full-Stack Type Safety:** Unified validation using Zod across a decoupled Node.js/Express backend and Next.js frontend.
 - **Robust Testing Suite:** Comprehensive coverage using Jest and Supertest for critical business logic (grade formulas) and REST endpoints.
-- **Automated Workflows:** Scheduled cron jobs for notification dispatch and background status derivation.
+- **Automated Workflows:** Scheduled cron jobs for healthcheck and CI scripts via Github Actions.
 
 Built with **Next.js**, **Express**, **Prisma**, and **PostgreSQL**.
+
+<img width="1404" height="752" alt="Screenshot 2026-04-10 at 12 25 25 AM" src="https://github.com/user-attachments/assets/516b036f-a4ef-4bd1-bff1-9614b963effc" />
+<img width="564" height="1650" alt="Screenshot 2026-04-10 at 12 04 04 AM" src="https://github.com/user-attachments/assets/f7a3ea8c-d1eb-474f-9ef9-0806705752b6" />
 
 ---
 
@@ -35,6 +40,8 @@ This project moves beyond CRUD by implementing a system that treats "Status" and
 - **Grade Simulator:** Input hypothetical scores to visualize "Maximum Potential Grade" vs. "Current Grade."
 - **Collision Tracker:** Visual indicators for overlapping deadlines and assessment clusters.
 - **Dynamic Grading Engine:** Support for late submission logic and improper weight warnings (e.g., total weight $\neq$ 100%).
+
+![grade_sim](https://github.com/user-attachments/assets/84f0ee8a-a08f-4d0f-bf7a-716710247459)
 
 ### Dashboard & UI
 - **Course-Centric Views:** Per-course breakdowns with horizontal progress visualizations for grade tracking.
