@@ -12,7 +12,7 @@ export function deriveStatusFromDate(
   }
 
   if (dueDate.getTime() < now.getTime()) return AssessmentStatuses.OVERDUE;
-  if (dueDate.getTime() - now.getTime() <= TWENTYFOUR_HOURS_IN_MS) return AssessmentStatuses.DUE_IN_24_HOURS;
+  if (dueDate.getTime() - now.getTime() <= TWENTYFOUR_HOURS_IN_MS) return AssessmentStatuses.DUE_IN_48_HOURS;
 
   return AssessmentStatuses.UPCOMING;
 }

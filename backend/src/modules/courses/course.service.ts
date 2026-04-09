@@ -228,7 +228,7 @@ export function getCourseServices(prisma: PrismaClient){
         if (status === AssessmentStatuses.SUBMITTED) submitted++;
         else if (status === AssessmentStatuses.GRADED) graded++;
         else if (status === AssessmentStatuses.OVERDUE) overdue++;
-        else if (status === AssessmentStatuses.DUE_IN_24_HOURS) in24hrs++;
+        else if (status === AssessmentStatuses.DUE_IN_48_HOURS) in24hrs++;
         else pending++;
       }
 

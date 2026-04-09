@@ -10,7 +10,7 @@ export default function UpcomingAssessments({
   const router = useRouter();
 
   const upcoming = assessments
-    .filter((a) => a.status === AssessmentStatuses.UPCOMING || a.status === AssessmentStatuses.DUE_IN_24_HOURS)
+    .filter((a) => a.status === AssessmentStatuses.UPCOMING || a.status === AssessmentStatuses.DUE_IN_48_HOURS)
     .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
     .slice(0, 5);
 

@@ -70,7 +70,11 @@ export default function SimulatorTable({
 
   const calculateTotalPenalty = (submission: Date | null, due: Date): number => {
     if(submission !== null){
-      return Math.max(0, new Date(submission).getTime() - new Date(due).getTime()) / TWENTYFOUR_HOURS_IN_MS * PENALTY_PERCENT_PER_DAY;
+      const subDay = new Date(submission);
+      subDay.setUTCHours(0, 0, 0, 0);
+      const dueDay = new Date(due);
+      dueDay.setUTCHours(0, 0, 0, 0);
+      return Math.max(0, new Date(subDay).getTime() - new Date(dueDay).getTime()) / TWENTYFOUR_HOURS_IN_MS * PENALTY_PERCENT_PER_DAY;
     }
     let today = new Date();
     let todayAtMidnight = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
@@ -90,7 +94,7 @@ export default function SimulatorTable({
                 <th className="p-3 text-left">Current Score</th>
                 <th className="p-3 text-left">Late Penalty</th>
                 <th className="p-3 text-left">Simulated</th>
-                <th className="p-3 text-left">Target</th>
+                {/* <th className="p-3 text-left">Target</th> */}
               </tr>
             </thead>
 
@@ -129,7 +133,7 @@ export default function SimulatorTable({
                     />
                   </td>
 
-                  <td className="p-3">
+                  {/* <td className="p-3">
                     <input
                       type="number"
                       value={t.targetScore ?? "N/A"}
@@ -142,7 +146,7 @@ export default function SimulatorTable({
                       }
                       className="border rounded px-2 py-1 w-24"
                     />
-                  </td>
+                  </td> */}
                 </tr>
               ))}
             </tbody>

@@ -18,14 +18,14 @@ export type CourseShared = {
 export const AssessmentStatuses = {
   UPCOMING: "UPCOMING",
   SUBMITTED: "SUBMITTED",
-  DUE_IN_24_HOURS: "DUE_IN_24_HOURS",
+  DUE_IN_48_HOURS: "DUE_IN_48_HOURS",
   OVERDUE: "OVERDUE",
   GRADED: "GRADED",
 } as const;
 
 export const AssessmentStatusMetadata = {
   UPCOMING: { label: "Upcoming", order: 3 },
-  DUE_IN_24_HOURS: { label: "Due in 24 hours", order: 4 },
+  DUE_IN_48_HOURS: { label: "Due in 48 hours", order: 4 },
   OVERDUE: { label: "Overdue", order: 5 },
   SUBMITTED: { label: "Submitted", order: 2 },
   GRADED: { label: "Graded", order: 1 },

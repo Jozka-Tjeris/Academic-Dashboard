@@ -41,7 +41,7 @@ describe("Status", () => {
         false,
         new Date("2026-01-01")
       );
-      expect(status).toBe(AssessmentStatuses.DUE_IN_24_HOURS);
+      expect(status).toBe(AssessmentStatuses.DUE_IN_48_HOURS);
     });
 
     test("returns upcoming if due in future and no score and not submitted", () => {
@@ -90,7 +90,7 @@ describe("Status - Hours, Minutes and Seconds", () => {
       false,
       new Date("2026-01-01T21:00:00")
     );
-    expect(status).toBe(AssessmentStatuses.DUE_IN_24_HOURS);
+    expect(status).toBe(AssessmentStatuses.DUE_IN_48_HOURS);
   });
 });
 
@@ -112,7 +112,7 @@ describe("Status - Edge cases (grade exists, not submitted); ignore the score an
       false,
       new Date("2026-01-01")
     );
-    expect(status).toBe(AssessmentStatuses.DUE_IN_24_HOURS);
+    expect(status).toBe(AssessmentStatuses.DUE_IN_48_HOURS);
   });
 
   test("due date passed, should return overdue", () => {
