@@ -22,7 +22,7 @@ app.use("/health", healthRouter);
 app.use(
   cors({
     origin: [
-      "https://academic-dashboard-frontend.vercel.app",
+      "https://grade-proxy.vercel.app",
       "http://localhost:3000"
     ],
     credentials: true,
@@ -44,7 +44,7 @@ app.use("/", dashboardRoutes);
 
 app.use((req, res, next) => {
   const allowedOrigin = [
-      "https://academic-dashboard-frontend.vercel.app",
+      "https://grade-proxy.vercel.app",
       "http://localhost:3000"
   ];
   const origin = req.headers.origin;
