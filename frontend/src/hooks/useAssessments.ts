@@ -39,7 +39,7 @@ export const useAssessment = (id: string) => {
   });
 };
 
-export const useUpdateAssessment = (courseId: string) => {
+export const useUpdateAssessment = (courseId: string, assessmentId: string) => {
   const { secureFetch } = useApi();
 
   return useMutation({
@@ -65,6 +65,12 @@ export const useUpdateAssessment = (courseId: string) => {
       });
       queryClient.invalidateQueries({
         queryKey: queryKeys.courses.all,
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.assessments.detail(assessmentId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.assessments.all,
       });
     },
   });
