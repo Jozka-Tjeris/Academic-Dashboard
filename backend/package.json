@@ -10,7 +10,7 @@
     "dev": "nodemon ./src/server.ts",
     "lint": "eslint",
     "test": "dotenv -e .env.test -- jest --forceExit --detectOpenHandles",
-    "test:coverage": "dotenv -e .env.test -- jest --coverage --forceExit --detectOpenHandles --coverageReporters='json-summary'",
+    "test:coverage": "dotenv -e .env.test -- jest --coverage --forceExit --detectOpenHandles",
     "posttest:ci": "jest-coverage-badges",
     "test:badges": "npm run test:coverage && jest-coverage-badges --output ./badges",
     "test:ci": "jest --runInBand --forceExit --coverage --detectOpenHandles --coverageReporters='json-summary'",

@@ -26,7 +26,7 @@ export default function EditAssessmentForm({
   open,
   onClose,
 }: EditAssessmentFormProps) {
-  const mutation = useUpdateAssessment(courseId);
+  const mutation = useUpdateAssessment(courseId, assessment.assessmentId);
 
   const {
     register,

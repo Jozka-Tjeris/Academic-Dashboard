@@ -30,7 +30,7 @@ export default function AddAssessmentForm({ courseId }: { courseId: string }) {
   const onSubmit = (data: FormData) => {
     mutate({
       ...data,
-      weight: data.weight / 100,
+      weight: data.weight,
       dueDate: new Date(data.dueDate),
     }, {
       onError: (err) => {
@@ -84,6 +84,7 @@ export default function AddAssessmentForm({ courseId }: { courseId: string }) {
           <Input
             type="number"
             placeholder="Weight"
+            step="0.01"
             {...register("weight", { valueAsNumber: true })}
           />
 
