@@ -475,10 +475,10 @@ describe("Course Services", () => {
       expect(result).toHaveProperty("course");
 
       expect(result.course).toEqual(courseWithAssessmentsAndGradeSummary);
-      expect(result.workload.upcomingAssessments.length).toEqual(4);
+      expect(result.workload.upcomingAssessments.length).toEqual(3);
       expect(result.workload.stats).toMatchObject({
-        dueNext7Days: 3,
-        dueNext14Days: 3,
+        dueNext7Days: 2,
+        dueNext14Days: 2,
         totalUpcomingWeight: new Prisma.Decimal(0.75),
         highestWeightUpcoming: {
           assessmentId: "a3",
@@ -495,9 +495,9 @@ describe("Course Services", () => {
           weight: new Prisma.Decimal(0.25),
         },
         busiestWeek: {
-          assessmentCount: 2,
-          end: new Date("2026-03-17"),
-          start: new Date("2026-03-10"),
+          assessmentCount: 1,
+          end: new Date("2026-03-08"),
+          start: new Date("2026-03-01"),
         },
       });
     });

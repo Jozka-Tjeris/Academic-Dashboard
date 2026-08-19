@@ -8,7 +8,6 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "outDir": "./dist",
-    "baseUrl": ".",
     "rootDir": "..",
     "types": ["node", "jest"],
     "strict": true,                  // Highly recommended for Prisma/Zod workflows

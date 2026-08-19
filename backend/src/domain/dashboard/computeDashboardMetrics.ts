@@ -10,11 +10,11 @@ export function buildDashboardMetrics(
   now: Date = new Date()
 ){
 
-  //Only process non-graded assessments
+  //Only process non-graded assessments (filter upcoming assessments to only include those that are not graded or submitted)
 
   const upcoming = assessments.filter(a => {
     const status = deriveStatusFromDate(a.dueDate, a.score, !!a.submissionDate, now);
-    return status !== AssessmentStatuses.GRADED;
+    return status !== AssessmentStatuses.GRADED && status !== AssessmentStatuses.SUBMITTED;
   });
 
   //Rank assessments by urgency
