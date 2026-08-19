@@ -1,7 +1,7 @@
 import { Collision } from "@internal_package/shared";
 import { Prisma } from "@prisma/client";
-import { AssessmentWithUrgency } from "src/domain/assessments/rankAssessmentsByUrgency";
-import { AssessmentBackend, CourseBackend } from "src/types/backendTypes";
+import { AssessmentWithUrgency } from "../../domain/assessments/rankAssessmentsByUrgency";
+import { AssessmentBackend, CourseBackend } from "../../types/backendTypes";
 import { decimalToNumberOrNull, serializeCourses } from "../courses/courseSerializer";
 import { serializeAssessmentWithUrgency } from "../courses/courseAnalyticsSerializer";
 import { serializeAssessment } from "../assessments/assessmentSerializer";

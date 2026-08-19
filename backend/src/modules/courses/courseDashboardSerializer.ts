@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import { decimalToNumberOrNull, serializeCourse } from "./courseSerializer";
 import { serializeAssessment } from "../assessments/assessmentSerializer";
 import { AssessmentWithUrgency } from "../../domain/assessments/rankAssessmentsByUrgency";
-import { AssessmentBackend, CourseBackend } from "src/types/backendTypes";
+import { AssessmentBackend, CourseBackend } from "../../types/backendTypes";
 import { Collision } from "@internal_package/shared";
 
 
