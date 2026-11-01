@@ -182,7 +182,7 @@ describe("Assessments controller", () => {
       expect(res.status).toBe(404);
     });
 
-    it("sets submitted=true when score is provided", async () => {
+    it("should not update submission date when only score is provided", async () => {
       const assessment = await prisma.assessment.create({
         data: {
           userId,
@@ -190,7 +190,7 @@ describe("Assessments controller", () => {
           title: `PATCH_RULE_Test_${testId}`,
           dueDate: new Date(),
           weight: new Prisma.Decimal(0.1),
-          submissionDate: null,
+          submissionDate: new Date("2026-03-11T00:00:00.000Z"),
           maxScore: new Prisma.Decimal(100),
         },
       });
@@ -204,7 +204,7 @@ describe("Assessments controller", () => {
 
       expect(res.status).toBe(200);
       expect(res.body.score).toBe(70);
-      expect(res.body.submissionDate).not.toBe(null);
+      expect(res.body.submissionDate).toBe("2026-03-11T00:00:00.000Z");
     });
   });
 
