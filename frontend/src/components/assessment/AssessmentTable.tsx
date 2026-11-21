@@ -34,7 +34,12 @@ interface AssessmentTableProps {
 
 export default function AssessmentTable({ assessments }: AssessmentTableProps) {
   const router = useRouter();
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    {
+      id : "title",
+      desc: false,
+    }
+  ]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState<AssessmentStatus | null>(null);
   const [pagination, setPagination] = useState({
@@ -56,6 +61,7 @@ export default function AssessmentTable({ assessments }: AssessmentTableProps) {
           </span>
         ),
       });
+      setSorting(sorting => [{ id: "courseName", desc: false }, ...sorting]);
     }
 
     if (assessments[0]?.urgency !== undefined) {
