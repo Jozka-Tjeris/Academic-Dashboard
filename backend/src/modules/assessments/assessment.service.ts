@@ -168,8 +168,10 @@ export function getAssessmentServices(prisma: PrismaClient){
           throw new HttpError(400, "Score cannot exceed maxScore");
         }
         if (updates.score !== null) {
-          // Submission date should not be affected if score is being updated, so we remove it from the updateData
-          delete updateData.submissionDate;
+          // If score is being updated, we should also update the submissionDate to the current date if it's not already set, unless the submissionDate is already set, in which case we should not change it.
+          if (assessment.submissionDate !== null) {
+            delete updateData.submissionDate;
+          }
         }
       }
 

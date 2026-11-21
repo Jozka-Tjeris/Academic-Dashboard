@@ -49,11 +49,15 @@ export default function UrgentAssessments({
               </span>
             </div>
 
-            <UrgencyHeatBar
-              urgency={a.urgency ?? 0}
-              weight={a.weight ?? 0}
-            />
-            <AssessmentActions assessment={a}/>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center flex-grow">
+                <UrgencyHeatBar
+                  urgency={a.urgency ?? 0}
+                  weight={a.weight ?? 0}
+                />
+              </div>
+              <AssessmentActions assessment={a}/>
+            </div>
           </li>
         ))}
       </ul>

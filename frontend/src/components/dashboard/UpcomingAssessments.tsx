@@ -25,10 +25,12 @@ export default function UpcomingAssessments({
             onClick={() => router.push(`/assessments/${a.assessmentId}`)}
           >
             <span>{a.title}</span>
-            <span className="text-muted-foreground text-sm">
-              {new Date(a.dueDate).toLocaleDateString()}
-            </span>
-            <AssessmentActions assessment={a}/>
+            <div className="flex items-center gap-4">
+              <span className="text-muted-foreground text-sm">
+                Due {new Date(a.dueDate).toLocaleDateString()}
+              </span>
+              <AssessmentActions assessment={a}/>
+            </div>
           </li>
         ))}
       </ul>
